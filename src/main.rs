@@ -2,6 +2,7 @@
 extern crate clap;
 
 use std::process;
+mod versions;
 mod commands;
 
 fn values_of_or_empty(values: Option<clap::Values>) -> Vec<&str> {
