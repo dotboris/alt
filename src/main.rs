@@ -26,7 +26,7 @@ fn main() {
             let command = matches.value_of("command").unwrap();
             let command_args = values_of_or_empty(matches.values_of("command_args"));
 
-            println!("TODO: exec {} {:#?}", command, command_args);
+            println!("TODO: exec {} {:?}", command, command_args);
             None
         },
         ("", None) => {
