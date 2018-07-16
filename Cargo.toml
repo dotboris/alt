@@ -1,0 +1,6 @@
+[package]
+name = "alt"
+version = "0.0.0"
+authors = ["Boris Bera <bera.boris@gmail.com>"]
+
+[dependencies]
