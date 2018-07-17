@@ -5,3 +5,4 @@ authors = ["Boris Bera <bera.boris@gmail.com>"]
 
 [dependencies]
 clap = "2.32.0"
+toml = "0.4.6"
