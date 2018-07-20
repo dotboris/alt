@@ -2,6 +2,7 @@
 extern crate clap;
 
 use std::process;
+mod config;
 mod versions;
 mod exec_cmd;
 
