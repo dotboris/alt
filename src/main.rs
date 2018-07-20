@@ -3,7 +3,7 @@ extern crate clap;
 
 use std::process;
 mod versions;
-mod commands;
+mod exec_cmd;
 
 fn values_of_or_empty(values: Option<clap::Values>) -> Vec<&str> {
     match values {
@@ -25,7 +25,7 @@ fn main() {
 
     match matches.subcommand() {
         ("exec", Some(matches)) =>
-            commands::exec(
+            exec_cmd::run(
                 matches.value_of("command").unwrap(),
                 values_of_or_empty(matches.values_of("command_args"))
             ),
