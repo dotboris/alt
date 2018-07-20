@@ -1,22 +1,26 @@
 use use_file;
 use def_file;
 use std::env;
+use std::os::unix::process::CommandExt;
+use std::process::Command;
 
-pub fn run(command: &str, command_args: Vec<&str>) {
-    let command = String::from(command);
-    println!("TODO: exec {} {:?}", command, command_args);
+pub fn run<'a>(command: &str, command_args: Vec<&str>) {
+    let system_command = String::from(command);
+
     let command_def = def_file::load_for(&command);
-    println!("{:?}", command_def);
-    let file = use_file::find(env::current_dir().unwrap());
-    println!("{:?}", file);
-    let bin = match file {
-        Some(path) =>
-            use_file::load(path)
-                .get(&command)
-                .map(|c| c.clone())
-                .unwrap_or(command),
-        None => command,
-    };
 
-    println!("{:?}", bin)
+    let file = use_file::find(env::current_dir().unwrap())
+        .map(|path| use_file::load(&path));
+    let command_version = file.as_ref()
+        .and_then(|file| file.get(command));
+
+    let bin = command_version
+        .and_then(|v| command_def.get(v))
+        .unwrap_or(&system_command);
+
+    let err = Command::new(&bin)
+        .args(command_args)
+        .exec();
+
+    panic!("Failed to exec(): {:#?}", err)
 }
