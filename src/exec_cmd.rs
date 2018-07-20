@@ -22,5 +22,10 @@ pub fn run<'a>(command: &str, command_args: Vec<&str>) {
         .args(command_args)
         .exec();
 
-    panic!("Failed to exec(): {:#?}", err)
+    // Since we're callling exec, either our process will be replaced
+    // (and this code will never be called) or something's wrong and
+    // we get this error
+    eprintln!("Failed to exec()!");
+    eprintln!("{:#?}", err);
+    panic!();
 }
