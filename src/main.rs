@@ -3,7 +3,8 @@ extern crate clap;
 
 use std::process;
 mod config;
-mod versions;
+mod use_file;
+mod def_file;
 mod exec_cmd;
 
 fn values_of_or_empty(values: Option<clap::Values>) -> Vec<&str> {
