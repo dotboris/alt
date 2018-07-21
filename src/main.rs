@@ -7,13 +7,6 @@ mod use_file;
 mod def_file;
 mod exec_cmd;
 
-fn values_of_or_empty(values: Option<clap::Values>) -> Vec<&str> {
-    match values {
-        Some(values) => values.collect(),
-        None => vec![],
-    }
-}
-
 fn main() {
     let matches = clap_app!(alt =>
         (version: crate_version!())
@@ -29,7 +22,9 @@ fn main() {
         ("exec", Some(matches)) =>
             exec_cmd::run(
                 matches.value_of("command").unwrap(),
-                values_of_or_empty(matches.values_of("command_args"))
+                matches.values_of("command_args")
+                    .map(|vals| vals.collect())
+                    .unwrap_or_default()
             ),
         ("", None) => {
             println!("Please specify a subcommand");
