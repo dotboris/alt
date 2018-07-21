@@ -4,7 +4,7 @@ use std::env;
 use std::os::unix::process::CommandExt;
 use std::process::Command;
 
-pub fn run<'a>(command: &str, command_args: Vec<&str>) {
+pub fn run(command: &str, command_args: &Vec<String>) {
     let system_command = String::from(command);
 
     let command_def = def_file::load_for(&command);
