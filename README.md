@@ -6,7 +6,25 @@ Command to switch between different versions of commands.
 
 ## Installation
 
-TODO: howto install
+Currently, `alt` doesn't have a binary release. If you want to use `alt`, you'll
+need to build it from source.
+
+1.  Setup a rust development environment
+
+    See: https://doc.rust-lang.org/book/second-edition/ch01-01-installation.html
+
+1.  Clone this repository
+
+    ```sh
+    git clone https://github.com/dotboris/alt.git
+    cd alt
+    ```
+
+1.  Build & Install `alt` from source
+
+    ```sh
+    cargo install
+    ```
 
 ## Usage
 
