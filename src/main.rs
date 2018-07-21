@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate clap;
+extern crate console;
 
 mod config;
 mod use_file;
