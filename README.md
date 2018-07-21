@@ -26,9 +26,26 @@ need to build it from source.
     cargo install
     ```
 
+1.  Check if `alt` is available
+
+    ```sh
+    alt --help
+    ```
+
 ## Usage
 
-TODO: usage
+In order to use `alt`, there are two things that you need to do:
+
+1.  Tell `alt` about the commands on your system and their different versions
+1.  Tell `alt` what version of a given command you want to use in a directory
+
+### Defining commands and versions
+
+TODO
+
+### Switching command versions
+
+TODO
 
 ## Development
 
