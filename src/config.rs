@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 use std::env;
 
 const DEFAULT_HOME: &'static str = ".config/alt";
+const DEFAULT_SHIM_DIR: &'static str = ".local/alt/shims";
 
 pub fn home_dir() -> PathBuf {
     match env::var("ALT_HOME") {
@@ -11,6 +12,15 @@ pub fn home_dir() -> PathBuf {
             Path::new(&home).join(DEFAULT_HOME)
         },
     }
+}
+
+pub fn shim_dir() -> PathBuf {
+    env::var("ALT_SHIM_DIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| {
+            let home = env::var("HOME").unwrap();
+            Path::new(&home).join(DEFAULT_SHIM_DIR)
+        })
 }
 
 #[cfg(test)]

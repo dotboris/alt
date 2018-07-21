@@ -1,4 +1,8 @@
 use std::path::Path;
+use config;
+use std::fs;
+use std::os::unix::fs as unix_fs;
+use std::io;
 
 pub fn is_shim(arg0: &str) -> bool {
     get_command(arg0) != "alt"
@@ -9,6 +13,18 @@ pub fn get_command(arg0: &str) -> &str {
         .file_stem()
         .and_then(|stem| stem.to_str())
         .unwrap()
+}
+
+pub fn make_shim(command: &str, exe: &Path) -> Result<(), io::Error> {
+    let root = config::shim_dir();
+    let link = root.join(command);
+    fs::create_dir_all(root)?;
+
+    if link.exists() && fs::symlink_metadata(&link)?.file_type().is_symlink() {
+        fs::remove_file(&link)?;
+    }
+
+    unix_fs::symlink(exe, link)
 }
 
 #[cfg(test)]

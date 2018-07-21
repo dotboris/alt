@@ -25,3 +25,13 @@ pub fn load_for(command: &str) -> CommandVersions {
         Err(_) => CommandVersions::new(),
     }
 }
+
+pub fn load() -> CommandDefs {
+    let path = config::home_dir().join(DEFS_FILE_NAME);
+    if path.is_file() {
+        let bytes = fs::read(path).expect("failed to read defs file");
+        toml::from_slice(&bytes).expect("failted to parse defs file toml")
+    } else {
+        CommandDefs::new()
+    }
+}

@@ -1,4 +1,5 @@
 use exec_cmd;
+use shim_cmd;
 use std::process;
 
 pub fn run() {
@@ -9,6 +10,9 @@ pub fn run() {
             (about: "Run the specipied command")
             (@arg command: +required "The command to run")
             (@arg command_args: ... "Arguments to pass to the command")
+        )
+        (@subcommand shim =>
+            (about: "Generate shims for all managed commands")
         )
     ).get_matches();
 
@@ -24,6 +28,7 @@ pub fn run() {
                 &args
             )
         },
+        ("shim", Some(_)) => shim_cmd::run(),
         ("", None) => {
             println!("Please specify a subcommand");
             // TODO: how do I display the full usage here?
