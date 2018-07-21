@@ -7,7 +7,7 @@ pub fn run() {
         (version: crate_version!())
         (about: "Switch between different versions of commands")
         (@subcommand exec =>
-            (about: "Run the specipied command")
+            (about: "Run the given command")
             (@arg command: +required "The command to run")
             (@arg command_args: ... "Arguments to pass to the command")
         )
