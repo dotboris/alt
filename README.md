@@ -32,6 +32,13 @@ need to build it from source.
     alt --help
     ```
 
+1.  Add the shims directory to your `PATH` environment variable
+
+    ```sh
+    # in ~/.zshrc or ~/.bashrc
+    export PATH="$HOME/.local/alt/shims:$PATH"
+    ```
+
 ## Usage
 
 In order to use `alt`, there are two things that you need to do:
@@ -41,11 +48,53 @@ In order to use `alt`, there are two things that you need to do:
 
 ### Defining commands and versions
 
-TODO
+`alt` looks for commands and their versions in the `~/.config/alt/defs.toml`
+file. Open that file with your text editor of choice.
+(create it if it's not already there)
+
+Here's an example of a command definition file:
+
+```toml
+# A section defines a command
+# Here we define the python command
+[python]
+# Under a section we associate a version name (in this case 2 and 3) to executable.
+# You can name versions whatever you want. We use version numbers because it's simple
+2 = "/usr/bin/python2"
+3 = "/usr/bin/python3"
+
+# Another section defining the node command
+[node]
+4 = "/path/to/node4/bin/node
+6 = "/path/to/node6/bin/node
+8 = "/path/to/node8/bin/node
+```
+
+When you make changes to the command definitions, remember to generate the shims.
+
+```sh
+alt shim
+```
 
 ### Switching command versions
 
-TODO
+Currently, `alt` only supports switching versions of commands based on the
+current directory. The idea is to let you define which versions of a command you
+want to use for your project.
+
+1.  Go to the root of a directory tree where you want to use a different command
+
+    ```sh
+    cd path/to/your/project
+    ```
+
+1.  Create a file named `.alt.toml`
+
+    ```toml
+    # Associate a command to a version defined in the command definition file
+    node = "8"
+    python = "3"
+    ```
 
 ## Development
 
