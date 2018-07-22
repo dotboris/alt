@@ -1,12 +1,13 @@
 extern crate toml;
 
 use std::collections::HashMap;
+use std::path::*;
 use std::fs;
 use config;
 
 const DEFS_FILE_NAME: &'static str = "defs.toml";
 
-pub type CommandVersions = HashMap<String, String>;
+pub type CommandVersions = HashMap<String, PathBuf>;
 pub type CommandDefs = HashMap<String, CommandVersions>;
 
 pub fn load() -> CommandDefs {
@@ -19,7 +20,7 @@ pub fn load() -> CommandDefs {
     }
 }
 
-pub fn find_bin<'a>(defs: &'a CommandDefs, command: &str, version: &str) -> Option<&'a String> {
+pub fn find_bin<'a>(defs: &'a CommandDefs, command: &str, version: &str) -> Option<&'a PathBuf> {
     defs.get(command).and_then(|def| def.get(version))
 }
 
@@ -40,8 +41,8 @@ mod tests {
     fn find_bin_returns_none_when_command_not_defined() {
         let mut defs = CommandDefs::new();
         let mut ruby = CommandVersions::new();
-        ruby.insert("2.4".to_string(), "/path/to/ruby2.4/bin/ruby".to_string());
-        ruby.insert("2.5".to_string(), "/path/to/ruby2.5/bin/ruby".to_string());
+        ruby.insert("2.4".to_string(), PathBuf::from("/path/to/ruby2.4/bin/ruby"));
+        ruby.insert("2.5".to_string(), PathBuf::from("/path/to/ruby2.5/bin/ruby"));
         defs.insert("ruby".to_string(), ruby);
 
         let res = find_bin(&defs, "python", "2");
@@ -53,8 +54,8 @@ mod tests {
     fn find_bin_returns_none_when_version_not_defined() {
         let mut defs = CommandDefs::new();
         let mut ruby = CommandVersions::new();
-        ruby.insert("2.4".to_string(), "/path/to/ruby2.4/bin/ruby".to_string());
-        ruby.insert("2.5".to_string(), "/path/to/ruby2.5/bin/ruby".to_string());
+        ruby.insert("2.4".to_string(), PathBuf::from("/path/to/ruby2.4/bin/ruby"));
+        ruby.insert("2.5".to_string(), PathBuf::from("/path/to/ruby2.5/bin/ruby"));
         defs.insert("ruby".to_string(), ruby);
 
         let res = find_bin(&defs, "ruby", "1.9");
@@ -66,14 +67,14 @@ mod tests {
     fn find_bin_returns_path_when_command_and_version_defined() {
         let mut defs = CommandDefs::new();
         let mut ruby = CommandVersions::new();
-        ruby.insert("2.4".to_string(), "/path/to/ruby2.4/bin/ruby".to_string());
-        ruby.insert("2.5".to_string(), "/path/to/ruby2.5/bin/ruby".to_string());
+        ruby.insert("2.4".to_string(), PathBuf::from("/path/to/ruby2.4/bin/ruby"));
+        ruby.insert("2.5".to_string(), PathBuf::from("/path/to/ruby2.5/bin/ruby"));
         defs.insert("ruby".to_string(), ruby);
 
         let res = find_bin(&defs, "ruby", "2.4");
 
         assert_eq!(
-            Some(&"/path/to/ruby2.4/bin/ruby".to_string()),
+            Some(&PathBuf::from("/path/to/ruby2.4/bin/ruby")),
             res
         )
     }
