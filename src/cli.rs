@@ -1,5 +1,6 @@
 use exec_cmd;
 use shim_cmd;
+use which_cmd;
 use std::process;
 
 pub fn run() {
@@ -13,6 +14,10 @@ pub fn run() {
         )
         (@subcommand shim =>
             (about: "Generate shims for all managed commands")
+        )
+        (@subcommand which =>
+            (about: "Print the resolved path of a command")
+            (@arg command: +required "Command to look up")
         )
     ).get_matches();
 
@@ -28,6 +33,8 @@ pub fn run() {
                 &args
             )
         },
+        ("which", Some(matches)) =>
+            which_cmd::run(matches.value_of("command").unwrap()),
         ("shim", Some(_)) => shim_cmd::run(),
         ("", None) => {
             println!("Please specify a subcommand");

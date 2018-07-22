@@ -7,8 +7,10 @@ mod use_file;
 mod def_file;
 mod exec_cmd;
 mod shim_cmd;
+mod which_cmd;
 mod cli;
 mod shim;
+mod command;
 
 use std::env;
 
