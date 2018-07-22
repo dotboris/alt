@@ -1,7 +1,7 @@
 use exec_cmd;
 use shim_cmd;
 use which_cmd;
-use std::process;
+use clap::AppSettings;
 
 pub fn run() {
     let matches = clap_app!(alt =>
@@ -19,7 +19,9 @@ pub fn run() {
             (about: "Print the resolved path of a command")
             (@arg command: +required "Command to look up")
         )
-    ).get_matches();
+    )
+        .setting(AppSettings::SubcommandRequiredElseHelp)
+        .get_matches();
 
     match matches.subcommand() {
         ("exec", Some(matches)) => {
@@ -36,11 +38,6 @@ pub fn run() {
         ("which", Some(matches)) =>
             which_cmd::run(matches.value_of("command").unwrap()),
         ("shim", Some(_)) => shim_cmd::run(),
-        ("", None) => {
-            println!("Please specify a subcommand");
-            // TODO: how do I display the full usage here?
-            process::exit(1);
-        },
         _ => unreachable!(),
     };
 }
