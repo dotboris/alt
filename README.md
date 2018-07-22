@@ -65,9 +65,9 @@ Here's an example of a command definition file:
 
 # Another section defining the node command
 [node]
-4 = "/path/to/node4/bin/node
-6 = "/path/to/node6/bin/node
-8 = "/path/to/node8/bin/node
+4 = "/path/to/node4/bin/node"
+6 = "/path/to/node6/bin/node"
+8 = "/path/to/node8/bin/node"
 ```
 
 When you make changes to the command definitions, remember to generate the shims.
