@@ -1,5 +1,7 @@
 # alt
 
+[![Build Status](https://travis-ci.org/dotboris/alt.svg?branch=master)](https://travis-ci.org/dotboris/alt)
+
 Tool for switching between different versions of commands.
 
 ## Installation
