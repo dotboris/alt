@@ -17,7 +17,11 @@ pub fn get_command(arg0: &str) -> &str {
 
 pub fn init_shim_dir() -> Result<(), io::Error> {
     let root = config::shim_dir();
-    fs::remove_dir_all(&root)?;
+
+    if root.is_dir() {
+        fs::remove_dir_all(&root)?;
+    }
+
     fs::create_dir_all(&root)
 }
 
