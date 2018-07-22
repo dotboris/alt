@@ -4,6 +4,8 @@ use std::env;
 use console::style;
 
 pub fn run() {
+    shim::init_shim_dir().expect("failed to init shim dir");
+
     let defs = def_file::load();
     for command in defs.keys() {
         let res = shim::make_shim(command, &env::current_exe().unwrap());

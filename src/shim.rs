@@ -15,15 +15,15 @@ pub fn get_command(arg0: &str) -> &str {
         .unwrap()
 }
 
+pub fn init_shim_dir() -> Result<(), io::Error> {
+    let root = config::shim_dir();
+    fs::remove_dir_all(&root)?;
+    fs::create_dir_all(&root)
+}
+
 pub fn make_shim(command: &str, exe: &Path) -> Result<(), io::Error> {
     let root = config::shim_dir();
     let link = root.join(command);
-    fs::create_dir_all(root)?;
-
-    if link.exists() && fs::symlink_metadata(&link)?.file_type().is_symlink() {
-        fs::remove_file(&link)?;
-    }
-
     unix_fs::symlink(exe, link)
 }
 
