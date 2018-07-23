@@ -1,6 +1,7 @@
 use exec_cmd;
 use shim_cmd;
 use which_cmd;
+use scan_cmd;
 use clap::AppSettings;
 
 pub fn run() {
@@ -18,6 +19,10 @@ pub fn run() {
         (@subcommand which =>
             (about: "Print the resolved path of a command")
             (@arg command: +required "Command to look up")
+        )
+        (@subcommand scan =>
+            (about: "Scan for different versions of the given command")
+            (@arg command: +required "Command to scan for")
         )
     )
         .setting(AppSettings::SubcommandRequiredElseHelp)
@@ -38,6 +43,8 @@ pub fn run() {
         ("which", Some(matches)) =>
             which_cmd::run(matches.value_of("command").unwrap()),
         ("shim", Some(_)) => shim_cmd::run(),
+        ("scan", Some(matches)) =>
+            scan_cmd::run(matches.value_of("command").unwrap()),
         _ => unreachable!(),
     };
 }

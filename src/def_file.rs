@@ -3,6 +3,7 @@ extern crate toml;
 use std::collections::HashMap;
 use std::path::*;
 use std::fs;
+use std::io;
 use config;
 
 const DEFS_FILE_NAME: &'static str = "defs.toml";
@@ -18,6 +19,15 @@ pub fn load() -> CommandDefs {
     } else {
         CommandDefs::new()
     }
+}
+
+pub fn save(defs: &CommandDefs) -> Result<(), io::Error> {
+    let home_dir = config::home_dir();
+
+    let toml = toml::to_string_pretty(defs)
+        .expect("failed to serialize defs toml");
+    fs::create_dir_all(&home_dir)?;
+    fs::write(&home_dir.join(DEFS_FILE_NAME), toml)
 }
 
 pub fn find_bin<'a>(defs: &'a CommandDefs, command: &str, version: &str) -> Option<&'a PathBuf> {
