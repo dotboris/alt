@@ -48,6 +48,20 @@ In order to use `alt`, there are two things that you need to do:
 
 ### Defining commands and versions
 
+#### Automatic scanning
+
+`alt` can automatically scan your system to find different versions of command.
+
+```sh
+alt scan some-command
+```
+
+Currently, scanning supports:
+
+- Looking through `PATH` for commands with version suffixes
+
+#### Manual definition
+
 `alt` looks for commands and their versions in the `~/.config/alt/defs.toml`
 file. Open that file with your text editor of choice.
 (create it if it's not already there)
