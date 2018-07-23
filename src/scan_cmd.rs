@@ -1,8 +1,12 @@
+extern crate toml;
+extern crate dialoguer;
+
 use config;
 use std::env;
 use std::fs;
 use std::path::*;
 use regex::Regex;
+use std::process;
 
 lazy_static! {
     static ref COMMAND_VERSION_REGEX: Regex =
@@ -27,10 +31,32 @@ fn parse_command_version(bin: PathBuf) -> Option<CommandVersion> {
         })
 }
 
+fn prompt_versions(versions: &Vec<CommandVersion>) -> Vec<usize> {
+    let items: Vec<_> = versions.iter()
+        .map(|version| format!("{} {} ({})",
+            version.command, version.version, version.path.to_str().unwrap()
+        ))
+        .collect();
+
+    let items_refs: Vec<_> = items.iter().map(String::as_ref).collect();
+
+    println!("Here are the version I found.");
+    println!("  ↑/↓,j/k: move cursor");
+    println!("  <space>: toggle keep");
+    println!("  <enter>: confirm");
+    println!();
+
+    dialoguer::Checkboxes::new()
+        .items(items_refs.as_slice())
+        .clear(false)
+        .interact()
+        .unwrap()
+}
+
 pub fn run(command: &str) {
     let shim_dir = config::shim_dir();
     let path = env::var("PATH").expect("env var PATH is not defined");
-    let paths: Vec<_> = env::split_paths(&path)
+    let versions: Vec<_> = env::split_paths(&path)
         .filter(|p| p != &shim_dir)
         .flat_map(|p| fs::read_dir(p).unwrap())
         .map(|bin| bin.unwrap().path())
@@ -38,5 +64,10 @@ pub fn run(command: &str) {
         .filter(|c| c.command == command)
         .collect();
 
-    println!("{:#?}", paths);
+    if versions.is_empty() {
+        println!("Sorry, could not find any versions of {}", command);
+        process::exit(1);
+    } else {
+        let choices = prompt_versions(&versions);
+    }
 }
