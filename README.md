@@ -116,4 +116,28 @@ TODO: development doc
 
 ## Relase
 
-TODO: Release doc
+1.  Update version in `Cargo.toml`
+1.  Update `Cargo.lock`
+
+    ```sh
+    cargo build
+    ```
+
+1.  Commit your version bump
+
+    ```sh
+    git add .
+    git commit -m 'bump version to v{your version number}'
+    ```
+
+1.  Tag a new version
+
+    ```sh
+    git tag v{your-version-number}
+    ```
+
+1.  Push everything
+
+    ```sh
+    git push --tags origin master
+    ```
