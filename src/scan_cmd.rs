@@ -7,6 +7,7 @@ use std::fs;
 use std::path::*;
 use regex::Regex;
 use std::process;
+use def_file;
 
 lazy_static! {
     static ref COMMAND_VERSION_REGEX: Regex =
@@ -69,5 +70,23 @@ pub fn run(command: &str) {
         process::exit(1);
     } else {
         let choices = prompt_versions(&versions);
+
+        if choices.is_empty() {
+            println!("Looks like you didn't choose anything.");
+            println!("Did you forget to select versions with <space>?");
+        } else {
+            let mut defs = def_file::load();
+            {
+                let def = defs.entry(command.to_string())
+                    .or_insert_with(|| def_file::CommandVersions::new());
+
+                for choice in choices {
+                    let version = &versions[choice];
+                    def.insert(version.version.clone(), version.path.clone());
+                }
+            }
+            def_file::save(&defs)
+                .expect("failed to save defs file");
+        }
     }
 }
