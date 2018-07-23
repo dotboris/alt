@@ -29,7 +29,10 @@ pub fn make_shim(command: &str, exe: &Path) -> Result<(), io::Error> {
     let root = config::shim_dir();
     fs::create_dir_all(&root)?;
     let link = root.join(command);
-    unix_fs::symlink(exe, link)
+    if link.exists() {
+        fs::remove_file(&link)?;
+    }
+    unix_fs::symlink(exe, &link)
 }
 
 #[cfg(test)]
