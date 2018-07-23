@@ -12,10 +12,10 @@ use shim;
 
 lazy_static! {
     static ref COMMAND_VERSION_REGEX: Regex =
-        Regex::new(r"^(?P<command>.+[^\d.-])-?(?P<version>[.\d]+)$").unwrap();
+        Regex::new(r"^(?P<command>.+[^\d.-])-?(?P<version>\d+(?:\.\d+)*)$").unwrap();
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 struct CommandVersion {
     command: String,
     version: String,
@@ -92,5 +92,58 @@ pub fn run(command: &str) {
             shim::make_shim(command, env::current_exe().unwrap().as_path())
                 .expect(&format!("failed to create shim for {}", command));
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn command_only_should_not_parse() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/python"));
+        assert_eq!(None, res)
+    }
+
+    #[test]
+    fn command_with_simple_number_suffix_should_parse() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/python2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("python"),
+            version: String::from("2"),
+            path: PathBuf::from("/usr/bin/python2"),
+        }))
+    }
+
+    #[test]
+    fn command_with_version_suffix_should_parse() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/python2.7"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("python"),
+            version: String::from("2.7"),
+            path: PathBuf::from("/usr/bin/python2.7"),
+        }))
+    }
+
+    #[test]
+    fn command_with_version_suffix_and_dash_should_parse() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/ruby-2.5"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("ruby"),
+            version: String::from("2.5"),
+            path: PathBuf::from("/usr/bin/ruby-2.5"),
+        }))
+    }
+
+    #[test]
+    fn command_with_text_suffix_should_not_parse() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/python-config"));
+        assert_eq!(res, None);
+    }
+
+    #[test]
+    fn command_trailing_period_in_suffix_should_not_parse() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/something-2.1."));
+        assert_eq!(res, None);
     }
 }
