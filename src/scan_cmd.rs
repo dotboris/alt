@@ -8,6 +8,7 @@ use std::path::*;
 use regex::Regex;
 use std::process;
 use def_file;
+use shim;
 
 lazy_static! {
     static ref COMMAND_VERSION_REGEX: Regex =
@@ -87,6 +88,9 @@ pub fn run(command: &str) {
             }
             def_file::save(&defs)
                 .expect("failed to save defs file");
+
+            shim::make_shim(command, env::current_exe().unwrap().as_path())
+                .expect(&format!("failed to create shim for {}", command));
         }
     }
 }
