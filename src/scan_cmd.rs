@@ -42,7 +42,7 @@ fn prompt_versions(versions: &Vec<CommandVersion>) -> Vec<usize> {
 
     let items_refs: Vec<_> = items.iter().map(String::as_ref).collect();
 
-    println!("Here are the version I found.");
+    println!("Here are the versions I found.");
     println!("  ↑/↓,j/k: move cursor");
     println!("  <space>: toggle keep");
     println!("  <enter>: confirm");
