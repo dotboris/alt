@@ -48,8 +48,6 @@ In order to use `alt`, there are two things that you need to do:
 
 ### Defining commands and versions
 
-#### Automatic scanning
-
 `alt` can automatically scan your system to find different versions of command.
 
 ```sh
@@ -60,7 +58,8 @@ Currently, scanning supports:
 
 - Looking through `PATH` for commands with version suffixes
 
-#### Manual definition
+If `alt` can't find your command versions automatically, you can define them
+by hand with:
 
 ```sh
 alt def some-command version-name /path/to/command/bin
