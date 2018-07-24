@@ -78,7 +78,21 @@ alt use some-command
 
 ## Development
 
-TODO: development doc
+### Setup
+
+See: https://doc.rust-lang.org/book/second-edition/ch01-01-installation.html
+
+### Run
+
+```sh
+cargo run ...
+```
+
+### Test
+
+```sh
+cargo test
+```
 
 ## Relase
 
