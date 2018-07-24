@@ -4,6 +4,7 @@ use which_cmd;
 use scan_cmd;
 use use_cmd;
 use show_cmd;
+use def_cmd;
 use clap::AppSettings;
 
 pub fn run() {
@@ -34,6 +35,12 @@ pub fn run() {
         (@subcommand show =>
             (about: "Print commands and their versions")
         )
+        (@subcommand def =>
+            (about: "Define a new version")
+            (@arg command: +required "Command to define the version for")
+            (@arg version: +required "The name of the version")
+            (@arg bin: +required "Path to the executable for the version")
+        )
     )
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
@@ -61,6 +68,12 @@ pub fn run() {
                 matches.value_of("version")
             ),
         ("show", Some(_)) => show_cmd::run(),
+        ("def", Some(matches)) =>
+            def_cmd::run(
+                matches.value_of("command").unwrap(),
+                matches.value_of("version").unwrap(),
+                matches.value_of("bin").unwrap()
+            ),
         _ => unreachable!(),
     };
 }
