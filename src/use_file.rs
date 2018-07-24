@@ -26,16 +26,15 @@ pub fn find(start: &Path) -> Option<PathBuf> {
 
 pub fn find_or_dir(start: &Path) -> PathBuf {
     find(start)
-        .unwrap_or_else(|| PathBuf::from(start))
+        .unwrap_or_else(|| start.join(FILE_NAME))
 }
 
 pub type UseFile = HashMap<String, String>;
 
-pub fn load(path: &Path) -> UseFile {
-    let contents = fs::read(path)
-        .expect("failed to read use file");
-
-    toml::from_slice(&contents).unwrap()
+pub fn load(path: &Path) -> Option<UseFile> {
+    fs::read(path)
+        .ok()
+        .map(|contents| toml::from_slice(&contents).unwrap())
 }
 
 pub fn save(use_def: &UseFile, path: &Path) -> Result<(), io::Error> {
