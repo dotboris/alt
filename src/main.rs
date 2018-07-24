@@ -18,6 +18,7 @@ mod def_cmd;
 mod cli;
 mod shim;
 mod command;
+mod scan;
 
 use std::env;
 
