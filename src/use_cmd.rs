@@ -1,7 +1,10 @@
+extern crate dialoguer;
+
 use def_file;
 use use_file;
 use std::process;
 use std::env;
+use self::dialoguer::Select;
 
 pub fn run(command: &str, arg_version: Option<&str>) {
     let defs = def_file::load();
@@ -13,8 +16,8 @@ pub fn run(command: &str, arg_version: Option<&str>) {
             process::exit(1);
         });
 
-    // TODO: prompt version if missing
-    let version = arg_version.unwrap();
+    let version = arg_version
+        .unwrap_or_else(|| prompt_version(command_versions));
     let bin = command_versions.get(version)
         .unwrap_or_else(|| {
             println!("Unknown version {} for command {}", version, command);
@@ -36,4 +39,27 @@ pub fn run(command: &str, arg_version: Option<&str>) {
         bin.to_str().unwrap(),
         use_file.parent().unwrap().to_str().unwrap()
     );
+}
+
+fn prompt_version(versions: &def_file::CommandVersions) -> &str {
+    let versions_vec: Vec<_> = versions.iter().collect();
+    let items: Vec<_> = versions_vec.iter()
+        .map(|(version, bin)| format!("{} ({})",
+            version, bin.to_str().unwrap()
+        ))
+        .collect();
+
+    println!("Please select a version to use");
+    println!("  ↑/↓,j/k: move cursor");
+    println!("  <enter>: select");
+    println!();
+
+    let items_refs: Vec<&str> = items.iter().map(String::as_ref).collect();
+    let choice = Select::new()
+        .items(items_refs.as_slice())
+        .interact()
+        .unwrap();
+
+    let (res, _) = versions_vec[choice];
+    res
 }
