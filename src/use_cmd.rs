@@ -27,7 +27,7 @@ pub fn run(command: &str, arg_version: Option<&str>) {
 
     let cwd = env::current_dir().unwrap();
     let use_file = use_file::find_or_dir(&cwd);
-    let mut use_def = use_file::load(&use_file);
+    let mut use_def = use_file::load(&use_file).unwrap_or_default();
     use_def.insert(String::from(command), String::from(version));
     use_file::save(&use_def, &use_file)
         .expect(&format!("Failed to write use file to {}", use_file.to_str().unwrap()));
