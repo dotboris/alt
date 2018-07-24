@@ -92,23 +92,14 @@ alt shim
 
 ### Switching command versions
 
-Currently, `alt` only supports switching versions of commands based on the
-current directory. The idea is to let you define which versions of a command you
-want to use for your project.
+`alt` uses the directory you're currently in to figure out which versions of
+commands to run. When switching versions, everything is related to the current
+directory.
 
-1.  Go to the root of a directory tree where you want to use a different command
-
-    ```sh
-    cd path/to/your/project
-    ```
-
-1.  Create a file named `.alt.toml`
-
-    ```toml
-    # Associate a command to a version defined in the command definition file
-    node = "8"
-    python = "3"
-    ```
+```sh
+cd directory/of/interest
+alt use some-command
+```
 
 ## Development
 
