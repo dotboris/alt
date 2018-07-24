@@ -26,8 +26,8 @@ pub fn run() {
             (@arg command: +required "Command to scan for")
         )
         (@subcommand use =>
-            (about: "Use a specific version of a command")
-            (@arg command: +required "Command who's version to select")
+            (about: "Swtich the version of a command")
+            (@arg command: +required "Command who's version to switch")
             (@arg version: "Version to use (will prompt if ommitted)")
         )
     )
