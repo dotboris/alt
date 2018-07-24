@@ -3,6 +3,7 @@ use shim_cmd;
 use which_cmd;
 use scan_cmd;
 use use_cmd;
+use show_cmd;
 use clap::AppSettings;
 
 pub fn run() {
@@ -30,6 +31,9 @@ pub fn run() {
             (@arg command: +required "Command who's version to switch")
             (@arg version: "Version to use (will prompt if ommitted)")
         )
+        (@subcommand show =>
+            (about: "Print commands and their versions")
+        )
     )
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
@@ -56,6 +60,7 @@ pub fn run() {
                 matches.value_of("command").unwrap(),
                 matches.value_of("version")
             ),
+        ("show", Some(_)) => show_cmd::run(),
         _ => unreachable!(),
     };
 }
