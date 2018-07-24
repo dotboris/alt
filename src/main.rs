@@ -12,6 +12,7 @@ mod exec_cmd;
 mod shim_cmd;
 mod which_cmd;
 mod scan_cmd;
+mod use_cmd;
 mod cli;
 mod shim;
 mod command;

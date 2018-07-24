@@ -2,6 +2,7 @@ use exec_cmd;
 use shim_cmd;
 use which_cmd;
 use scan_cmd;
+use use_cmd;
 use clap::AppSettings;
 
 pub fn run() {
@@ -24,6 +25,11 @@ pub fn run() {
             (about: "Scan for different versions of the given command")
             (@arg command: +required "Command to scan for")
         )
+        (@subcommand use =>
+            (about: "Swtich the version of a command")
+            (@arg command: +required "Command who's version to switch")
+            (@arg version: "Version to use (will prompt if ommitted)")
+        )
     )
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
@@ -45,6 +51,11 @@ pub fn run() {
         ("shim", Some(_)) => shim_cmd::run(),
         ("scan", Some(matches)) =>
             scan_cmd::run(matches.value_of("command").unwrap()),
+        ("use", Some(matches)) =>
+            use_cmd::run(
+                matches.value_of("command").unwrap(),
+                matches.value_of("version")
+            ),
         _ => unreachable!(),
     };
 }

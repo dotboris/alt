@@ -4,7 +4,7 @@ use use_file;
 use config;
 
 pub fn find_selected_version(command: &str) -> Option<String> {
-    let file = use_file::find(env::current_dir().unwrap())
+    let file = use_file::find(&env::current_dir().unwrap())
         .map(|path| use_file::load(&path));
 
     file.as_ref()
