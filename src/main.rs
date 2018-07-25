@@ -4,6 +4,7 @@ extern crate console;
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;
+extern crate glob;
 
 mod config;
 mod use_file;
@@ -18,6 +19,7 @@ mod def_cmd;
 mod cli;
 mod shim;
 mod command;
+mod scan;
 
 use std::env;
 
