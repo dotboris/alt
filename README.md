@@ -57,6 +57,7 @@ alt scan some-command
 Currently, scanning supports:
 
 - Looking through `PATH` for commands with version suffixes
+- Looking through homebrew versioned packages (ex: `node@8`)
 
 If `alt` can't find your command versions automatically, you can define them
 by hand with:
