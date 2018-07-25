@@ -41,3 +41,33 @@ pub fn scan(command: &str) -> Vec<CommandVersion> {
         .filter(|c| c.command == command)
         .collect()
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_version_path_node() {
+        assert_eq!(
+            parse_version_path(PathBuf::from("/usr/local/opt/node@8/bin/node")),
+            CommandVersion {
+                command: "node".to_string(),
+                version: "8".to_string(),
+                path: PathBuf::from("/usr/local/opt/node@8/bin/node"),
+            }
+        );
+    }
+
+    #[test]
+    fn test_parse_version_path_php() {
+        assert_eq!(
+            parse_version_path(PathBuf::from("/usr/local/opt/php@5.6/bin/php")),
+            CommandVersion {
+                command: "php".to_string(),
+                version: "5.6".to_string(),
+                path: PathBuf::from("/usr/local/opt/php@5.6/bin/php"),
+            }
+        );
+    }
+}
