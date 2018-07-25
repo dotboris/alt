@@ -4,6 +4,7 @@ extern crate console;
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;
+extern crate glob;
 
 mod config;
 mod use_file;

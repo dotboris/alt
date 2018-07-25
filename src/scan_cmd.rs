@@ -36,7 +36,8 @@ fn prompt_versions(versions: &Vec<CommandVersion>) -> Vec<usize> {
 
 pub fn run(command: &str) {
     let scans = vec![
-        scan::path_suffix::scan(command)
+        scan::path_suffix::scan(command),
+        scan::homebrew::scan(command),
     ];
     let is_empty = scans.iter()
         .all(|v| v.is_empty());
