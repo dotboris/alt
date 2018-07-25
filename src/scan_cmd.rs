@@ -1,11 +1,7 @@
 extern crate toml;
 extern crate dialoguer;
 
-use config;
 use std::env;
-use std::fs;
-use std::path::*;
-use regex::Regex;
 use std::process;
 use def_file;
 use shim;
