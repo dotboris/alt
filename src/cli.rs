@@ -29,8 +29,14 @@ pub fn run() {
         )
         (@subcommand use =>
             (about: "Swtich the version of a command")
+            (after_help:
+"EXAMPLES:
+    alt use node 8        Use version 8 of node
+    alt use node          Prompt for a version of node to use
+    alt use node system   Use the system version of node"
+            )
             (@arg command: +required "Command who's version to switch")
-            (@arg version: "Version to use (will prompt if ommitted)")
+            (@arg version: "Version to use (optional)")
         )
         (@subcommand show =>
             (about: "Print commands and their versions")
