@@ -58,7 +58,8 @@ pub fn run(command: &str, arg_version: Option<&str>) {
 }
 
 fn prompt_version(versions: &def_file::CommandVersions) -> &str {
-    let versions_vec: Vec<_> = versions.iter().collect();
+    let mut versions_vec: Vec<_> = versions.iter().collect();
+    versions_vec.sort();
     let version_strings: Vec<_> = versions_vec.iter()
         .map(|(version, bin)| format!("{} ({})",
             version, bin.to_str().unwrap()
