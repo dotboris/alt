@@ -59,7 +59,7 @@ pub fn run(command: &str, arg_version: Option<&str>) {
 
 fn prompt_version(versions: &def_file::CommandVersions) -> &str {
     let versions_vec: Vec<_> = versions.iter().collect();
-    let items: Vec<_> = versions_vec.iter()
+    let version_strings: Vec<_> = versions_vec.iter()
         .map(|(version, bin)| format!("{} ({})",
             version, bin.to_str().unwrap()
         ))
@@ -70,12 +70,16 @@ fn prompt_version(versions: &def_file::CommandVersions) -> &str {
     println!("  <enter>: select");
     println!();
 
-    let items_refs: Vec<&str> = items.iter().map(String::as_ref).collect();
+    let mut items_refs: Vec<&str> = version_strings.iter().map(String::as_ref).collect();
+    items_refs.insert(0, "system version");
     let choice = Select::new()
         .items(items_refs.as_slice())
+        .default(0)
         .interact()
         .unwrap();
 
-    let (res, _) = versions_vec[choice];
-    res
+    match choice {
+        0 => "system",
+        i => versions_vec[i - 1].0,
+    }
 }
