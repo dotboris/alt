@@ -37,8 +37,32 @@ fn system_with_no_use() {
     let env = TestEnv::new();
     def_all(&env);
 
-    env.command("alfa")
+    env.command("bravo")
         .assert()
         .success()
-        .stdout("alfa system\n");
+        .stdout("bravo system\n");
+}
+
+#[test]
+fn reset_with_use_system() {
+    let env = TestEnv::new();
+    def_all(&env);
+
+    env._use("charlie", "3")
+        .assert()
+        .success();
+
+    env.command("charlie")
+        .assert()
+        .success()
+        .stdout("charlie3\n");
+
+    env._use("charlie", "system")
+        .assert()
+        .success();
+
+    env.command("charlie")
+        .assert()
+        .success()
+        .stdout("charlie system\n");
 }
