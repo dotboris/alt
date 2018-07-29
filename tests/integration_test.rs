@@ -3,6 +3,7 @@ extern crate assert_cmd;
 use assert_cmd::prelude::*;
 mod test_env;
 use test_env::TestEnv;
+use std::fs;
 
 fn def_all(env: &TestEnv) {
     for command in &["alfa", "bravo", "charlie"] {
@@ -65,4 +66,50 @@ fn reset_with_use_system() {
         .assert()
         .success()
         .stdout("charlie system\n");
+}
+
+#[test]
+fn use_with_subdir() {
+    let env = TestEnv::new();
+    def_all(&env);
+
+    env._use("alfa", "3")
+        .assert()
+        .success();
+
+    let subdir = env.root.join("subdir");
+    fs::create_dir(&subdir).unwrap();
+    env.command("alfa")
+        .current_dir(&subdir)
+        .assert()
+        .success()
+        .stdout("alfa3\n");
+}
+
+#[test]
+fn use_with_subdir_overwrite() {
+    let env = TestEnv::new();
+    def_all(&env);
+
+    env._use("bravo", "1")
+        .assert()
+        .success();
+
+    env.command("bravo")
+        .assert()
+        .success()
+        .stdout("bravo1\n");
+
+    let subdir = env.root.join("subdir");
+    fs::create_dir(&subdir).unwrap();
+
+    env._use("bravo", "2")
+        .assert()
+        .success();
+
+    env.command("bravo")
+        .current_dir(&subdir)
+        .assert()
+        .success()
+        .stdout("bravo2\n");
 }
