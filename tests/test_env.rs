@@ -34,7 +34,7 @@ pub fn set_env<'a>(c: &'a mut Command, test_env: &Path) -> &'a mut Command {
     c.env("PATH", test_env.join("shims"))
 }
 
-pub fn fixture_command_path(name: &str, version: &i32) -> PathBuf {
+pub fn fixture_command_path(name: &str, version: i32) -> PathBuf {
     env::current_dir()
         .unwrap()
         .join("fixtures/commands")
