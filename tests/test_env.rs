@@ -10,6 +10,7 @@ use std::path::*;
 use std::process::Command;
 use assert_cmd::cargo;
 
+#[derive(Debug)]
 pub struct TestEnv {
     pub root: PathBuf,
     project_root: PathBuf,
@@ -36,9 +37,22 @@ impl TestEnv {
         }
     }
 
+    pub fn fixture_path(&self, command: &str, version: i32) -> PathBuf {
+        self.project_root
+            .join("fixtures/commands")
+            .join(format!("{}{}", command, version))
+    }
+
     pub fn command<T: AsRef<OsStr>>(&self, name: T) -> Command {
         let mut c = Command::new(name);
-        set_env(&mut c, self);
+        c.current_dir(&self.root);
+        c.env_clear();
+        c.env("ALT_HOME", self.root.join("alt-home"));
+        c.env("ALT_SHIM_DIR", self.root.join("shims"));
+        c.env("PATH", env::join_paths(&[
+            self.root.join("shims"),
+            self.project_root.join("fixtures/system_commands")
+        ]).unwrap());
         c
     }
 
@@ -64,20 +78,4 @@ impl Drop for TestEnv {
         fs::remove_dir_all(&self.root)
             .expect(&format!("failred to remove {:?}", &self.root));
     }
-}
-
-fn set_env<'a>(c: &'a mut Command, test_env: &TestEnv) -> &'a mut Command {
-    c.env("ALT_HOME", test_env.root.join("alt-home"));
-    c.env("ALT_SHIM_DIR", test_env.root.join("shims"));
-    c.env("PATH", env::join_paths(&[
-        test_env.root.join("shims"),
-        test_env.project_root.join("fixtures/system_commands")
-    ]).unwrap())
-}
-
-pub fn fixture_command_path(name: &str, version: i32) -> PathBuf {
-    env::current_dir()
-        .unwrap()
-        .join("fixtures/commands")
-        .join(format!("{}{}", name, version))
 }

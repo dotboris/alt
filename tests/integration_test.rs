@@ -1,7 +1,6 @@
 extern crate assert_cmd;
 
 use assert_cmd::prelude::*;
-use std::env;
 mod test_env;
 use test_env::TestEnv;
 
@@ -10,7 +9,7 @@ fn def_all(env: &TestEnv) {
         for version in &[1, 2, 3] {
             env.def(
                 command, &version.to_string(),
-                &test_env::fixture_command_path(command, version.clone())
+                &env.fixture_path(command, version.clone())
             )
                 .assert()
                 .success();
@@ -21,15 +20,7 @@ fn def_all(env: &TestEnv) {
 #[test]
 fn def_and_use() {
     let env = TestEnv::new();
-
     def_all(&env);
-
-    env::set_current_dir(&env.root).unwrap();
-
-    env.command("alfa")
-        .assert()
-        .success()
-        .stdout("alfa system\n");
 
     env._use("alfa", "1")
         .assert()
@@ -39,4 +30,15 @@ fn def_and_use() {
         .assert()
         .success()
         .stdout("alfa1\n");
+}
+
+#[test]
+fn system_with_no_use() {
+    let env = TestEnv::new();
+    def_all(&env);
+
+    env.command("alfa")
+        .assert()
+        .success()
+        .stdout("alfa system\n");
 }
