@@ -11,3 +11,8 @@ regex = "1"
 lazy_static = "1.0.2"
 dialoguer = "0.1.0"
 glob = "0.2.11"
+
+[dev-dependencies]
+rand = "0.5"
+assert_cmd = "0.6.0"
+predicates = "0.5"
