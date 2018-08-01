@@ -2,10 +2,8 @@
 
 ## Requirements
 
-- A working rust setup
-  (https://doc.rust-lang.org/book/second-edition/ch01-01-installation.html)
-- A linux machine
-- An OSX machine
+- A linux machine with rust
+- An OSX machine with rust
 
 ## Version bump
 
@@ -37,9 +35,8 @@
 
 1.  Create a release
 
-    ```sh
-    hub release create -d -m v{your version number} v{your version number}
-    ```
+    Go to https://github.com/dotboris/alt/releases and create a draft release
+    for the tag you just created.
 
 ## Build release versions
 
@@ -59,14 +56,8 @@ You'll need to do the following steps twice. Once on a mac and once on linux.
 
 1.  Push your binary to the github release page
 
-    ```sh
-    hub release edit -a dist/release/atl_{osx or linux} v{your version number}
-    ```
+    Open the release you created and attach the binary in `dist/relase/`.
 
 ## Publish the relase
 
-When the has all binaries in it, publish it
-
-```sh
-hub release edit --draft=false v{your version number}
-```
+When the release has all binaries in it, publish it
