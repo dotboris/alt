@@ -1,3 +1,4 @@
 /.alt.toml
 /target
+/dist
 **/*.rs.bk
