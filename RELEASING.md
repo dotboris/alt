@@ -35,6 +35,12 @@
     git push --tags origin master
     ```
 
+1.  Create a release
+
+    ```sh
+    hub release create -d -m v{your version number} v{your version number}
+    ```
+
 ## Build release versions
 
 You'll need to do the following steps twice. Once on a mac and once on linux.
@@ -56,3 +62,11 @@ You'll need to do the following steps twice. Once on a mac and once on linux.
     ```sh
     hub release edit -a dist/release/atl_{osx or linux} v{your version number}
     ```
+
+## Publish the relase
+
+When the has all binaries in it, publish it
+
+```sh
+hub release edit --draft=false v{your version number}
+```
