@@ -34,35 +34,24 @@ Tool for switching between different versions of commands.
 
 ## Usage
 
-In order to use `alt`, there are two things that you need to do:
+### Define commands versions
 
-1.  Tell `alt` about the commands on your system and their different versions
-1.  Tell `alt` what version of a given command you want to use in a directory
-
-### Defining commands and versions
-
-`alt` can automatically scan your system to find different versions of command.
+Automatically
 
 ```sh
 alt scan some-command
 ```
 
-Currently, scanning supports:
-
-- Looking through `PATH` for commands with version suffixes
-- Looking through homebrew versioned packages (ex: `node@8`)
-
-If `alt` can't find your command versions automatically, you can define them
-by hand with:
+or manually
 
 ```sh
 alt def some-command version-name /path/to/command/bin
 ```
 
-### Switching command versions
+### Switch command version
 
-`alt` uses the directory you're currently in to figure out which versions of
-commands to run. When switching versions, everything is related to the current
+It's important to understand that that __`alt` works with the current
+directory__. When you switch command versions, you do so for the current
 directory.
 
 ```sh
