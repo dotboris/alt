@@ -22,10 +22,16 @@ get_os() {
   esac
 }
 
-file_name="alt_$(get_os)"
-url="https://github.com/dotboris/alt/releases/download/$(get_latest_version)/$file_name"
+version="$(get_latest_version)"
+os="$(get_os)"
+
+echo "Installing alt $version for $os as /usr/local/bin/alt"
+echo "You may be prompted for your password"
+
+file_name="alt_$os"
+url="https://github.com/dotboris/alt/releases/download/$version/$file_name"
 
 sudo sh -e -o pipefail -s <<SH
-  curl -L "$url" -o /usr/local/bin/alt
+  curl --progress-bar -L "$url" -o /usr/local/bin/alt
   chmod +x /usr/local/bin/alt
 SH
