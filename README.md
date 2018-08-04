@@ -34,7 +34,7 @@ Tool for switching between different versions of commands.
 
 ## Usage
 
-### Define commands versions
+### Define command versions
 
 Automatically
 
