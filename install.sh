@@ -8,14 +8,13 @@ get_latest_version() {
 }
 
 get_os() {
-  local os;
-  os="$(uname -s)"
+  _os="$(uname -s)"
 
-  case "$os" in
-    Linux) echo -n linux;;
-    Darwin) echo -n osx;;
+  case "$_os" in
+    Linux) printf linux;;
+    Darwin) printf osx;;
     *)
-      echo "Unkown OS $os."
+      echo "Unkown OS $_os."
       echo "Currently, only linux and osx are supported"
       return 1
       ;;
