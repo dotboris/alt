@@ -35,3 +35,19 @@ sudo sh -e -o pipefail -s <<SH
   curl --progress-bar -L "$url" -o /usr/local/bin/alt
   chmod +x /usr/local/bin/alt
 SH
+
+echo
+echo '  🎉  Alt is installed!  🎉'
+echo
+echo 'Remember to add $HOME/.local/alt/shims to your PATH'
+echo
+echo 'BASH:'
+echo $'    echo \'export PATH="$HOME/.local/alt/shims:$PATH"\' >> ~/.bashrc'
+echo
+echo 'ZSH:'
+echo $'    echo \'export PATH="$HOME/.local/alt/shims:$PATH"\' >> ~/.zshrc'
+echo
+echo 'FISH:'
+echo $'    echo \'set -x PATH "$HOME/.local/alt/shims" $PATH\' >> ~/.config/fish/config.fish'
+echo
+
