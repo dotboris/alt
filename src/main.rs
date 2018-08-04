@@ -20,10 +20,13 @@ mod cli;
 mod shim;
 mod command;
 mod scan;
+mod checks;
 
 use std::env;
 
 fn main() {
+    checks::check_shim_in_path();
+
     let arg0 = env::args().next().unwrap();
 
     if shim::is_shim(&arg0) {
