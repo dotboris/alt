@@ -1,4 +1,4 @@
-# alt
+# alt the version switcher
 
 [![Build Status](https://travis-ci.org/dotboris/alt.svg?branch=master)](https://travis-ci.org/dotboris/alt)
 
