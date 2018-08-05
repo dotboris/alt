@@ -4,9 +4,11 @@
 
 Tool for switching between different versions of commands.
 
-<a href="https://asciinema.org/a/195103?autoplay=1" target="_blank">
-  <img alt="Screencast demo of alt" src="https://asciinema.org/a/195103.png" />
-</a>
+<p align="center">
+  <a href="https://asciinema.org/a/195103?autoplay=1" target="_blank">
+    <img alt="Screencast demo of alt" src="demo.gif" />
+  </a>
+</p>
 
 ## Installation
 
