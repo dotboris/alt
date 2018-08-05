@@ -4,6 +4,8 @@
 
 Tool for switching between different versions of commands.
 
+[![Screencast demo of alt](https://asciinema.org/a/5X4W5GEEMmBjlNl84yaAehnmh.png)](https://asciinema.org/a/5X4W5GEEMmBjlNl84yaAehnmh?autoplay=1)
+
 ## Installation
 
 1.  Install alt
