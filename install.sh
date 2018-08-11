@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e -o pipefail
 
 get_latest_version() {
@@ -30,7 +30,7 @@ echo "You may be prompted for your password"
 file_name="alt_$os"
 url="https://github.com/dotboris/alt/releases/download/$version/$file_name"
 
-sudo sh -e -o pipefail -s <<SH
+sudo bash -e -o pipefail -s <<SH
   curl --progress-bar -L "$url" -o /usr/local/bin/alt
   chmod +x /usr/local/bin/alt
 SH
