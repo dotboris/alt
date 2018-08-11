@@ -15,7 +15,7 @@ Tool for switching between different versions of commands.
 1.  Install alt
 
     ```sh
-    curl -sL https://github.com/dotboris/alt/raw/master/install.sh | sh -s
+    curl -sL https://github.com/dotboris/alt/raw/master/install.sh | bash -s
     ```
 
 1.  Add the shims directory to your `PATH` environment variable
