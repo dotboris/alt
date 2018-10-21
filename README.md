@@ -135,6 +135,18 @@ line:
 alt use some-command version-name
 ```
 
+### Show known commands & used versions
+
+```sh
+alt show
+```
+
+The above command will show you:
+
+- All commands `alt` knows about
+- The versions of those commands available
+- The versions being used in the current directory
+
 ## Development
 
 ### Setup
