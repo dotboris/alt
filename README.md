@@ -24,18 +24,21 @@ Tool for switching between different versions of commands.
 
     ```sh
     echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.bashrc
+    export PATH="$HOME/.local/alt/shims:$PATH"
     ```
 
     For ZSH:
 
     ```sh
     echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.zshrc
+    export PATH="$HOME/.local/alt/shims:$PATH"
     ```
 
     For FISH:
 
     ```sh
     echo 'set -x PATH "$HOME/.local/alt/shims" $PATH' >> ~/.config/fish/config.fish
+    set -x PATH "$HOME/.local/alt/shims" $PATH
     ```
 
 ## Usage
