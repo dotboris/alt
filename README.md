@@ -43,7 +43,7 @@ itself in a few ways:
     curl -sL https://github.com/dotboris/alt/raw/master/install.sh | bash -s
     ```
 
-1.  Add the shims directory to your `PATH` environment variable
+1.  Configure your `PATH` to let `alt` change command versions.
 
     For BASH:
 
@@ -65,6 +65,16 @@ itself in a few ways:
     echo 'set -x PATH "$HOME/.local/alt/shims" $PATH' >> ~/.config/fish/config.fish
     set -x PATH "$HOME/.local/alt/shims" $PATH
     ```
+
+1.  (Optional) Add `.alt.toml` to your global gitignore file
+
+    During it's operation, `alt` puts a file named `.alt.toml` in the current
+    directory. These files don't belong in git repositories. To avoid getting
+    those files all over your git repositories, you can add them to a global
+    gitignore file.
+
+    If you don't know how to create a global gitignore file, see:
+    https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
 
 ## Usage
 
