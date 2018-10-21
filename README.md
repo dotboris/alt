@@ -14,8 +14,8 @@ of commands based on your current directory.
 ## Why?
 
 As developers, we work with a large number of tools. When we move from codebase
-to codebase, those tools and their versions change. Switching the different
-versions of those tools every time you change codebase is a nightmare.
+to codebase, those tools and their versions change. Switching between the
+different versions of those tools every time you change codebase is a nightmare.
 
 This is where `alt` comes in. It will automatically switch the version of
 commands when you move to a different codebase.
@@ -23,13 +23,12 @@ commands when you move to a different codebase.
 There are other tools out there that solve this problem. `alt` distinguish
 itself in a few ways:
 
--   __tool / language agnostic__: There are plenty of tools out there that will
-    let you switch the version of a specific tool or programming language. `alt`
-    is generic. It works for any command.
--   __no shell pollution__: Other version switching tools out there hook
-    themselves into your shell. This can slow down your shell's start time.
-    `alt` does not hook into your shell. You can use it without slowing down
-    your shell start time.
+-   __tool / language agnostic__: Some version switching tools only work with a
+    specific tool or programming language. `alt` is generic. It works for any
+    command.
+-   __no shell pollution__: Most version switching tools hook themselves into
+    your shell. This can slow down your shell's start time. `alt` does not hook
+    into your shell. You can use it without slowing down your shell start time.
 -   __only version switching__: Unlike other tools, `alt` does not take
     responsibility for installing different versions of commands or managing
     their dependencies. How you install install different versions of commands
