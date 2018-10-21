@@ -42,7 +42,7 @@ itself in a few ways:
     curl -sL https://github.com/dotboris/alt/raw/master/install.sh | bash -s
     ```
 
-1.  Configure your `PATH` to let `alt` change command versions.
+1.  Configure your `PATH` to let `alt` change command versions
 
     For BASH:
 
