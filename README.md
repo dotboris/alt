@@ -77,15 +77,33 @@ itself in a few ways:
 
 ## Usage
 
+Using `alt` is done in two steps:
+
+1.  First, you tell `alt` about the different versions of commands installed on
+    your system.
+1.  Second, you tell `alt` what version of your commands to use in a given
+    directory.
+
 ### Define command versions
 
-Automatically
+`alt` can automatically scan your system to find different version of a command.
+This can be done with the `alt scan` command:
 
 ```sh
 alt scan some-command
 ```
 
-or manually
+This will bring up a menu that lets you choose all the versions of the given
+command that you want to use.
+
+- <kbd>↑</kbd> / <kbd>↓</kbd> or <kbd>j</kbd> / <kbd>k</kbd>: Move cursor
+- <kbd>Space</kbd>: Select versions of command
+- <kbd>Enter</kbd>: Confirm selection
+
+If `alt` is not able to find a version of a command automatically for you. You
+can always define the command version by hand.
+
+This can be done with the `alt def` command:
 
 ```sh
 alt def some-command version-name /path/to/command/bin
@@ -93,13 +111,28 @@ alt def some-command version-name /path/to/command/bin
 
 ### Switch command version
 
-It's important to understand that that __`alt` works with the current
-directory__. When you switch command versions, you do so for the current
+Remember that `alt` decides what version of a command to use based on the
+current directory. When you select a command version, it's for the current
 directory.
 
+You can tell `alt` to use a specific version of a command in the current
+directory with the `alt use` command:
+
 ```sh
-cd directory/of/interest
 alt use some-command
+```
+
+This will bring up a menu that lets you choose the version of the specified
+command that you want to use.
+
+- <kbd>↑</kbd> / <kbd>↓</kbd> or <kbd>j</kbd> / <kbd>k</kbd>: Move cursor
+- <kbd>Enter</kbd>: Select version to use
+
+If menus aren't your cup of tea, you can specify the version on the command
+line:
+
+```sh
+alt use some-command version-name
 ```
 
 ## Development
