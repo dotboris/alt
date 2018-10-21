@@ -10,18 +10,18 @@ fn line(width: usize) -> String {
 }
 
 fn line_label(width: usize, label: &str) -> String {
-    let label_size = label.len() + 2;
+    let label_size = label.len() + 4;
     let left_size = (width - label_size) / 2;
     let right_size = width - left_size - label_size;
 
-    let left: String = iter::repeat(">").take(left_size).collect();
-    let right: String = iter::repeat("<").take(right_size).collect();
+    let left: String = iter::repeat("=").take(left_size).collect();
+    let right: String = iter::repeat("=").take(right_size).collect();
 
     return format!(
         "{} {} {}",
-        style(left).bold(),
+        style(format!("{}>", left)).bold(),
         style(label).bold().red(),
-        style(right).bold()
+        style(format!("<{}", right)).bold(),
     );
 }
 
