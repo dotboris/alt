@@ -27,6 +27,7 @@ pub fn scan(command: &str) -> Vec<CommandVersion> {
 
     env::split_paths(&path)
         .filter(|p| p != &shim_dir)
+        .filter(|p| p.is_dir())
         .flat_map(|p| fs::read_dir(p).unwrap())
         .map(|bin| bin.unwrap().path())
         .flat_map(|bin| parse_command_version(bin))
