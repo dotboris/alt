@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/dotboris/alt.svg?branch=master)](https://travis-ci.org/dotboris/alt)
 
-Tool for switching between different versions of commands.
+`alt` is a command line utility that lets you switch between different versions
+of commands based on your current directory.
 
 <p align="center">
   <a href="https://asciinema.org/a/195103?autoplay=1" target="_blank">
@@ -10,9 +11,33 @@ Tool for switching between different versions of commands.
   </a>
 </p>
 
+## Why?
+
+As developers, we work with a large number of tools. When we move from codebase
+to codebase, those tools and their versions change. Switching the different
+versions of those tools every time you change codebase is a nightmare.
+
+This is where `alt` comes in. It will automatically switch the version of
+commands when you move to a different codebase.
+
+There are other tools out there that solve this problem. `alt` distinguish
+itself in a few ways:
+
+-   __tool / language agnostic__: There are plenty of tools out there that will
+    let you switch the version of a specific tool or programming language. `alt`
+    is generic. It works for any command.
+-   __no shell pollution__: Other version switching tools out there hook
+    themselves into your shell. This can slow down your shell's start time.
+    `alt` does not hook into your shell. You can use it without slowing down
+    your shell start time.
+-   __only version switching__: Unlike other tools, `alt` does not take
+    responsibility for installing different versions of commands or managing
+    their dependencies. How you install install different versions of commands
+    is entirely up to you.
+
 ## Installation
 
-1.  Install alt
+1.  Install the `alt` binary
 
     ```sh
     curl -sL https://github.com/dotboris/alt/raw/master/install.sh | bash -s
