@@ -100,7 +100,7 @@ command that you want to use.
 - <kbd>Space</kbd>: Select versions of command
 - <kbd>Enter</kbd>: Confirm selection
 
-If `alt` is not able to find a version of a command automatically for you. You
+If `alt` is not able to find a version of a command automatically for you, you
 can always define the command version by hand.
 
 This can be done with the `alt def` command:
