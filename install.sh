@@ -42,11 +42,14 @@ echo 'Remember to add $HOME/.local/alt/shims to your PATH'
 echo
 echo 'BASH:'
 echo $'    echo \'export PATH="$HOME/.local/alt/shims:$PATH"\' >> ~/.bashrc'
+echo $'    export PATH="$HOME/.local/alt/shims:$PATH"'
 echo
 echo 'ZSH:'
 echo $'    echo \'export PATH="$HOME/.local/alt/shims:$PATH"\' >> ~/.zshrc'
+echo $'    export PATH="$HOME/.local/alt/shims:$PATH"'
 echo
 echo 'FISH:'
 echo $'    echo \'set -x PATH "$HOME/.local/alt/shims" $PATH\' >> ~/.config/fish/config.fish'
+echo $'    set -x PATH "$HOME/.local/alt/shims" $PATH'
 echo
 
