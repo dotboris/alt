@@ -31,8 +31,8 @@ itself in a few ways:
     into your shell. You can use it without slowing down your shell start time.
 -   __only version switching__: Unlike other tools, `alt` does not take
     responsibility for installing different versions of commands or managing
-    their dependencies. How you install install different versions of commands
-    is entirely up to you.
+    their dependencies. How you install different versions of commands is
+    entirely up to you.
 
 ## Installation
 
@@ -94,11 +94,11 @@ alt scan some-command
 ```
 
 This will bring up a menu that lets you choose all the versions of the given
-command that you want to use.
+command that you want to use with `alt`.
 
 - <kbd>↑</kbd> / <kbd>↓</kbd> or <kbd>j</kbd> / <kbd>k</kbd>: Move cursor
-- <kbd>Space</kbd>: Select versions of command
-- <kbd>Enter</kbd>: Confirm selection
+- <kbd>Space</kbd>: Make version available to `alt`
+- <kbd>Enter</kbd>: Confirm and save selection
 
 If `alt` is not able to find a version of a command automatically for you, you
 can always define the command version by hand.
