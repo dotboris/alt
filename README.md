@@ -36,13 +36,14 @@ itself in a few ways:
 
 ## Installation
 
-1.  Install the `alt` binary
+1.  Install the `alt` binary.
 
     ```sh
     curl -sL https://github.com/dotboris/alt/raw/master/install.sh | bash -s
     ```
 
-1.  Configure your `PATH` to let `alt` change command versions
+1.  Add the `alt` shims directory to the top of your `PATH`.
+    This lets `alt` change command versions.
 
     For BASH:
 
@@ -65,7 +66,7 @@ itself in a few ways:
     set -x PATH "$HOME/.local/alt/shims" $PATH
     ```
 
-1.  (Optional) Add `.alt.toml` to your global gitignore file
+1.  (Optional) Add `.alt.toml` to your global gitignore file.
 
     During it's operation, `alt` puts a file named `.alt.toml` in the current
     directory. These files don't belong in git repositories. To avoid getting
