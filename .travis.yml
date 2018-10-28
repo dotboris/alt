@@ -6,10 +6,6 @@ language: rust
 services: docker
 sudo: required
 
-env:
-  global:
-    - CRATE_NAME=alt
-
 matrix:
   include:
     # Linux
@@ -51,12 +47,18 @@ install:
   - cargo install cross
 
 script:
-  - bash ci/test.sh
+  - cross build --target "$TARGET"
+  - cross build --target "$TARGET" --release
+  - cross test --target "$TARGET"
+  - cross run --target "$TARGET"
+  - cross run --target "$TARGET" --release
 
 after_script: set +e
 
 before_deploy:
-  - sh ci/before_deploy.sh
+  - cross rustc --bin alt --target "$TARGET" --release -- -C lto
+  - gzip "target/$TARGET/release/alt"
+  - mv "target/$TARGET/release/alt.gz" "alt_${TRAVIS_TAG}_$TARGET.gz"
 
 deploy:
   # TODO update `api_key.secure`
@@ -66,7 +68,7 @@ deploy:
   api_key:
     secure: TODO set api key for travis
   file_glob: true
-  file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  file: "alt_${TRAVIS_TAG}_$TARGET.gz"
   on:
     condition: $TRAVIS_RUST_VERSION = stable
     tags: true
