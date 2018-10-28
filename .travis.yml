@@ -7,7 +7,7 @@ services: docker
 sudo: required
 
 env:
-  RUST_BACKTRACE: '1'
+  - RUST_BACKTRACE=1
 
 matrix:
   fast_finish: true
