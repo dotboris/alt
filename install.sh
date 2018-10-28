@@ -46,7 +46,9 @@ url="https://github.com/dotboris/alt/releases/download/$version/$file_name"
 
 sudo bash -e -o pipefail -s <<SH
   curl --progress-bar -L "$url" -o /usr/local/bin/alt.gz
+  rm -f /usr/local/bin/alt
   gzip -d /usr/local/bin/alt.gz
+  rm -f /usr/local/bin/alt.gz
   chmod +x /usr/local/bin/alt
 SH
 
