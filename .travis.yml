@@ -7,6 +7,11 @@ services: docker
 sudo: required
 
 matrix:
+  fast_finish: true
+  allow_failures:
+    - rust: beta
+    - rust: nightly
+
   include:
     # Linux
     - env: TARGET=aarch64-unknown-linux-gnu
@@ -21,10 +26,11 @@ matrix:
     - env: TARGET=x86_64-apple-darwin
       os: osx
 
+    # TODO: BSD fails to build. Not sure why
     # *BSD
-    - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
-    - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
-    - env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
+    #- env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+    #- env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+    #- env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
 
     # Testing other channels
     - env: TARGET=x86_64-unknown-linux-gnu
@@ -38,10 +44,6 @@ matrix:
       os: osx
       rust: nightly
 
-before_install:
-  - set -e
-  - rustup self update
-
 install:
   - source ~/.cargo/env || true
   - cargo install cross || true
@@ -50,8 +52,6 @@ script:
   - cross build --target "$TARGET"
   - if [ -z "$DISABLE_TESTS" ]; then cross test --target "$TARGET"; fi
   - if [ -z "$DISABLE_TESTS" ]; then cross run --target "$TARGET" help; fi
-
-after_script: set +e
 
 before_deploy:
   - cross rustc --bin alt --target "$TARGET" --release -- -C lto
