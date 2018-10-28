@@ -59,12 +59,8 @@ before_deploy:
   - mv "target/$TARGET/release/alt.gz" "alt_${TRAVIS_TAG}_$TARGET.gz"
 
 deploy:
-  # TODO update `api_key.secure`
-  # - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
-  # - Encrypt it: `travis encrypt 0123456789012345678901234567890123456789
-  # - Paste the output down here
   api_key:
-    secure: TODO set api key for travis
+    secure: "oh1USFlP+HazJn+Pqob32x012P89KKDl/5AegqqUPfFkzBu7sZcWY1ndOhKDpglVIP5Ad3ULPwZXGFAuH3+LFI786dwxUE3Dv+T2LLM32p6s0BP7cENsnkUVaHWGchWRpdyV3sdqJ5shxi6rEqiy2Nghq/CjByFQdEj1QYj4zmN8OcDOlE+OSyJ/uDOlK0oG1sx0UjnBbpIU5NH1cpxwfJOLDbCeZE+RE6tiR2akeQTCF4rTZHTZBHheeyKesBrMSqP6KFPpVCbh7MaU/ZX1tSXQqBTQ671xBP02qlhQWRH1ulbL0TbYjtlqDELLoCZ9ikoUFHK1gfkj0DmEKpZzFq6Bx3KJK5syFjbnGMcf6qbbu1uQS3n1uXspkKIV7+au/LmZaNISORyS2r2gCAiDHE7JJbkXrjbwr7H6YcVA7FLW3LSB0TqPrJurf74qU+HIXtqcMuglXsHsLcGg8CIYsW1lPdeuaviBRT/M5slUsW5gA+KUKyz2VDBMkPARIBOHmPycilfF1Vy/vZ7xTZg6i7ryZzNZCrDEQtGF9xQMmPAjVRQEH1Bv8PmaRYo9a2V1O4xBRS1xks8IODKlnNior/5YPg3k5C25Kj4RQQVhKJKZA5wzU3NQj28IGTlCUbLoBi9s9yJ9jJxX2zFBHanrLdwJwWfMs+UlXDeMWN3L/dA="
   file_glob: true
   file: "alt_${TRAVIS_TAG}_$TARGET.gz"
   on:
