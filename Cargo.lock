@@ -8,7 +8,7 @@ dependencies = [
 
 [[package]]
 name = "alt"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "assert_cmd 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.32.0 (registry+https://github.com/rust-lang/crates.io-index)",
