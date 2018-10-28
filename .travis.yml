@@ -50,8 +50,8 @@ script:
   - cross build --target "$TARGET"
   - cross build --target "$TARGET" --release
   - cross test --target "$TARGET"
-  - cross run --target "$TARGET"
-  - cross run --target "$TARGET" --release
+  - cross run --target "$TARGET" help
+  - cross run --target "$TARGET" --release help
 
 after_script: set +e
 
