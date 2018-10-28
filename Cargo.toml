@@ -13,5 +13,6 @@ dialoguer = "0.1.0"
 glob = "0.2.11"
 
 [dev-dependencies]
-assert_cmd = "0.6.0"
+assert_cmd = "0.10"
+escargot = "0.3"
 rand = "0.5"

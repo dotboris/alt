@@ -1,5 +1,6 @@
 extern crate rand;
 extern crate assert_cmd;
+extern crate escargot;
 
 use self::rand::prelude::*;
 use self::rand::distributions::Alphanumeric;
@@ -8,7 +9,7 @@ use std::env;
 use std::fs;
 use std::path::*;
 use std::process::Command;
-use assert_cmd::cargo;
+use self::escargot::CargoBuild;
 
 #[derive(Debug)]
 pub struct TestEnv {
@@ -30,10 +31,17 @@ impl TestEnv {
         fs::create_dir(&root)
             .expect(&format!("failed to created tmp env {:?}", &root));
 
+        let bin = CargoBuild::new()
+            .bin("alt")
+            .current_release()
+            .current_target()
+            .run()
+            .unwrap();
+
         TestEnv {
             root: root,
             project_root: env::current_dir().unwrap(),
-            alt_bin: cargo::main_binary_path().unwrap(),
+            alt_bin: PathBuf::from(bin.path())
         }
     }
 
@@ -76,6 +84,6 @@ impl TestEnv {
 impl Drop for TestEnv {
     fn drop(&mut self) {
         fs::remove_dir_all(&self.root)
-            .expect(&format!("failred to remove {:?}", &self.root));
+            .expect(&format!("failed to remove {:?}", &self.root));
     }
 }
