@@ -48,7 +48,7 @@ before_install:
 
 install:
   - source ~/.cargo/env || true
-  - cargo install
+  - cargo install cross
 
 script:
   - bash ci/test.sh
