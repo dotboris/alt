@@ -1,10 +1,85 @@
+# Based on the "trust" template v0.1.2
+# https://github.com/japaric/trust/tree/v0.1.2
+
+dist: trusty
 language: rust
-rust:
-  - stable
-  - beta
-  - nightly
+services: docker
+sudo: required
 
 matrix:
   fast_finish: true
   allow_failures:
+    - rust: beta
     - rust: nightly
+
+  include:
+    # Linux
+    - env: TARGET=aarch64-unknown-linux-gnu
+    - env: TARGET=arm-unknown-linux-gnueabi
+    - env: TARGET=armv7-unknown-linux-gnueabihf
+    - env: TARGET=i686-unknown-linux-gnu
+    - env: TARGET=x86_64-unknown-linux-gnu
+
+    # OSX
+    - env: TARGET=i686-apple-darwin
+      os: osx
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+
+    # TODO: BSD fails to build. Not sure why
+    # *BSD
+    #- env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+    #- env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+    #- env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
+
+    # Testing other channels
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: beta
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+      rust: beta
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: nightly
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+      rust: nightly
+
+install:
+  - source ~/.cargo/env || true
+  - cargo install cross || true
+
+script:
+  - cross build --target "$TARGET"
+  - if [ -z "$DISABLE_TESTS" ]; then cross test --target "$TARGET"; fi
+  - if [ -z "$DISABLE_TESTS" ]; then cross run --target "$TARGET" help; fi
+
+before_deploy:
+  - cross rustc --bin alt --target "$TARGET" --release -- -C lto
+  - gzip "target/$TARGET/release/alt"
+  - mv "target/$TARGET/release/alt.gz" "alt_${TRAVIS_TAG}_$TARGET.gz"
+
+deploy:
+  api_key:
+    secure: "q6pEft0t1WB4Magi06K/EPgYRqVpEynC1bhYc9Sal3zenOjY2z1zyPPcpVTPY0ewP8r2Phf+W1pOF+crTyWnRJv1sFCT7wkKoW22vLOSNYnrf3S2PxqNmibNQiUnI9jtI6fGsx9mXyKp1SyEPuuv/a4PntQGjEd9NKIFG2o1XqvuF4bAUVYymv7tK/DEDtEqQGUAkrhmEJrN5G+j3iKZqZ0RpzibTxGvO5FWKS91xQTz88QIbEqADai9l0cncuApA1dOlxfwGMPN2vQ5/LqSsrDqGXS7347E/KyJgmK4T6q5Gs/TdlERr7bzGc1odhuHZraSnxwvB+nlKxnp3YkT5GjrnkVCisOIu8cmPOHJfdT3yq7HqPhE07UkR9fP6aH/WkzbbneJyCcCfVAkrZkT21WnyG+GUkjF49X7zn5T6lHcwuY/F25Zep9CUG/iZzDQ+PCqU6GKHnNgObHac/lDmu/dn33FKyFNsogTeGQUmcE6AGQgMOU+XV7bj/1AcgQdBbVby9kv4hu4xBI4y+w295hRBiXl1cy5gWD39SJwpnBMpHioiXb53pkKfbcT2G16vvjCeK9BLJF+eZ6zkq3kxvYV3PzQnGcDph0OhleLkzIdI/BZCc6jWu3YG0rdRXBv6zQefKgbLytxe+T+QI4QgIglImnUr6OrBY3SLZtzd5g="
+  file_glob: true
+  file: "alt_${TRAVIS_TAG}_$TARGET.gz"
+  on:
+    condition: $TRAVIS_RUST_VERSION = stable
+    tags: true
+  provider: releases
+  skip_cleanup: true
+
+cache: cargo
+before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
+
+branches:
+  only:
+    # release tags
+    - /^v\d+\.\d+\.\d+.*$/
+    - master
+
+notifications:
+  email:
+    on_success: never
