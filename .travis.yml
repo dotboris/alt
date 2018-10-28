@@ -48,8 +48,8 @@ install:
 
 script:
   - cross build --target "$TARGET"
-  - cross test --target "$TARGET"
-  - cross run --target "$TARGET" help
+  - if [ -z "$DISABLE_TESTS" ]; then cross --target "$TARGET" test; fi
+  - if [ -z "$DISABLE_TESTS" ]; then cross --target "$TARGET" run help; fi
 
 after_script: set +e
 
