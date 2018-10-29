@@ -3,6 +3,11 @@ name = "alt"
 version = "1.0.2"
 authors = ["Boris Bera <bera.boris@gmail.com>"]
 
+[features]
+# This is a bullshit feature used to disable some tests from running in certain
+# funny edge cases.
+travis_ci = []
+
 [dependencies]
 clap = "2.32.0"
 toml = "0.4.6"
@@ -13,5 +18,6 @@ dialoguer = "0.1.0"
 glob = "0.2.11"
 
 [dev-dependencies]
-assert_cmd = "0.6.0"
+assert_cmd = "0.10"
+escargot = "0.3"
 rand = "0.5"
