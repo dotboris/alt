@@ -54,7 +54,7 @@ install:
 
 script:
   - cross build --target "$TARGET"
-  - if [ -z "$DISABLE_TESTS" ]; then cross test --target "$TARGET"; fi
+  - if [ -z "$DISABLE_TESTS" ]; then cross test --target "$TARGET" --features travis_ci; fi
   - if [ -z "$DISABLE_TESTS" ]; then cross run --target "$TARGET" help; fi
 
 before_deploy:
