@@ -28,23 +28,35 @@ mod tests {
     use std::env;
     use config;
     use std::path::{Path, PathBuf};
+    use std::sync::Mutex;
+
+    lazy_static! {
+        static ref env_mutex: Mutex<()> = Mutex::new(());
+    }
 
     #[test]
     fn home_dir_should_default() {
-        env::remove_var("ALT_HOME");
+        let res = {
+            let _guard = env_mutex.lock().unwrap();
+            env::remove_var("ALT_HOME");
+            config::home_dir()
+        };
+
         assert_eq!(
-            config::home_dir(),
+            res,
             Path::new(&env::var("HOME").unwrap())
                 .join(config::DEFAULT_HOME)
-        )
+        );
     }
 
     #[test]
     fn home_dir_should_read_alt_home_env() {
-        env::set_var("ALT_HOME", "/path/to/phony/home");
-        assert_eq!(
-            config::home_dir(),
-            PathBuf::from("/path/to/phony/home")
-        )
+        let res = {
+            let _guard = env_mutex.lock().unwrap();
+            env::set_var("ALT_HOME", "/path/to/phony/home");
+            config::home_dir()
+        };
+
+        assert_eq!(res, PathBuf::from("/path/to/phony/home"));
     }
 }
