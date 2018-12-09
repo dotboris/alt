@@ -1,8 +1,8 @@
 use std::path::{Path, PathBuf};
 use std::env;
 
-const DEFAULT_HOME: &'static str = ".config/alt";
-const DEFAULT_SHIM_DIR: &'static str = ".local/alt/shims";
+const DEFAULT_HOME: &str = ".config/alt";
+const DEFAULT_SHIM_DIR: &str = ".local/alt/shims";
 
 pub fn home_dir() -> PathBuf {
     match env::var("ALT_HOME") {

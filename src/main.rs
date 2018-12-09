@@ -32,7 +32,7 @@ fn main() {
     if shim::is_shim(&arg0) {
         let args = env::args()
             .skip(1)
-            .collect();
+            .collect::<Vec<String>>();
 
         exec_cmd::run(
             shim::get_command(&arg0),

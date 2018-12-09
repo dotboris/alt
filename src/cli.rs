@@ -56,7 +56,7 @@ pub fn run() {
             let args = matches.values_of("command_args")
                 .unwrap_or_default()
                 .map(|i| i.to_owned())
-                .collect();
+                .collect::<Vec<String>>();
 
             exec_cmd::run(
                 matches.value_of("command").unwrap(),

@@ -4,14 +4,15 @@ use std::os::unix::process::CommandExt;
 use std::process;
 use std::process::Command;
 
-pub fn run(command: &str, command_args: &Vec<String>) {
+pub fn run(command: &str, command_args: &[String]) {
     let defs = def_file::load();
     let command_version = command::find_selected_version(&command);
 
     let bin = command_version
         .map(|version| {
             def_file::find_bin(&defs, command, &version)
-                .expect(&format!("version {} of command {} is not defined",
+                .unwrap_or_else(|| panic!(
+                    "version {} of command {} is not defined",
                     version,
                     command
                 ))

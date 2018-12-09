@@ -8,7 +8,7 @@ use shim;
 use scan;
 use scan::CommandVersion;
 
-fn prompt_versions(versions: &Vec<CommandVersion>) -> Vec<usize> {
+fn prompt_versions(versions: &[CommandVersion]) -> Vec<usize> {
     let items: Vec<_> = versions.iter()
         .map(|version| format!("{} {} ({})",
             version.command, version.version, version.path.to_str().unwrap()
@@ -52,7 +52,7 @@ pub fn run(command: &str) {
             let mut defs = def_file::load();
             {
                 let def = defs.entry(command.to_string())
-                    .or_insert_with(|| def_file::CommandVersions::new());
+                    .or_insert_with(def_file::CommandVersions::new);
 
                 for choice in choices {
                     let version = &versions[choice];
@@ -63,7 +63,10 @@ pub fn run(command: &str) {
                 .expect("failed to save defs file");
 
             shim::make_shim(command, env::current_exe().unwrap().as_path())
-                .expect(&format!("failed to create shim for {}", command));
+                .unwrap_or_else(|err| panic!(
+                    "failed to create shim for {}: {}",
+                    command, err
+                ));
         }
     }
 }

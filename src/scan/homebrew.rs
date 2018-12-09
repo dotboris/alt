@@ -2,7 +2,7 @@ use super::CommandVersion;
 use glob::glob;
 use std::path::*;
 
-const HOMEBREW_GLOB: &'static str = "/usr/local/opt/*@*/bin/*";
+const HOMEBREW_GLOB: &str = "/usr/local/opt/*@*/bin/*";
 
 fn extract_command_and_version(path: &Path) -> (String, String) {
     let parts: Vec<_> = path.components().collect();
@@ -26,11 +26,7 @@ fn extract_command_and_version(path: &Path) -> (String, String) {
 fn parse_version_path(path: PathBuf) -> CommandVersion {
     let (command, version) = extract_command_and_version(&path);
 
-    CommandVersion {
-        command: command,
-        version: version,
-        path: path,
-    }
+    CommandVersion { command, version, path }
 }
 
 pub fn scan(command: &str) -> Vec<CommandVersion> {

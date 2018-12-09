@@ -5,7 +5,7 @@ use std::fs;
 use std::io;
 use std::path::{PathBuf, Path};
 
-const FILE_NAME: &'static str = ".alt.toml";
+const FILE_NAME: &str = ".alt.toml";
 
 pub fn find(start: &Path) -> Option<PathBuf> {
     let mut dir = PathBuf::from(start);
@@ -15,11 +15,8 @@ pub fn find(start: &Path) -> Option<PathBuf> {
         if file.is_file() {
             return Some(file);
         } else {
-            if dir.parent().is_none() {
-                return None;
-            } else {
-                dir.pop();
-            }
+            dir.parent()?;
+            dir.pop();
         }
     }
 }
