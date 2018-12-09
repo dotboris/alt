@@ -25,7 +25,11 @@ pub fn run(command: &str, arg_version: Option<&str>) {
         let mut use_def = use_file::load(&use_file).unwrap_or_default();
         use_def.remove(command);
         use_file::save(&use_def, &use_file)
-            .expect(&format!("Failed to write use file to {}", use_file.to_str().unwrap()));
+            .unwrap_or_else(|err| panic!(
+                "Failed to write use file to {}: {}",
+                use_file.to_str().unwrap(),
+                err
+            ));
 
         println!(
             "Will now use system version of {} when in {}",
@@ -45,7 +49,11 @@ pub fn run(command: &str, arg_version: Option<&str>) {
         let mut use_def = use_file::load(&use_file).unwrap_or_default();
         use_def.insert(String::from(command), String::from(version));
         use_file::save(&use_def, &use_file)
-            .expect(&format!("Failed to write use file to {}", use_file.to_str().unwrap()));
+            .unwrap_or_else(|err| panic!(
+                "Failed to write use file to {}: {}",
+                use_file.to_str().unwrap(),
+                err
+            ));
 
         println!(
             "Will now use {} {} ({}) when in {}",

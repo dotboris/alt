@@ -30,7 +30,7 @@ pub fn scan(command: &str) -> Vec<CommandVersion> {
         .filter(|p| p.is_dir())
         .flat_map(|p| fs::read_dir(p).unwrap())
         .map(|bin| bin.unwrap().path())
-        .flat_map(|bin| parse_command_version(bin))
+        .flat_map(parse_command_version)
         .filter(|c| c.command == command)
         .collect()
 }

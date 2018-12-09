@@ -6,7 +6,7 @@ use std::fs;
 use std::io;
 use config;
 
-const DEFS_FILE_NAME: &'static str = "defs.toml";
+const DEFS_FILE_NAME: &str = "defs.toml";
 
 pub type CommandVersions = HashMap<String, PathBuf>;
 pub type CommandDefs = HashMap<String, CommandVersions>;
