@@ -11,7 +11,7 @@ travis_ci = []
 [dependencies]
 clap = "2.32.0"
 toml = "0.4.6"
-console = "0.6.1"
+console = "0.7.2"
 regex = "1"
 lazy_static = "1.0.2"
 dialoguer = "0.3.0"
