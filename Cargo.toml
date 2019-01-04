@@ -14,7 +14,7 @@ toml = "0.4.6"
 console = "0.6.1"
 regex = "1"
 lazy_static = "1.0.2"
-dialoguer = "0.1.0"
+dialoguer = "0.3.0"
 glob = "0.2.11"
 
 [dev-dependencies]
