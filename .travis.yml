@@ -58,7 +58,8 @@ script:
   - if [ -z "$DISABLE_TESTS" ]; then cross run --target "$TARGET" help; fi
 
 before_deploy:
-  - cross rustc --bin alt --target "$TARGET" --release -- -C lto
+  - cross build --target "$TARGET" --release
+  - strip "target/$TARGET/release/alt"
   - gzip -fk9 "target/$TARGET/release/alt"
   - mv "target/$TARGET/release/alt.gz" "alt_${TRAVIS_TAG}_$TARGET.gz"
 

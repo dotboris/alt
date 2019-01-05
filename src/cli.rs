@@ -1,14 +1,8 @@
-use exec_cmd;
-use shim_cmd;
-use which_cmd;
-use scan_cmd;
-use use_cmd;
-use show_cmd;
-use def_cmd;
+use clap::App;
 use clap::AppSettings;
 
-pub fn run() {
-    let matches = clap_app!(alt =>
+pub fn make_app() -> App<'static, 'static> {
+    clap_app!(alt =>
         (version: crate_version!())
         (about: "Switch between different versions of commands")
         (@subcommand exec =>
@@ -49,37 +43,4 @@ pub fn run() {
         )
     )
         .setting(AppSettings::SubcommandRequiredElseHelp)
-        .get_matches();
-
-    match matches.subcommand() {
-        ("exec", Some(matches)) => {
-            let args = matches.values_of("command_args")
-                .unwrap_or_default()
-                .map(|i| i.to_owned())
-                .collect::<Vec<String>>();
-
-            exec_cmd::run(
-                matches.value_of("command").unwrap(),
-                &args
-            )
-        },
-        ("which", Some(matches)) =>
-            which_cmd::run(matches.value_of("command").unwrap()),
-        ("shim", Some(_)) => shim_cmd::run(),
-        ("scan", Some(matches)) =>
-            scan_cmd::run(matches.value_of("command").unwrap()),
-        ("use", Some(matches)) =>
-            use_cmd::run(
-                matches.value_of("command").unwrap(),
-                matches.value_of("version")
-            ),
-        ("show", Some(_)) => show_cmd::run(),
-        ("def", Some(matches)) =>
-            def_cmd::run(
-                matches.value_of("command").unwrap(),
-                matches.value_of("version").unwrap(),
-                matches.value_of("bin").unwrap()
-            ),
-        _ => unreachable!(),
-    };
 }
