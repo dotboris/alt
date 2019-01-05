@@ -3,6 +3,7 @@ name = "alt"
 version = "1.0.2"
 authors = ["Boris Bera <bera.boris@gmail.com>"]
 build = "build.rs"
+publish = false
 
 [features]
 # This is a bullshit feature used to disable some tests from running in certain
@@ -25,3 +26,6 @@ rand = "0.5"
 
 [build-dependencies]
 clap = "2.32.0"
+
+[profile.release]
+lto = true
