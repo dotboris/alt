@@ -22,7 +22,7 @@ glob = "0.2.11"
 [dev-dependencies]
 assert_cmd = "0.10"
 escargot = "0.4"
-rand = "0.5"
+rand = "0.6"
 
 [build-dependencies]
 clap = "2.32.0"
