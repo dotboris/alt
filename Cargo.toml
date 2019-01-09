@@ -21,7 +21,7 @@ glob = "0.2.11"
 
 [dev-dependencies]
 assert_cmd = "0.10"
-escargot = "0.3"
+escargot = "0.4"
 rand = "0.5"
 
 [build-dependencies]
