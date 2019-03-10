@@ -12,14 +12,16 @@ pub fn find_selected_version(command: &str) -> Option<String> {
         .map(|version| version.to_owned())
 }
 
-fn realpath_equal(a: &Path, b: &Path) -> bool {
-    fs::canonicalize(&a).unwrap() == fs::canonicalize(&b).unwrap()
-}
+pub fn find_system_bin(command: &str) -> Option<PathBuf> {
+    let system_path = env::var("PATH").unwrap();
+    let current_exe = env::current_exe()
+        .and_then(fs::canonicalize)
+        .unwrap();
 
-pub fn find_system_bin(command: &str, system_path: &str, current_exe: &Path) -> Option<PathBuf> {
     env::split_paths(&system_path)
         .map(|p| p.join(command))
         .filter(|p| p.exists())
-        .filter(|p| !realpath_equal(&p, &current_exe))
+        .map(|p| fs::canonicalize(&p).unwrap())
+        .filter(|p| p != &current_exe)
         .next()
 }

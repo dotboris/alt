@@ -3,7 +3,6 @@ use command;
 use std::os::unix::process::CommandExt;
 use std::process;
 use std::process::Command;
-use std::env;
 
 pub fn run(command: &str, command_args: &[String]) {
     let defs = def_file::load();
@@ -19,11 +18,7 @@ pub fn run(command: &str, command_args: &[String]) {
                 ))
                 .to_owned()
         })
-        .or_else(|| {
-            let path = env::var("PATH").expect("env var PATH is not defined");
-            let current_exe = env::current_exe().unwrap();
-            command::find_system_bin(command, &path, &current_exe)
-        });
+        .or_else(|| command::find_system_bin(command));
 
     match bin {
         Some(bin) => {
