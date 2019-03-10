@@ -32,13 +32,13 @@ pub fn check_shim_in_path() {
     let shim_dir = config::shim_dir();
     if !parts.any(|part| part == shim_dir) {
         let term = console::Term::stdout();
-        let (_, term_witdh) = term.size();
+        let (_, term_width) = term.size();
 
         let shim_dir = shim_dir.to_str().unwrap();
         let shim_dir = style(shim_dir).cyan();
         let path_env_var = style("PATH").cyan();
 
-        eprintln!("{}", line_label(term_witdh as usize, "WARNING"));
+        eprintln!("{}", line_label(term_width as usize, "WARNING"));
         eprintln!("Alt is not installed corrected and will not work!");
         eprintln!();
         eprintln!(
@@ -53,7 +53,7 @@ pub fn check_shim_in_path() {
             "Alternatively, see {} for setup instructions.",
             style("https://github.com/dotboris/alt#installation").cyan()
         );
-        eprintln!("{}", line(term_witdh as usize));
+        eprintln!("{}", line(term_width as usize));
         eprintln!();
     }
 }

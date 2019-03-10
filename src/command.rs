@@ -1,7 +1,7 @@
 use std::path::*;
 use std::env;
 use use_file;
-use config;
+use std::fs;
 
 pub fn find_selected_version(command: &str) -> Option<String> {
     let file = use_file::find(&env::current_dir().unwrap())
@@ -13,13 +13,15 @@ pub fn find_selected_version(command: &str) -> Option<String> {
 }
 
 pub fn find_system_bin(command: &str) -> Option<PathBuf> {
-    let shim_dir = config::shim_dir();
-    let path = env::var("PATH").expect("env var PATH is not defined");
-    let paths: Vec<_> = env::split_paths(&path)
-        .filter(|p| p != &shim_dir)
-        .collect();
+    let system_path = env::var("PATH").ok()?;
+    let current_exe = env::current_exe()
+        .and_then(fs::canonicalize)
+        .unwrap();
 
-    paths.iter()
-        .find(|p| p.join(command).exists())
+    env::split_paths(&system_path)
         .map(|p| p.join(command))
+        .filter(|p| p.exists())
+        .map(|p| fs::canonicalize(&p).unwrap())
+        .filter(|p| p != &current_exe)
+        .next()
 }
