@@ -13,7 +13,7 @@ pub fn find_selected_version(command: &str) -> Option<String> {
 }
 
 pub fn find_system_bin(command: &str) -> Option<PathBuf> {
-    let system_path = env::var("PATH").unwrap();
+    let system_path = env::var("PATH").ok()?;
     let current_exe = env::current_exe()
         .and_then(fs::canonicalize)
         .unwrap();
