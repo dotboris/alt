@@ -1,6 +1,6 @@
 [package]
 name = "alt"
-version = "1.0.3"
+version = "1.0.4"
 authors = ["Boris Bera <bera.boris@gmail.com>"]
 build = "build.rs"
 publish = false
