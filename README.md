@@ -136,6 +136,13 @@ line:
 alt use some-command version-name
 ```
 
+Note: If you want to use the system version without the menu, you can pass
+`system` as the `version-name`.
+
+```sh
+alt use some-command system
+```
+
 ### Show known commands & used versions
 
 ```sh
