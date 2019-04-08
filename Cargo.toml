@@ -11,7 +11,7 @@ publish = false
 travis_ci = []
 
 [dependencies]
-clap = "2.32.0"
+clap = "2.33.0"
 toml = "0.5.0"
 console = "0.7.5"
 regex = "1"
@@ -25,7 +25,7 @@ escargot = "0.4"
 rand = "0.6"
 
 [build-dependencies]
-clap = "2.32.0"
+clap = "2.33.0"
 
 [profile.release]
 lto = true
