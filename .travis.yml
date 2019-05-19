@@ -17,35 +17,14 @@ matrix:
     - rust: nightly
 
   include:
-    # Linux
-    - env: TARGET=aarch64-unknown-linux-gnu
-    - env: TARGET=arm-unknown-linux-gnueabi
-    - env: TARGET=armv7-unknown-linux-gnueabihf
-    - env: TARGET=i686-unknown-linux-gnu
     - env: TARGET=x86_64-unknown-linux-gnu
-
-    # OSX
-    - env: TARGET=i686-apple-darwin
-      os: osx
     - env: TARGET=x86_64-apple-darwin
       os: osx
-
-    # TODO: BSD fails to build. Not sure why
-    # *BSD
-    #- env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
-    #- env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
-    #- env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
 
     # Testing other channels
     - env: TARGET=x86_64-unknown-linux-gnu
       rust: beta
-    - env: TARGET=x86_64-apple-darwin
-      os: osx
-      rust: beta
     - env: TARGET=x86_64-unknown-linux-gnu
-      rust: nightly
-    - env: TARGET=x86_64-apple-darwin
-      os: osx
       rust: nightly
 
 install:
