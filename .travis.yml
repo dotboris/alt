@@ -32,9 +32,9 @@ install:
   - cargo install cross || true
 
 script:
-  - cross build --target "$TARGET"
-  - if [ -z "$DISABLE_TESTS" ]; then cross test --target "$TARGET" --features travis_ci; fi
-  - if [ -z "$DISABLE_TESTS" ]; then cross run --target "$TARGET" help; fi
+  - cross build --target "$TARGET" --release
+  - cross test --target "$TARGET" --release
+  - cross run --target "$TARGET" --release
 
 before_deploy:
   - cross build --target "$TARGET" --release
