@@ -1,16 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 import subprocess
-from os import path, makedirs
+from os import path, mkdir
 from shutil import copy, move
 from argparse import ArgumentParser
 
 def sh(*args):
-    return subprocess.run(
-        args,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
+    return subprocess.check_output(args)
 
 
 def parse():
@@ -26,15 +21,15 @@ def main(
     dest_dir=None,
     rust_target=None,
 ):
-    makedirs(dest_dir, exist_ok=True)
+    mkdir(dest_dir)
     dest_alt_bin = path.join(dest_dir, 'alt')
     copy(alt_bin, dest_alt_bin)
 
-    version = sh(dest_alt_bin, '--version').stdout
+    version = sh(dest_alt_bin, '--version')
     version = version.strip().split(' ')[1]
 
     gz_dir = path.join(dest_dir, 'gz-bin')
-    makedirs(gz_dir, exist_ok=True)
+    mkdir(gz_dir)
     sh('gzip', '-fk9', dest_alt_bin)
     move(
         '{0}.gz'.format(dest_alt_bin),
