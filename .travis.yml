@@ -41,10 +41,13 @@ deploy:
   provider: releases
   skip_cleanup: true
 
-cache: cargo
+# Cache ~/.cargo without ~/.cargo/registry. Also don't cache ./target
+# See: https://levans.fr/rust_travis_cache.html
+cache:
+  directories:
+    - /home/travis/.cargo
 before_cache:
-  # Travis can't cache files that are not readable by "others"
-  - chmod -R a+r $HOME/.cargo
+  - rm -rf /home/travis/.cargo/registry
 
 branches:
   only:
