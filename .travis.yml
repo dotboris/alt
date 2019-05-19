@@ -30,11 +30,11 @@ script:
   - cargo run --target "$TARGET" --release help
 
   # Package for the release
-  - mkdir -p dist dist/gz-bin
-  - mv "target/$TARGET/release/alt" dist/bin/alt
-  - export VERSION="$(dist/alt --version | cut -d ' ' -f 2)"
-  - gzip -fk9 dist/alt
-  - mv dist/alt.gz "dist/gz-bin/alt_${VERSION}_$TARGET.gz"
+  - |
+    ./ci/package.py \
+      --alt-bin "target/$TARGET/release/alt" \
+      --rust-target "$TARGET" \
+      --dest-dir dist
   - ls -laR dist
 
 deploy:
