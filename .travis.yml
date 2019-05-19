@@ -35,7 +35,7 @@ script:
       --alt-bin "target/$TARGET/release/alt" \
       --rust-target "$TARGET" \
       --dest-dir dist
-  - ls -laR dist
+  - find dist -print0 | xargs -0 ls -lhd
 
 deploy:
   api_key:
