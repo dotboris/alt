@@ -5,11 +5,6 @@ authors = ["Boris Bera <bera.boris@gmail.com>"]
 build = "build.rs"
 publish = false
 
-[features]
-# This is a bullshit feature used to disable some tests from running in certain
-# funny edge cases.
-travis_ci = []
-
 [dependencies]
 clap = "2.33.0"
 toml = "0.5.0"
