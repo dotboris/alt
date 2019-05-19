@@ -1,23 +1,3 @@
-#![cfg(not(all(
-    any(target_arch = "arm", target_arch = "aarch64"),
-    feature = "travis_ci"
-)))]
-// Long story short: the integration tests don't work and will not work
-// in travis-ci on arm.
-//
-// Long story long:
-// These tests work by executing the `alt` binary for the current
-// release & target. This is done in two ways:
-// - Direct call with the Command module
-// - Indirect call through a shim (symlink pointing to the alt binary)
-//
-// This is usually fine since you tend to build binaries for the os you
-// currently run. When building arm on travis, things break down.
-// We're building arm binaries on a x64 machine that we can't run directly.
-// `cross` runs arm binaries through `qemu-arm` (QEMU user mode).
-// I think that it's possible to setup QEMU user mode to work seemlessly on
-// linux, but I'm not going to bother with it for now.
-
 extern crate assert_cmd;
 
 use assert_cmd::prelude::*;
