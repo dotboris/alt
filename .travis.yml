@@ -29,15 +29,18 @@ script:
   - cargo test --target "$TARGET" --release
   - cargo run --target "$TARGET" --release help
 
-before_deploy:
-  - gzip -fk9 "target/$TARGET/release/alt"
-  - mv "target/$TARGET/release/alt.gz" "alt_${TRAVIS_TAG}_$TARGET.gz"
+  # Package for the release
+  - mkdir dist
+  - mv "target/$TARGET/release/alt" dist/alt
+  - gzip -fk9 dist/alt
+  - mv dist/alt.gz "dist/alt_${TRAVIS_BRANCH}_$TARGET.gz"
+  - ls -la dist
 
 deploy:
   api_key:
     secure: "q6pEft0t1WB4Magi06K/EPgYRqVpEynC1bhYc9Sal3zenOjY2z1zyPPcpVTPY0ewP8r2Phf+W1pOF+crTyWnRJv1sFCT7wkKoW22vLOSNYnrf3S2PxqNmibNQiUnI9jtI6fGsx9mXyKp1SyEPuuv/a4PntQGjEd9NKIFG2o1XqvuF4bAUVYymv7tK/DEDtEqQGUAkrhmEJrN5G+j3iKZqZ0RpzibTxGvO5FWKS91xQTz88QIbEqADai9l0cncuApA1dOlxfwGMPN2vQ5/LqSsrDqGXS7347E/KyJgmK4T6q5Gs/TdlERr7bzGc1odhuHZraSnxwvB+nlKxnp3YkT5GjrnkVCisOIu8cmPOHJfdT3yq7HqPhE07UkR9fP6aH/WkzbbneJyCcCfVAkrZkT21WnyG+GUkjF49X7zn5T6lHcwuY/F25Zep9CUG/iZzDQ+PCqU6GKHnNgObHac/lDmu/dn33FKyFNsogTeGQUmcE6AGQgMOU+XV7bj/1AcgQdBbVby9kv4hu4xBI4y+w295hRBiXl1cy5gWD39SJwpnBMpHioiXb53pkKfbcT2G16vvjCeK9BLJF+eZ6zkq3kxvYV3PzQnGcDph0OhleLkzIdI/BZCc6jWu3YG0rdRXBv6zQefKgbLytxe+T+QI4QgIglImnUr6OrBY3SLZtzd5g="
   file_glob: true
-  file: "alt_${TRAVIS_TAG}_$TARGET.gz"
+  file: "dist/alt_${TRAVIS_BRANCH}_$TARGET.gz"
   on:
     condition: $TRAVIS_RUST_VERSION = stable
     tags: true
