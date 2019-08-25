@@ -1,5 +1,5 @@
-use def_file;
-use command;
+use crate::def_file;
+use crate::command;
 use std::os::unix::process::CommandExt;
 use std::process;
 use std::process::Command;

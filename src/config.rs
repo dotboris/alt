@@ -26,7 +26,7 @@ pub fn shim_dir() -> PathBuf {
 #[cfg(test)]
 mod tests {
     use std::env;
-    use config;
+    use crate::config;
     use std::path::{Path, PathBuf};
     use std::sync::Mutex;
 

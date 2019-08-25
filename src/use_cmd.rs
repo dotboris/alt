@@ -1,7 +1,7 @@
 extern crate dialoguer;
 
-use def_file;
-use use_file;
+use crate::def_file;
+use crate::use_file;
 use std::process;
 use std::env;
 use self::dialoguer::Select;

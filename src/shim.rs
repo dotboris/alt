@@ -1,5 +1,5 @@
 use std::path::Path;
-use config;
+use crate::config;
 use std::fs;
 use std::os::unix::fs as unix_fs;
 use std::io;

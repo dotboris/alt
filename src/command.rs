@@ -1,6 +1,6 @@
 use std::path::*;
 use std::env;
-use use_file;
+use crate::use_file;
 use std::fs;
 
 pub fn find_selected_version(command: &str) -> Option<String> {
