@@ -25,8 +25,8 @@ install:
   - rustup target add "$TARGET"
 
 script:
-  - cargo test --target "$TARGET" --release
-  - cargo run --target "$TARGET" --release help
+  - cargo test --target "$TARGET" --release --locked
+  - cargo run --target "$TARGET" --release --locked help
 
   # Package for the release
   - |
