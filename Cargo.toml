@@ -10,6 +10,16 @@ readme = "README.md"
 build = "build.rs"
 publish = false
 
+[package.metadata.deb]
+assets = [
+    ["target/release/alt", "usr/bin/alt", "755"],
+    ["README.md", "usr/share/doc/alt/README.md", "644"],
+    ["etc/profile.d/alt.sh", "etc/profile.d/alt.sh", "644"]
+]
+
+[profile.release]
+lto = true
+
 [dependencies]
 clap = "2.33.0"
 toml = "0.5.3"
@@ -26,6 +36,3 @@ rand = "0.7"
 
 [build-dependencies]
 clap = "2.33.0"
-
-[profile.release]
-lto = true
