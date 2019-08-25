@@ -1,10 +1,24 @@
 [package]
 name = "alt"
 version = "1.0.4"
+description = "A tool for switching between different version so commands based on the current directory."
 authors = ["Boris Bera <bera.boris@gmail.com>"]
-edition = '2018'
+edition = "2018"
+license = "MIT"
+readme = "README.md"
+
 build = "build.rs"
 publish = false
+
+[package.metadata.deb]
+assets = [
+    ["target/release/alt", "usr/bin/alt", "755"],
+    ["README.md", "usr/share/doc/alt/README.md", "644"],
+    ["etc/profile.d/alt.sh", "etc/profile.d/alt.sh", "644"]
+]
+
+[profile.release]
+lto = true
 
 [dependencies]
 clap = "2.33.0"
@@ -22,6 +36,3 @@ rand = "0.7"
 
 [build-dependencies]
 clap = "2.33.0"
-
-[profile.release]
-lto = true

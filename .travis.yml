@@ -25,23 +25,20 @@ install:
   - rustup target add "$TARGET"
 
 script:
-  - cargo build --target "$TARGET" --release
   - cargo test --target "$TARGET" --release
   - cargo run --target "$TARGET" --release help
 
   # Package for the release
   - |
     ./ci/package.py \
-      --alt-bin "target/$TARGET/release/alt" \
       --rust-target "$TARGET" \
-      --dest-dir dist
-  - find dist -print0 | xargs -0 ls -lhd
+      --dest-dir dist/release
 
 deploy:
   api_key:
     secure: "q6pEft0t1WB4Magi06K/EPgYRqVpEynC1bhYc9Sal3zenOjY2z1zyPPcpVTPY0ewP8r2Phf+W1pOF+crTyWnRJv1sFCT7wkKoW22vLOSNYnrf3S2PxqNmibNQiUnI9jtI6fGsx9mXyKp1SyEPuuv/a4PntQGjEd9NKIFG2o1XqvuF4bAUVYymv7tK/DEDtEqQGUAkrhmEJrN5G+j3iKZqZ0RpzibTxGvO5FWKS91xQTz88QIbEqADai9l0cncuApA1dOlxfwGMPN2vQ5/LqSsrDqGXS7347E/KyJgmK4T6q5Gs/TdlERr7bzGc1odhuHZraSnxwvB+nlKxnp3YkT5GjrnkVCisOIu8cmPOHJfdT3yq7HqPhE07UkR9fP6aH/WkzbbneJyCcCfVAkrZkT21WnyG+GUkjF49X7zn5T6lHcwuY/F25Zep9CUG/iZzDQ+PCqU6GKHnNgObHac/lDmu/dn33FKyFNsogTeGQUmcE6AGQgMOU+XV7bj/1AcgQdBbVby9kv4hu4xBI4y+w295hRBiXl1cy5gWD39SJwpnBMpHioiXb53pkKfbcT2G16vvjCeK9BLJF+eZ6zkq3kxvYV3PzQnGcDph0OhleLkzIdI/BZCc6jWu3YG0rdRXBv6zQefKgbLytxe+T+QI4QgIglImnUr6OrBY3SLZtzd5g="
   file_glob: true
-  file: "dist/gz-bin/*"
+  file: "dist/release/*"
   on:
     condition: $TRAVIS_RUST_VERSION = stable
     tags: true
