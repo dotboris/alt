@@ -27,7 +27,7 @@ get_target() {
     linux-x86_64) printf 'x86_64-unknown-linux-musl';;
     darwin-x86_64) printf 'x86_64-apple-darwin';;
     *)
-      echo "Unsupported OS/Arch $_os/$_arch. Try building by hand."
+      echo "Unsupported OS/Arch $_os/$_arch. Try building from source."
       return 1
       ;;
   esac
