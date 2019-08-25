@@ -3,10 +3,10 @@ extern crate dialoguer;
 
 use std::env;
 use std::process;
-use def_file;
-use shim;
-use scan;
-use scan::CommandVersion;
+use crate::def_file;
+use crate::shim;
+use crate::scan;
+use crate::scan::CommandVersion;
 
 fn prompt_versions(versions: &[CommandVersion]) -> Vec<usize> {
     let items: Vec<_> = versions.iter()

@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::path::*;
 use std::fs;
 use std::io;
-use config;
+use crate::config;
 
 const DEFS_FILE_NAME: &str = "defs.toml";
 

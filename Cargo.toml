@@ -2,6 +2,7 @@
 name = "alt"
 version = "1.0.4"
 authors = ["Boris Bera <bera.boris@gmail.com>"]
+edition = '2018'
 build = "build.rs"
 publish = false
 

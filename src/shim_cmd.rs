@@ -1,5 +1,5 @@
-use def_file;
-use shim;
+use crate::def_file;
+use crate::shim;
 use std::env;
 use console::style;
 

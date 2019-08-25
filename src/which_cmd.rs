@@ -1,5 +1,5 @@
-use def_file;
-use command;
+use crate::def_file;
+use crate::command;
 use std::process;
 
 pub fn run(command: &str) {

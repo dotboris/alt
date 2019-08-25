@@ -1,4 +1,4 @@
-use config;
+use crate::config;
 use std::env;
 use std::iter;
 use console;

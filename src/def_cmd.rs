@@ -1,5 +1,5 @@
-use def_file;
-use shim;
+use crate::def_file;
+use crate::shim;
 use std::path::*;
 use std::process;
 use std::env;

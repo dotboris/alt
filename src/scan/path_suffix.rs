@@ -3,7 +3,7 @@ use std::fs;
 use std::path::*;
 use regex::Regex;
 use super::CommandVersion;
-use config;
+use crate::config;
 
 lazy_static! {
     static ref COMMAND_VERSION_REGEX: Regex =
