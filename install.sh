@@ -24,12 +24,10 @@ get_target() {
   _os="$(uname -s | tr '[:upper:]' '[:lower:]')"
 
   case "$_os-$_arch" in
-    linux-x86_64) printf 'x86_64-unknown-linux-gnu';;
-    linux-i686) printf 'i686-unknown-linux-gnu';;
+    linux-x86_64) printf 'x86_64-unknown-linux-musl';;
     darwin-x86_64) printf 'x86_64-apple-darwin';;
-    darwin-i686) printf 'i686-apple-darwin';;
     *)
-      echo "Unkown OS/Arch $_os/$_arch."
+      echo "Unsupported OS/Arch $_os/$_arch. Try building by hand."
       return 1
       ;;
   esac
