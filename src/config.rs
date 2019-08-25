@@ -31,13 +31,13 @@ mod tests {
     use std::sync::Mutex;
 
     lazy_static! {
-        static ref env_mutex: Mutex<()> = Mutex::new(());
+        static ref ENV_MUTEX: Mutex<()> = Mutex::new(());
     }
 
     #[test]
     fn home_dir_should_default() {
         let res = {
-            let _guard = env_mutex.lock().unwrap();
+            let _guard = ENV_MUTEX.lock().unwrap();
             env::remove_var("ALT_HOME");
             config::home_dir()
         };
@@ -52,7 +52,7 @@ mod tests {
     #[test]
     fn home_dir_should_read_alt_home_env() {
         let res = {
-            let _guard = env_mutex.lock().unwrap();
+            let _guard = ENV_MUTEX.lock().unwrap();
             env::set_var("ALT_HOME", "/path/to/phony/home");
             config::home_dir()
         };
