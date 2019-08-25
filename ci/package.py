@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
+import sys
 from argparse import ArgumentParser
 from os import path, makedirs
 from shutil import copy, move, rmtree, which
@@ -20,6 +21,10 @@ def sh_capture(*args):
 
 def command_exists(command):
     return which(command) is not None
+
+
+def is_platform(platform):
+    return sys.platform.startswith(platform)
 
 
 def build_release(rust_target):
@@ -88,7 +93,8 @@ def main(
 
     build_gzip_bin(alt_bin, version, rust_target, dest_dir)
 
-    build_deb(rust_target, dest_dir)
+    if is_platform('linux'):
+        build_deb(rust_target, dest_dir)
 
     list_output(dest_dir)
 
