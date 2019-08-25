@@ -29,7 +29,7 @@ def is_platform(platform):
 
 def build_release(rust_target):
     step('Building release build for target {}'.format(rust_target))
-    sh('cargo', 'build', '--release', '--target', rust_target)
+    sh('cargo', 'build', '--release', '--locked', '--target', rust_target)
 
 
 def build_deb(rust_target, dest_dir):
@@ -38,7 +38,7 @@ def build_deb(rust_target, dest_dir):
         sh('cargo', 'install', 'cargo-deb')
 
     step('Building deb package for {}'.format(rust_target))
-    sh('cargo', 'deb', '--target', rust_target, '-o', dest_dir)
+    sh('cargo', 'deb', '--target', rust_target, '-o', dest_dir, '--', '--locked')
 
 
 def build_gzip_bin(bin_path, version, rust_target, dest_dir):
