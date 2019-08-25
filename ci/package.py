@@ -1,8 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import subprocess
 from os import path, mkdir
 from shutil import copy, move
 from argparse import ArgumentParser
+
 
 def sh(*args):
     return subprocess.check_output(args)
@@ -26,6 +27,7 @@ def main(
     copy(alt_bin, dest_alt_bin)
 
     version = sh(dest_alt_bin, '--version')
+    version = str(version)
     version = version.strip().split(' ')[1]
 
     gz_dir = path.join(dest_dir, 'gz-bin')
