@@ -16,7 +16,10 @@ pub fn main() {
         .next().unwrap().to_owned();
     completion_dir.push("completion");
 
-    fs::create_dir_all(&completion_dir).unwrap();
+    if !completion_dir.exists() {
+        fs::create_dir_all(&completion_dir).unwrap();
+    }
+
     let mut app = make_app();
     app.gen_completions("alt", Shell::Bash, &completion_dir);
     app.gen_completions("alt", Shell::Zsh, &completion_dir);
