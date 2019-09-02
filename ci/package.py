@@ -72,9 +72,19 @@ def build_tarbal(bin_path, version, rust_target, dest_dir):
     install('./etc/profile.d/alt.sh', path.join(work_dir, 'etc/profile.d/alt.sh'), '644')
     install('./etc/fish/conf.d/alt.fish', path.join(work_dir, 'etc/fish/conf.d/alt.fish'), '644')
 
+
+    # On OSX, we're running with BSD tar and not GNU tar
+    # Both of these commands have their own way of overwriting the owner / group
+    # Because of that, we get to do this.
+    permission_flags = None
+    if is_platform('darwin'):
+        permission_flags = ['--uid', '0', '--gid', '0']
+    else:
+        permission_flags = ['--owner=0', '--group=0']
+
     dest_file = path.join(dest_dir, dest_file_name)
     sh(
-        'tar', '--owner=0', '--group=0',
+        'tar', *permission_flags,
         '-czf', path.abspath(dest_file),
         '-C', work_dir,
         '.'
