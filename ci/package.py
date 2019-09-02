@@ -20,7 +20,8 @@ def sh_capture(*args):
 
 
 def install(src, dest, mode):
-    return sh('install', '-D', '-m', mode, src, dest)
+    makedirs(path.dirname(dest), exist_ok=True)
+    return sh('install', '-m', mode, src, dest)
 
 
 def command_exists(command):
