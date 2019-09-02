@@ -14,7 +14,8 @@ publish = false
 assets = [
     ["target/release/alt", "usr/bin/alt", "755"],
     ["README.md", "usr/share/doc/alt/README.md", "644"],
-    ["etc/profile.d/alt.sh", "etc/profile.d/alt.sh", "644"]
+    ["etc/profile.d/alt.sh", "etc/profile.d/alt.sh", "644"],
+    ["etc/fish/conf.d/alt.fish", "etc/fish/conf.d/alt.fish", "644"]
 ]
 
 [profile.release]
