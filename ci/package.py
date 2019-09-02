@@ -76,6 +76,13 @@ def build_tarbal(bin_path, version, rust_target, dest_dir):
     install('./etc/profile.d/alt.sh', path.join(install_dir, 'etc/profile.d/alt.sh'), '644')
     install('./etc/fish/conf.d/alt.fish', path.join(install_dir, 'etc/fish/conf.d/alt.fish'), '644')
 
+    for completion_file in ['_alt', 'alt.bash', 'alt.fish']:
+        install(
+            path.join('target', rust_target, 'release/completion', completion_file),
+            path.join(install_dir, 'completion', completion_file),
+            '644'
+        )
+
     def as_root(tarinfo):
         tarinfo.uid = 0
         tarinfo.gid = 0

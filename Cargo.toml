@@ -15,7 +15,10 @@ assets = [
     ["target/release/alt", "usr/bin/alt", "755"],
     ["README.md", "usr/share/doc/alt/README.md", "644"],
     ["etc/profile.d/alt.sh", "etc/profile.d/alt.sh", "644"],
-    ["etc/fish/conf.d/alt.fish", "etc/fish/conf.d/alt.fish", "644"]
+    ["etc/fish/conf.d/alt.fish", "etc/fish/conf.d/alt.fish", "644"],
+    ["target/release/completion/alt.fish", "etc/fish/completions/alt.fish", "644"],
+    ["target/release/completion/alt.bash", "etc/bash_completion.d/alt", "644"],
+    ["target/release/completion/_alt", "usr/share/zsh/vendor-completions/_alt", "644"]
 ]
 
 [profile.release]

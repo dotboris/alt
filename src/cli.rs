@@ -29,7 +29,7 @@ pub fn make_app() -> App<'static, 'static> {
     alt use node          Prompt for a version of node to use
     alt use node system   Use the system version of node"
             )
-            (@arg command: +required "Command who's version to switch")
+            (@arg command: +required "Command to switch the version of")
             (@arg version: "Version to use (optional)")
         )
         (@subcommand show =>
