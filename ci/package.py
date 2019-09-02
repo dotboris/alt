@@ -3,7 +3,7 @@ import subprocess
 import sys
 from argparse import ArgumentParser
 from os import path, makedirs
-from shutil import copy, move, rmtree, which
+from shutil import copy, copytree, move, rmtree, which
 from tempfile import mkdtemp
 
 
@@ -17,6 +17,10 @@ def sh(*args):
 
 def sh_capture(*args):
     return subprocess.check_output(args)
+
+
+def install(src, dest, mode):
+    return sh('install', '-D', '-m', mode, src, dest)
 
 
 def command_exists(command):
@@ -56,6 +60,29 @@ def build_gzip_bin(bin_path, version, rust_target, dest_dir):
     rmtree(work_dir)
 
 
+def build_tarbal(bin_path, version, rust_target, dest_dir):
+    step('Packinging {0} as a gzipped binary'.format(bin_path))
+    work_dir = mkdtemp()
+
+    install(bin_path, path.join(work_dir, 'bin/alt'), '755')
+    install('./README.md', path.join(work_dir, 'README.md'), '644')
+    install('./LICENSE', path.join(work_dir, 'LICENSE'), '644')
+    install('./etc/profile.d/alt.sh', path.join(work_dir, 'etc/profile.d/alt.sh'), '644')
+    install('./etc/fish/conf.d/alt.fish', path.join(work_dir, 'etc/fish/conf.d/alt.fish'), '644')
+
+    dest_file = path.join(dest_dir, 'alt_v{0}_{1}.tar.gz'.format(version, rust_target))
+    sh(
+        'tar', '--owner=0', '--group=0',
+        '-czf', path.abspath(dest_file),
+        '-C', work_dir,
+        '.'
+    )
+
+    sh('tar', 'tvzf', dest_file)
+
+    rmtree(work_dir)
+
+
 def list_output(dest_dir):
     step('Contents of {}'.format(dest_dir))
     sh('ls', '-lh', dest_dir)
@@ -90,6 +117,8 @@ def main(
     version = version.decode()
     version = version.strip().split(' ')[1]
     print(version)
+
+    build_tarbal(alt_bin, version, rust_target, dest_dir)
 
     build_gzip_bin(alt_bin, version, rust_target, dest_dir)
 
