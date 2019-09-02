@@ -61,7 +61,8 @@ def build_gzip_bin(bin_path, version, rust_target, dest_dir):
 
 
 def build_tarbal(bin_path, version, rust_target, dest_dir):
-    step('Packinging {0} as a gzipped binary'.format(bin_path))
+    dest_file_name = 'alt_v{0}_{1}.tar.gz'.format(version, rust_target)
+    step('Packinging {}'.format(dest_file_name))
     work_dir = mkdtemp()
 
     install(bin_path, path.join(work_dir, 'bin/alt'), '755')
@@ -70,7 +71,7 @@ def build_tarbal(bin_path, version, rust_target, dest_dir):
     install('./etc/profile.d/alt.sh', path.join(work_dir, 'etc/profile.d/alt.sh'), '644')
     install('./etc/fish/conf.d/alt.fish', path.join(work_dir, 'etc/fish/conf.d/alt.fish'), '644')
 
-    dest_file = path.join(dest_dir, 'alt_v{0}_{1}.tar.gz'.format(version, rust_target))
+    dest_file = path.join(dest_dir, dest_file_name)
     sh(
         'tar', '--owner=0', '--group=0',
         '-czf', path.abspath(dest_file),
