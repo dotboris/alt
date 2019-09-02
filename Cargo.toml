@@ -18,7 +18,7 @@ assets = [
     ["etc/fish/conf.d/alt.fish", "etc/fish/conf.d/alt.fish", "644"],
     ["target/release/completion/alt.fish", "etc/fish/completions/alt.fish", "644"],
     ["target/release/completion/alt.bash", "etc/bash_completion.d/alt", "644"],
-    ["target/release/completion/_alt", "usr/share/zsh/site-functions/_alt", "644"]
+    ["target/release/completion/_alt", "usr/share/zsh/vendor-completions/_alt", "644"]
 ]
 
 [profile.release]
