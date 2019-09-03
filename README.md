@@ -34,47 +34,39 @@ itself in a few ways:
     their dependencies. How you install different versions of commands is
     entirely up to you.
 
-## Installation
+## Install
 
-1.  Install the `alt` binary.
+### Debian / Ubuntu / Anything using DEBs
 
-    ```sh
-    curl -sL https://github.com/dotboris/alt/raw/master/install.sh | bash -s
-    ```
-
-1.  Add the `alt` shims directory to the top of your `PATH`.
-    This lets `alt` change command versions.
-
-    For BASH:
+1.  Open the [latest release page on Github][latest-release]
+1.  Download the `.deb` file matching your architecture
+1.  Install the `.deb` file by double clicking on it
+1.  OR Install the `.deb` file from the command line
 
     ```sh
-    echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.bashrc
-    export PATH="$HOME/.local/alt/shims:$PATH"
+    sudo apt install path/to/alt.deb
     ```
 
-    For ZSH:
+Note: You will probably need to log out & log back in to your user for `alt` to
+finish being configured.
 
-    ```sh
-    echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.zshrc
-    export PATH="$HOME/.local/alt/shims:$PATH"
-    ```
+### OSX (Homebrew & Linuxbrew)
 
-    For FISH:
+```sh
+brew tap dotboris/alt
+brew install alt-bin
+```
 
-    ```sh
-    echo 'set -x PATH "$HOME/.local/alt/shims" $PATH' >> ~/.config/fish/config.fish
-    set -x PATH "$HOME/.local/alt/shims" $PATH
-    ```
+Pay close attention to the "Caveats" messages as you'll need to add a line to
+your `~/.bashrc` / `~/.zshrc` files.
 
-1.  (Optional) Add `.alt.toml` to your global gitignore file.
+### Pre-packaged binaries
 
-    During it's operation, `alt` puts a file named `.alt.toml` in the current
-    directory. These files don't belong in git repositories. To avoid getting
-    those files all over your git repositories, you can add them to a global
-    gitignore file.
+TODO
 
-    If you don't know how to create a global gitignore file, see:
-    https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
+### From source
+
+TODO
 
 ## Usage
 
@@ -155,6 +147,28 @@ The above command will show you:
 - The versions of those commands available
 - The versions being used in the current directory
 
+## Troubleshooting
+
+### Warning about shims directory not being in `PATH`
+
+TODO: Try logging out / logging back in
+TODO: Try sourcing `/etc/profile.d/alt.sh`
+
+### Git always see a `.alt.toml` file
+
+TODO: Does this belong here or should it be higher up?
+
+During it's normal operation, `alt` puts a file named `.alt.toml` in the current
+directory. __You should not commit `.alt.toml`.__ To avoid getting those files
+all over your git repositories, you can add them to a global gitignore file.
+
+If you don't know how to create a global gitignore file, see:
+https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
+
+```sh
+echo '.alt.toml' >> path/to/your/global-gitgnore
+```
+
 ## Development
 
 ### Setup
@@ -172,3 +186,5 @@ cargo run ...
 ```sh
 cargo test
 ```
+
+[latest-release]: https://github.com/dotboris/alt/releases/latest
