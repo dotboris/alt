@@ -27,3 +27,5 @@
     ```
 
 1.  Travis CI will build the release and push it to github
+1.  Wait for Travis CI to finish building & pushing the artifacts
+1.  Update the Homebrew formula in <https://github.com/dotboris/homebrew-alt>
