@@ -44,7 +44,7 @@ itself in a few ways:
 1.  OR Install the `.deb` file from the command line
 
     ```sh
-    sudo apt install path/to/alt.deb
+    sudo apt install ./path/to/alt.deb
     ```
 
 You will probably need to log out & log back in to your desktop session for
