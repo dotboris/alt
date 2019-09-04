@@ -151,12 +151,35 @@ The above command will show you:
 
 ### Warning about shims directory not being in `PATH`
 
-TODO: Try logging out / logging back in
-TODO: Try sourcing `/etc/profile.d/alt.sh`
+Behind the scenes, `alt` manages a directory of "shims"
+(`$HOME/.local/alt/shims`). In order to switch the version of commands, it needs
+that directory to be at the top of your `PATH` environment variable.
 
-### Git always see a `.alt.toml` file
+During the install process, we install scripts that configures this
+automatically for you. These scripts are `/etc/profile.d/alt.sh` &
+`/etc/fish/conf.d/alt.fish` (the location of these scripts may vary on some
+platforms).
 
-TODO: Does this belong here or should it be higher up?
+In some cases, you may need to force these scripts to re-load. You can try the following steps:
+
+1.  Close & re-open your terminal
+1.  Log out of your desktop session & log back in again
+
+If either or both of these fail, you can put the shim directory on top of your
+`PATH` manually. This will vary depending on what shell you use.
+
+```sh
+# For BASH
+echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.bashrc
+
+# For ZSH
+echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.zshrc
+
+# For FISH
+echo 'set -gx PATH "$HOME/.local/alt/shims" $PATH' >> ~/.config/fish/config.fish
+```
+
+### `.alt.toml` file in git repositories
 
 During it's normal operation, `alt` puts a file named `.alt.toml` in the current
 directory. __You should not commit `.alt.toml`.__ To avoid getting those files
