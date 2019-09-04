@@ -62,7 +62,7 @@ your `~/.bashrc` / `~/.zshrc` files.
 
 ### Pre-packaged binaries
 
-See: [doc/install-prepackaged-bins.md]
+See: [doc/install-pre-packaged-bins.md](./doc/install-pre-packaged-bins.md)
 
 ### From source
 
