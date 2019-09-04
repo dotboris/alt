@@ -4,7 +4,7 @@
 1.  Download the source `.tar.gz` file
 1.  Install the Rust compiler
 
-    See: <https://doc.rust-lang.org/book/ch01-01-installation.html>
+    See: <https://www.rust-lang.org/tools/install>
 
 1.  Extract the source code
 
