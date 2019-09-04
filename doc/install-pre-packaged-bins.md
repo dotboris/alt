@@ -1,6 +1,6 @@
 # Install Pre-packaged Binaries
 
-Note that the following instructions assume a farly "normal" file system setup.
+Note that the following instructions assume a fairly "normal" file system.
 You may need to adjust some of the paths here to match your system.
 
 1.  Open the [latest release page on Github][latest-release]
