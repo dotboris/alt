@@ -47,7 +47,7 @@
     sudo cp target/release/completion/alt.fish /etc/fish/completions/alt.fish
     ```
 
-You will probably need to log out & log back in to your user so that the `PATH`
-configuration scripts you install will load.
+You will probably need to log out & log back in to your desktop session so that
+the `PATH` configuration scripts you installed will load.
 
 [latest-release]: https://github.com/dotboris/alt/releases/latest
