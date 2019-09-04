@@ -39,7 +39,7 @@ itself in a few ways:
 ### Debian / Ubuntu / Anything using DEBs
 
 1.  Open the [latest release page on Github][latest-release]
-1.  Download the `.deb` file matching your architecture
+1.  Download the `.deb` file matching your system architecture
 1.  Install the `.deb` file by double clicking on it
 1.  OR Install the `.deb` file from the command line
 
@@ -62,7 +62,7 @@ your `~/.bashrc` / `~/.zshrc` files.
 
 ### Pre-packaged binaries
 
-TODO
+See: [doc/install-prepackaged-bins.md]
 
 ### From source
 
