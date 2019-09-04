@@ -66,7 +66,7 @@ See: [doc/install-pre-packaged-bins.md](./doc/install-pre-packaged-bins.md)
 
 ### From source
 
-TODO
+See: [doc/install-from-source.md](./doc/install-from-source.md)
 
 ## Usage
 
