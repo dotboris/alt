@@ -47,8 +47,8 @@ itself in a few ways:
     sudo apt install path/to/alt.deb
     ```
 
-You will probably need to log out & log back in to your user for `alt` to finish
-being configured.
+You will probably need to log out & log back in to your desktop session for
+`alt` to be configured.
 
 ### OSX (Homebrew & Linuxbrew)
 
