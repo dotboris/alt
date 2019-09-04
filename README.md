@@ -183,8 +183,9 @@ echo 'set -gx PATH "$HOME/.local/alt/shims" $PATH' >> ~/.config/fish/config.fish
 ### `.alt.toml` file in git repositories
 
 During it's normal operation, `alt` puts a file named `.alt.toml` in the current
-directory. __You should not commit `.alt.toml`.__ To avoid getting those files
-all over your git repositories, you can add them to a global gitignore file.
+directory. __You should not commit `.alt.toml` to git or any other VCS.__ To
+avoid getting those files all over your git repositories, you can add them to a
+global gitignore file.
 
 If you don't know how to create a global gitignore file, see:
 https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
