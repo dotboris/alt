@@ -155,12 +155,13 @@ Behind the scenes, `alt` manages a directory of "shims"
 (`$HOME/.local/alt/shims`). In order to switch the version of commands, it needs
 that directory to be at the top of your `PATH` environment variable.
 
-During the install process, we install scripts that configures this
+During the install process, we install scripts that configure this
 automatically for you. These scripts are `/etc/profile.d/alt.sh` &
 `/etc/fish/conf.d/alt.fish` (the location of these scripts may vary on some
 platforms).
 
-In some cases, you may need to force these scripts to re-load. You can try the following steps:
+In some cases, you may need to force these scripts to re-load. You can try the
+following steps:
 
 1.  Close & re-open your terminal
 1.  Log out of your desktop session & log back in again
