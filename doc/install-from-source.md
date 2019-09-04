@@ -4,10 +4,7 @@
 1.  Download the source `.tar.gz` file
 1.  Install the Rust compiler
 
-    This can be done through your distributions' package manager. Note that the
-    version of rust packaged by some distributions may be fairly out of date.
-
-    I recommend installing rust with <https://rustup.rs/>.
+    See: <https://doc.rust-lang.org/book/ch01-01-installation.html>
 
 1.  Extract the source code
 

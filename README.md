@@ -198,7 +198,7 @@ echo '.alt.toml' >> path/to/your/global-gitgnore
 
 ### Setup
 
-See: https://doc.rust-lang.org/book/second-edition/ch01-01-installation.html
+See: <https://doc.rust-lang.org/book/ch01-01-installation.html>
 
 ### Run
 
