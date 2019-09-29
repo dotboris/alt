@@ -41,7 +41,7 @@ pub fn check_shim_in_path() {
         eprintln!(
             "\
 {warning_line}
-Alt is not configured corrected and will not work!
+Alt is not configured correctly and will not work!
 
 You are seeing the warning because the shim directory ({shim_dir}) is not in \
 your {path_env_var} environment variable.
