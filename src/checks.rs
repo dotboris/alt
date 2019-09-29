@@ -47,7 +47,7 @@ You are seeing this warning because the shim directory ({shim_dir}) is not in \
 your {path_env_var} environment variable.
 
 Normally, alt should configure this automatically during the install process.
-In come cases you may need to:
+In some cases you may need to:
 
 - {reopen_terminal}
 - {relogin}
