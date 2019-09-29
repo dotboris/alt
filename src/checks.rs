@@ -43,7 +43,7 @@ pub fn check_shim_in_path() {
 {warning_line}
 Alt is not configured correctly and will not work!
 
-You are seeing the warning because the shim directory ({shim_dir}) is not in \
+You are seeing this warning because the shim directory ({shim_dir}) is not in \
 your {path_env_var} environment variable.
 
 Normally, alt should configure this automatically during the install process.
