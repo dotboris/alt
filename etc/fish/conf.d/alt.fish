@@ -1,1 +1,1 @@
-set -gx PATH "$HOME/.local/alt/shims" $PATH
+set -g fish_user_paths "$HOME/.local/alt/shims" $fish_user_paths
