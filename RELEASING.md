@@ -7,6 +7,8 @@
     cargo build
     ```
 
+1.  Add the new version to the `CHANGELOG.md`
+
 1.  Commit your version bump
 
     ```sh
