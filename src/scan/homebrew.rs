@@ -7,12 +7,13 @@ const LINUXBREW_GLOB: &str = "/home/linuxbrew/.linuxbrew/opt/*@*/bin/*";
 
 fn extract_command_and_version(path: &Path) -> (String, String) {
     let parts: Vec<_> = path.components().collect();
+    let num_parts = parts.len();
 
-    let command = match parts[parts.len() - 1] {
+    let command = match parts[num_parts - 1] {
         Component::Normal(part) => String::from(part.to_str().unwrap()),
         _ => panic!(),
     };
-    let version = match parts[parts.len() - 3] {
+    let version = match parts[num_parts - 3] {
         Component::Normal(part) => {
             let package = part.to_str().unwrap();
             let version = package.split('@').last().unwrap();
