@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Update dependencies
 - Move the shims directory higher up in the `PATH` on fish by using
   `fish_user_paths`.
 - Expand documentation on `alt` in relation to git (and other VCS).
