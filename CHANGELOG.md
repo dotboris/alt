@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- `alt scan` now knows about LinuxBrew and can automatically find different
+  version of commands installed through LinuxBrew.
+
 ### Changed
 
 - Move the shims directory higher up in the `PATH` on fish by using
