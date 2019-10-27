@@ -1,6 +1,9 @@
 # alt the version switcher
 
+![GitHub All Releases](https://img.shields.io/github/downloads/dotboris/alt/total)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/dotboris/alt?sort=semver)
 [![Build Status](https://travis-ci.org/dotboris/alt.svg?branch=master)](https://travis-ci.org/dotboris/alt)
+![License](https://img.shields.io/github/license/dotboris/alt)
 
 `alt` is a command line utility that lets you switch between different versions
 of commands based on your current directory.
