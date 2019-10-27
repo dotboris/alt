@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## v1.1.0 - 2019-10-27
+
 ### Added
 
 - `alt scan` now knows about LinuxBrew and can automatically find different
