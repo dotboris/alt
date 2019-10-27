@@ -11,9 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `alt scan` now knows about LinuxBrew and can automatically find different
   version of commands installed through LinuxBrew.
+- Add install instructions for Mac OSX using the Homebrew package manager.
+  (LinuxBrew also supported)
+- Add install instructions for `DEB` based linux systems.
+- Add install instructions using the pre-built `.tar.gz` release.
+- Add install from source instructions.
+- Document how to troubleshoot the warning emitted by `alt` when the shim
+  directory is not present in the `PATH` environment variable.
+- Add Homebrew formula update to release instructions.
 
 ### Changed
 
 - Update dependencies
 - Move the shims directory higher up in the `PATH` on fish by using
-  `fish_user_paths`
+  `fish_user_paths`.
+- Expand documentation on `alt` in relation to git (and other VCS).
+- Update link to rust install instructions.
+- Update the shims dir not in `PATH` warning to include troubleshooting steps
+  and to link to the troubleshooting documentation.
+
+### Removed
+
+- The gziped `alt` binary (`alt_{...}.gz`) is no longer packaged.
+- Remove support for the `curl ... | bash -s` install method.
+
+### Fixed
+
+- Fix crash when `alt` is run without the `PATH` environment variable set.

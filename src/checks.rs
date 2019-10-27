@@ -26,7 +26,7 @@ fn line_label(width: usize, label: &str) -> String {
 }
 
 pub fn check_shim_in_path() {
-    let path = env::var("PATH").unwrap();
+    let path = env::var("PATH").unwrap_or_default();
     let mut parts = env::split_paths(&path);
 
     let shim_dir = config::shim_dir();
@@ -38,22 +38,32 @@ pub fn check_shim_in_path() {
         let shim_dir = style(shim_dir).cyan();
         let path_env_var = style("PATH").cyan();
 
-        eprintln!("{}", line_label(term_width as usize, "WARNING"));
-        eprintln!("Alt is not installed corrected and will not work!");
-        eprintln!();
         eprintln!(
-            "You are seeing the warning because the shim directory ({}) is not in your {} environment variable.",
-            shim_dir,
-            path_env_var
+            "\
+{warning_line}
+Alt is not configured correctly and will not work!
+
+You are seeing this warning because the shim directory ({shim_dir}) is not in \
+your {path_env_var} environment variable.
+
+Normally, alt should configure this automatically during the install process.
+In some cases you may need to:
+
+- {reopen_terminal}
+- {relogin}
+
+If the problem persists, please see:
+    {troubleshooting_link}
+{bottom_line}
+
+",
+            warning_line=line_label(term_width as usize, "WARNING"),
+            bottom_line=line(term_width as usize),
+            shim_dir=shim_dir,
+            path_env_var=path_env_var,
+            reopen_terminal=style("re-open your terminal").bold(),
+            relogin=style("log out and log back into your user session").bold(),
+            troubleshooting_link=style("https://github.com/dotboris/alt#troubleshooting").cyan()
         );
-        eprintln!();
-        eprintln!("Please add {} to your {} environment variable.", shim_dir, path_env_var);
-        eprintln!();
-        eprintln!(
-            "Alternatively, see {} for setup instructions.",
-            style("https://github.com/dotboris/alt#installation").cyan()
-        );
-        eprintln!("{}", line(term_width as usize));
-        eprintln!();
     }
 }

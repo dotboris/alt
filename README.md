@@ -37,47 +37,39 @@ itself in a few ways:
     their dependencies. How you install different versions of commands is
     entirely up to you.
 
-## Installation
+## Install
 
-1.  Install the `alt` binary.
+### Debian / Ubuntu / Anything using DEBs
 
-    ```sh
-    curl -sL https://github.com/dotboris/alt/raw/master/install.sh | bash -s
-    ```
-
-1.  Add the `alt` shims directory to the top of your `PATH`.
-    This lets `alt` change command versions.
-
-    For BASH:
+1.  Open the [latest release page on Github][latest-release]
+1.  Download the `.deb` file matching your system architecture
+1.  Install the `.deb` file by double clicking on it
+1.  OR Install the `.deb` file from the command line
 
     ```sh
-    echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.bashrc
-    export PATH="$HOME/.local/alt/shims:$PATH"
+    sudo apt install ./path/to/alt.deb
     ```
 
-    For ZSH:
+You will probably need to log out & log back in to your desktop session for
+`alt` to be configured.
 
-    ```sh
-    echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.zshrc
-    export PATH="$HOME/.local/alt/shims:$PATH"
-    ```
+### OSX (Homebrew & Linuxbrew)
 
-    For FISH:
+```sh
+brew tap dotboris/alt
+brew install alt-bin
+```
 
-    ```sh
-    echo 'set -x PATH "$HOME/.local/alt/shims" $PATH' >> ~/.config/fish/config.fish
-    set -x PATH "$HOME/.local/alt/shims" $PATH
-    ```
+Pay close attention to the "Caveats" messages as you'll need to add a line to
+your `~/.bashrc` / `~/.zshrc` files.
 
-1.  (Optional) Add `.alt.toml` to your global gitignore file.
+### Pre-packaged binaries
 
-    During it's operation, `alt` puts a file named `.alt.toml` in the current
-    directory. These files don't belong in git repositories. To avoid getting
-    those files all over your git repositories, you can add them to a global
-    gitignore file.
+See: [doc/install-pre-packaged-bins.md](./doc/install-pre-packaged-bins.md)
 
-    If you don't know how to create a global gitignore file, see:
-    https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
+### From source
+
+See: [doc/install-from-source.md](./doc/install-from-source.md)
 
 ## Usage
 
@@ -158,11 +150,58 @@ The above command will show you:
 - The versions of those commands available
 - The versions being used in the current directory
 
+## Troubleshooting
+
+### Warning about shims directory not being in `PATH`
+
+Behind the scenes, `alt` manages a directory of "shims"
+(`$HOME/.local/alt/shims`). In order to switch the version of commands, it needs
+that directory to be at the top of your `PATH` environment variable.
+
+During the install process, we install scripts that configure this
+automatically for you. These scripts are `/etc/profile.d/alt.sh` &
+`/etc/fish/conf.d/alt.fish` (the location of these scripts may vary on some
+platforms).
+
+In some cases, you may need to force these scripts to re-load. You can try the
+following steps:
+
+1.  Close & re-open your terminal
+1.  Log out of your desktop session & log back in again
+
+If either or both of these fail, you can put the shim directory on top of your
+`PATH` manually. This will vary depending on what shell you use.
+
+```sh
+# For BASH
+echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.bashrc
+
+# For ZSH
+echo 'export PATH="$HOME/.local/alt/shims:$PATH"' >> ~/.zshrc
+
+# For FISH
+echo 'set -gx PATH "$HOME/.local/alt/shims" $PATH' >> ~/.config/fish/config.fish
+```
+
+### `.alt.toml` file in git repositories
+
+During it's normal operation, `alt` puts a file named `.alt.toml` in the current
+directory. __You should not commit `.alt.toml` to git or any other VCS.__ To
+avoid getting those files all over your git repositories, you can add them to a
+global gitignore file.
+
+If you don't know how to create a global gitignore file, see:
+https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
+
+```sh
+echo '.alt.toml' >> path/to/your/global-gitgnore
+```
+
 ## Development
 
 ### Setup
 
-See: https://doc.rust-lang.org/book/second-edition/ch01-01-installation.html
+See: <https://www.rust-lang.org/tools/install>
 
 ### Run
 
@@ -175,3 +214,5 @@ cargo run ...
 ```sh
 cargo test
 ```
+
+[latest-release]: https://github.com/dotboris/alt/releases/latest

@@ -47,21 +47,6 @@ def build_deb(rust_target, dest_dir):
     sh('cargo', 'deb', '--target', rust_target, '-o', dest_dir, '--', '--locked')
 
 
-def build_gzip_bin(bin_path, version, rust_target, dest_dir):
-    step('Packinging {0} as a gzipped binary'.format(bin_path))
-    work_dir = mkdtemp()
-
-    to_gzip_file = path.join(work_dir, 'alt')
-    copy(bin_path, to_gzip_file)
-    sh('gzip', '-fk9', to_gzip_file)
-    move(
-        '{}.gz'.format(to_gzip_file),
-        path.join(dest_dir, 'alt_v{0}_{1}.gz'.format(version, rust_target))
-    )
-
-    rmtree(work_dir)
-
-
 def build_tarbal(bin_path, version, rust_target, dest_dir):
     dest_file_name = 'alt_v{0}_{1}.tar.gz'.format(version, rust_target)
     step('Packinging {}'.format(dest_file_name))
@@ -135,8 +120,6 @@ def main(
     print(version)
 
     build_tarbal(alt_bin, version, rust_target, dest_dir)
-
-    build_gzip_bin(alt_bin, version, rust_target, dest_dir)
 
     if is_platform('linux'):
         build_deb(rust_target, dest_dir)
