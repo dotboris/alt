@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Fix bug where `alt scan` would not find single letter commands with a version
+  suffix. Example: `a2`, `a-2`, `a2.2` `a-2.2`.
+
 ## v1.1.0 - 2019-10-27
 
 ### Added
