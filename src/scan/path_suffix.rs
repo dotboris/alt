@@ -7,13 +7,15 @@ use crate::config;
 
 lazy_static! {
     static ref COMMAND_VERSION_REGEX: Regex =
-        Regex::new(r"^(?P<command>.+[^\d.-])-?(?P<version>\d+(?:\.\d+)*)$").unwrap();
+        Regex::new(r"^(?P<command>[^\d.-]+)-?(?P<version>\d+(?:\.\d+)*)$").unwrap();
 }
 
 fn parse_command_version(bin: PathBuf) -> Option<CommandVersion> {
     let name = String::from(bin.file_name().unwrap().to_str().unwrap());
 
-    COMMAND_VERSION_REGEX.captures(&name)
+    let res = COMMAND_VERSION_REGEX.captures(&name);
+    println!("{:?}", &res);
+        res
         .map(|captures| CommandVersion {
             command: String::from(captures.name("command").unwrap().as_str()),
             version: String::from(captures.name("version").unwrap().as_str()),
@@ -85,5 +87,85 @@ mod tests {
     fn command_trailing_period_in_suffix_should_not_parse() {
         let res = parse_command_version(PathBuf::from("/usr/bin/something-2.1."));
         assert_eq!(res, None);
+    }
+
+    #[test]
+    fn single_letter_command_with_single_digit_version() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/a2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("a"),
+            version: String::from("2"),
+            path: PathBuf::from("/usr/bin/a2"),
+        }));
+    }
+
+    #[test]
+    fn single_letter_command_with_dot_version() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/a2.2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("a"),
+            version: String::from("2.2"),
+            path: PathBuf::from("/usr/bin/a2.2"),
+        }));
+    }
+
+    #[test]
+    fn single_letter_command_with_dash_single_digit_version() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/a-2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("a"),
+            version: String::from("2"),
+            path: PathBuf::from("/usr/bin/a-2"),
+        }));
+    }
+
+    #[test]
+    fn single_letter_command_with_dash_dot_version() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/a-2.2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("a"),
+            version: String::from("2.2"),
+            path: PathBuf::from("/usr/bin/a-2.2"),
+        }));
+    }
+
+    #[test]
+    fn emoji_command_with_single_digit_version() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/💩2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("💩"),
+            version: String::from("2"),
+            path: PathBuf::from("/usr/bin/💩2"),
+        }));
+    }
+
+    #[test]
+    fn emoji_command_with_dot_version() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/💩2.2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("💩"),
+            version: String::from("2.2"),
+            path: PathBuf::from("/usr/bin/💩2.2"),
+        }));
+    }
+
+    #[test]
+    fn emoji_command_with_dash_single_digit_version() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/💩-2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("💩"),
+            version: String::from("2"),
+            path: PathBuf::from("/usr/bin/💩-2"),
+        }));
+    }
+
+    #[test]
+    fn emoji_command_with_dash_dot_version() {
+        let res = parse_command_version(PathBuf::from("/usr/bin/💩-2.2"));
+        assert_eq!(res, Some(CommandVersion {
+            command: String::from("💩"),
+            version: String::from("2.2"),
+            path: PathBuf::from("/usr/bin/💩-2.2"),
+        }));
     }
 }
