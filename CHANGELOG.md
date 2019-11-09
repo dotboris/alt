@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Reduce final binary size by removing unused unicode regex features.
+
 ### Fixed
 
 - Fix bug where `alt scan` would not find single letter commands with a version
