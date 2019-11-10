@@ -5,6 +5,10 @@ pub fn make_app() -> App<'static, 'static> {
     clap_app!(alt =>
         (version: crate_version!())
         (about: "Switch between different versions of commands")
+        (settings: &[
+            AppSettings::SubcommandRequiredElseHelp,
+            AppSettings::VersionlessSubcommands
+        ])
         (@subcommand exec =>
             (about: "Run the given command")
             (after_help:
@@ -54,8 +58,4 @@ pub fn make_app() -> App<'static, 'static> {
             (@arg bin: +required "Path to the executable for the version")
         )
     )
-        .settings(&[
-            AppSettings::SubcommandRequiredElseHelp,
-            AppSettings::VersionlessSubcommands
-        ])
 }
