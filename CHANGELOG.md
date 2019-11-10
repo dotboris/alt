@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Document how to pass flags parsed by `alt exec` to the executed command
+  instead of `alt exec` itself. This was done directly in `alt exec`'s help
+  text.
+
 ### Removed
 
 - Removed the `--version` & `-V` flags from all subcommands. This means that
