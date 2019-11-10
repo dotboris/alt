@@ -7,6 +7,18 @@ pub fn make_app() -> App<'static, 'static> {
         (about: "Switch between different versions of commands")
         (@subcommand exec =>
             (about: "Run the given command")
+            (after_help:
+"ARGS NOTE:
+    Note that `alt exec` handles some flags on its own (`--help` for example).
+    If you want to pass such arguments to the executed command instead of
+    `alt exec`, you will need to use `--` to tell alt exec to stop parsing
+    arguments.
+
+    Example:
+
+    alt exec node --help        # --help passed to alt (shows this message)
+    alt exec node -- --help     # --help passed to node (shows node's help)"
+            )
             (@arg command: +required "The command to run")
             (@arg command_args: ... "Arguments to pass to the command")
         )
