@@ -13,9 +13,7 @@ lazy_static! {
 fn parse_command_version(bin: PathBuf) -> Option<CommandVersion> {
     let name = String::from(bin.file_name().unwrap().to_str().unwrap());
 
-    let res = COMMAND_VERSION_REGEX.captures(&name);
-    println!("{:?}", &res);
-        res
+    COMMAND_VERSION_REGEX.captures(&name)
         .map(|captures| CommandVersion {
             command: String::from(captures.name("command").unwrap().as_str()),
             version: String::from(captures.name("version").unwrap().as_str()),
