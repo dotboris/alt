@@ -42,5 +42,8 @@ pub fn make_app() -> App<'static, 'static> {
             (@arg bin: +required "Path to the executable for the version")
         )
     )
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+        .settings(&[
+            AppSettings::SubcommandRequiredElseHelp,
+            AppSettings::VersionlessSubcommands
+        ])
 }
