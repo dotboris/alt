@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Removed
+
+- Removed the `--version` & `-V` flags from all subcommands. This means that
+  `alt --version` works just fine but `alt scan --version` does not. This was
+  done because the `--version` flag on subcommands did not output anything
+  useful.
+
 ### Changed
 
 - Reduce final binary size by removing unused unicode regex features.
