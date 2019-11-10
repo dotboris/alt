@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Removed the `--version` & `-V` flags from all subcommands. This means that
+- Remove the `--version` & `-V` flags from all subcommands. This means that
   `alt --version` works just fine but `alt scan --version` does not. This was
   done because the `--version` flag on subcommands did not output anything
   useful.
