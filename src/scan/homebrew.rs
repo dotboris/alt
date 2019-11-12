@@ -37,7 +37,7 @@ pub fn scan(command: &str) -> Vec<CommandVersion> {
     let paths = homebrew_glob.chain(linuxbrew_glob);
 
     paths
-        .flat_map(|x| x)
+        .flatten()
         .map(parse_version_path)
         .filter(|c| c.command == command)
         .collect()
