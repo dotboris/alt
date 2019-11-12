@@ -3,6 +3,7 @@ extern crate dialoguer;
 
 use std::env;
 use std::process;
+use dialoguer::Checkboxes;
 use crate::def_file;
 use crate::shim;
 use crate::scan;
@@ -15,16 +16,14 @@ fn prompt_versions(versions: &[CommandVersion]) -> Vec<usize> {
         ))
         .collect();
 
-    let items_refs: Vec<_> = items.iter().map(String::as_ref).collect();
-
     println!("Here are the versions I found.");
     println!("  ↑/↓,j/k: move cursor");
     println!("  <space>: toggle keep");
     println!("  <enter>: confirm");
     println!();
 
-    dialoguer::Checkboxes::new()
-        .items(items_refs.as_slice())
+    Checkboxes::new()
+        .items(items.as_slice())
         .clear(false)
         .interact()
         .unwrap()
