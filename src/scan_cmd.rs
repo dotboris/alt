@@ -30,15 +30,12 @@ fn prompt_versions(versions: &[CommandVersion]) -> Vec<usize> {
 }
 
 pub fn run(command: &str) {
-    let scans = vec![
-        scan::path_suffix::scan(command),
-        scan::homebrew::scan(command),
-    ];
-    let is_empty = scans.iter()
-        .all(|v| v.is_empty());
-    let versions: Vec<_> = scans.into_iter().flat_map(|x| x).collect();
+    let versions: Vec<_> = scan::path_suffix::scan(command)
+        .into_iter()
+        .chain(scan::homebrew::scan(command))
+        .collect();
 
-    if is_empty {
+    if versions.is_empty() {
         println!("Sorry, could not find any versions of {}", command);
         process::exit(1);
     } else {

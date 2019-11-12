@@ -22,6 +22,5 @@ pub fn find_system_bin(command: &str) -> Option<PathBuf> {
         .map(|p| p.join(command))
         .filter(|p| p.exists())
         .map(|p| fs::canonicalize(&p).unwrap())
-        .filter(|p| p != &current_exe)
-        .next()
+        .find(|p| p != &current_exe)
 }

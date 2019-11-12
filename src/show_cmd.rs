@@ -17,8 +17,8 @@ pub fn run() {
     let used_versions = use_file.as_ref()
         .and_then(|path| use_file::load(&path));
 
-    if use_file.is_some() {
-        println!("Versions from: {}", use_file.unwrap().to_str().unwrap());
+    if let Some(use_file_path) = use_file {
+        println!("Versions from: {}", use_file_path.to_str().unwrap());
     }
 
     let mut sorted_defs: Vec<_> = defs.iter().collect();
