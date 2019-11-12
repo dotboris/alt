@@ -4,7 +4,7 @@ use crate::def_file;
 use crate::use_file;
 use std::process;
 use std::env;
-use self::dialoguer::Select;
+use dialoguer::Select;
 
 pub fn run(command: &str, arg_version: Option<&str>) {
     let defs = def_file::load();
@@ -68,7 +68,7 @@ pub fn run(command: &str, arg_version: Option<&str>) {
 fn prompt_version(versions: &def_file::CommandVersions) -> &str {
     let mut versions_vec: Vec<_> = versions.iter().collect();
     versions_vec.sort();
-    let version_strings: Vec<_> = versions_vec.iter()
+    let mut version_strings: Vec<_> = versions_vec.iter()
         .map(|(version, bin)| format!("{} ({})",
             version, bin.to_str().unwrap()
         ))
@@ -79,10 +79,9 @@ fn prompt_version(versions: &def_file::CommandVersions) -> &str {
     println!("  <enter>: select");
     println!();
 
-    let mut items_refs: Vec<&str> = version_strings.iter().map(String::as_ref).collect();
-    items_refs.insert(0, "system version");
+    version_strings.insert(0, "system version".to_string());
     let choice = Select::new()
-        .items(items_refs.as_slice())
+        .items(version_strings.as_slice())
         .default(0)
         .interact()
         .unwrap();
