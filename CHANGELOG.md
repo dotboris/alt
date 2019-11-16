@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## v1.1.1 - 2019-11-16
+
 ### Added
 
 - Document how to pass flags parsed by `alt exec` to the executed command
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Reduce final binary size by removing unused unicode regex features.
+- Update dependencies.
 
 ### Fixed
 
