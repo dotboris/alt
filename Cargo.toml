@@ -27,7 +27,7 @@ lto = true
 [dependencies]
 clap = "2.33.0"
 toml = "0.5.6"
-console = "0.10.0"
+console = "0.10.1"
 lazy_static = "1.4.0"
 dialoguer = "0.5.0"
 glob = "0.3.0"
