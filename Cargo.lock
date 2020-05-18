@@ -14,7 +14,7 @@ version = "1.1.1"
 dependencies = [
  "assert_cmd 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.33.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "console 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "console 0.11.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dialoguer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "escargot 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "glob 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -99,7 +99,7 @@ dependencies = [
 
 [[package]]
 name = "console"
-version = "0.10.0"
+version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "clicolors-control 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -107,9 +107,26 @@ dependencies = [
  "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.62 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "terminal_size 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "termios 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "unicode-width 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "console"
+version = "0.11.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "encode_unicode 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.62 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex 1.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "terminal_size 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "termios 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "unicode-width 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "winapi 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "winapi-util 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -117,7 +134,7 @@ name = "dialoguer"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "console 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "console 0.10.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tempfile 3.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -363,6 +380,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "terminal_size"
+version = "0.1.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.2.62 (registry+https://github.com/rust-lang/crates.io-index)",
+ "winapi 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "termios"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -442,6 +468,14 @@ version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "winapi-util"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "winapi 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "winapi-x86_64-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -456,7 +490,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum cfg-if 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)" = "b486ce3ccf7ffd79fdeb678eac06a9e6c09fc88d33836340becb8fffe87c5e33"
 "checksum clap 2.33.1 (registry+https://github.com/rust-lang/crates.io-index)" = "bdfa80d47f954d53a35a64987ca1422f495b8d6483c0fe9f7117b36c2a792129"
 "checksum clicolors-control 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)" = "90082ee5dcdd64dc4e9e0d37fbf3ee325419e39c0092191e0393df65518f741e"
-"checksum console 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)" = "6728a28023f207181b193262711102bfbaf47cc9d13bc71d0736607ef8efe88c"
+"checksum console 0.10.3 (registry+https://github.com/rust-lang/crates.io-index)" = "2586208b33573b7f76ccfbe5adb076394c88deaf81b84d7213969805b0a952a7"
+"checksum console 0.11.2 (registry+https://github.com/rust-lang/crates.io-index)" = "dea0f3e2e8d7dba335e913b97f9e1992c86c4399d54f8be1d31c8727d0652064"
 "checksum dialoguer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "d8b5eb0fce3c4f955b8d8d864b131fb8863959138da962026c106ba7a2e3bf7a"
 "checksum difference 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "524cbf6897b527295dff137cec09ecf3a05f4fddffd7dfcd1585403449e74198"
 "checksum doc-comment 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "923dea538cea0aa3025e8685b20d6ee21ef99c4f77e954a30febbaac5ec73a97"
@@ -490,6 +525,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum strsim 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8ea5119cdb4c55b55d432abb513a0429384878c15dde60cc77b1c99de1a95a6a"
 "checksum syn 1.0.4 (registry+https://github.com/rust-lang/crates.io-index)" = "c65d951ab12d976b61a41cf9ed4531fc19735c6e6d84a4bb1453711e762ec731"
 "checksum tempfile 3.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "7a6e24d9338a0a5be79593e2fa15a648add6138caa803e2d5bc782c371732ca9"
+"checksum terminal_size 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)" = "8038f95fc7a6f351163f4b964af631bd26c9e828f7db085f2a84aca56f70d13b"
 "checksum termios 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "72b620c5ea021d75a735c943269bb07d30c9b77d6ac6b236bc8b5c496ef05625"
 "checksum textwrap 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d326610f408c7a4eb6f51c37c330e496b08506c9457c9d34287ecc38809fb060"
 "checksum thread_local 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)" = "d40c6d1b69745a6ec6fb1ca717914848da4b44ae29d9b3080cbee91d72a69b14"
@@ -502,4 +538,5 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum wasi 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fd5442abcac6525a045cc8c795aedb60da7a2e5e89c7bf18a0d5357849bb23c7"
 "checksum winapi 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)" = "f10e386af2b13e47c89e7236a7a14a086791a2b88ebad6df9bf42040195cf770"
 "checksum winapi-i686-pc-windows-gnu 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
+"checksum winapi-util 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)" = "70ec6ce85bb158151cae5e5c87f95a8e97d2c0c4b001223f33a334e3ce5de178"
 "checksum winapi-x86_64-pc-windows-gnu 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
