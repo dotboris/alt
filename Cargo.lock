@@ -15,7 +15,7 @@ dependencies = [
  "assert_cmd 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.33.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "console 0.11.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "dialoguer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dialoguer 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "escargot 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "glob 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -87,33 +87,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "clicolors-control"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "atty 0.2.13 (registry+https://github.com/rust-lang/crates.io-index)",
- "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.62 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "console"
-version = "0.10.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "clicolors-control 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "encode_unicode 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.62 (registry+https://github.com/rust-lang/crates.io-index)",
- "regex 1.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
- "terminal_size 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "termios 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "unicode-width 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "console"
 version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -131,10 +104,10 @@ dependencies = [
 
 [[package]]
 name = "dialoguer"
-version = "0.5.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "console 0.10.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "console 0.11.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tempfile 3.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -489,10 +462,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum c2-chacha 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "7d64d04786e0f528460fc884753cf8dddcc466be308f6026f8e355c41a0e4101"
 "checksum cfg-if 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)" = "b486ce3ccf7ffd79fdeb678eac06a9e6c09fc88d33836340becb8fffe87c5e33"
 "checksum clap 2.33.1 (registry+https://github.com/rust-lang/crates.io-index)" = "bdfa80d47f954d53a35a64987ca1422f495b8d6483c0fe9f7117b36c2a792129"
-"checksum clicolors-control 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)" = "90082ee5dcdd64dc4e9e0d37fbf3ee325419e39c0092191e0393df65518f741e"
-"checksum console 0.10.3 (registry+https://github.com/rust-lang/crates.io-index)" = "2586208b33573b7f76ccfbe5adb076394c88deaf81b84d7213969805b0a952a7"
 "checksum console 0.11.3 (registry+https://github.com/rust-lang/crates.io-index)" = "8c0994e656bba7b922d8dd1245db90672ffb701e684e45be58f20719d69abc5a"
-"checksum dialoguer 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "d8b5eb0fce3c4f955b8d8d864b131fb8863959138da962026c106ba7a2e3bf7a"
+"checksum dialoguer 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)" = "f4aa86af7b19b40ef9cbef761ed411a49f0afa06b7b6dcd3dfe2f96a3c546138"
 "checksum difference 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "524cbf6897b527295dff137cec09ecf3a05f4fddffd7dfcd1585403449e74198"
 "checksum doc-comment 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "923dea538cea0aa3025e8685b20d6ee21ef99c4f77e954a30febbaac5ec73a97"
 "checksum encode_unicode 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)" = "a357d28ed41a50f9c765dbfe56cbc04a64e53e5fc58ba79fbc34c10ef3df831f"
