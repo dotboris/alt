@@ -3,7 +3,7 @@ extern crate dialoguer;
 
 use std::env;
 use std::process;
-use dialoguer::Checkboxes;
+use dialoguer::MultiSelect;
 use crate::def_file;
 use crate::shim;
 use crate::scan;
@@ -22,7 +22,7 @@ fn prompt_versions(versions: &[CommandVersion]) -> Vec<usize> {
     println!("  <enter>: confirm");
     println!();
 
-    Checkboxes::new()
+    MultiSelect::new()
         .items(items.as_slice())
         .clear(false)
         .interact()
