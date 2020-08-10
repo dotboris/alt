@@ -25,7 +25,7 @@ assets = [
 lto = true
 
 [dependencies]
-clap = "2.33.1"
+clap = "2.33.2"
 toml = "0.5.6"
 console = "0.11.3"
 lazy_static = "1.4.0"
@@ -43,4 +43,4 @@ escargot = "0.5"
 rand = "0.7"
 
 [build-dependencies]
-clap = "2.33.1"
+clap = "2.33.2"
