@@ -13,7 +13,7 @@ name = "alt"
 version = "1.1.1"
 dependencies = [
  "assert_cmd 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "clap 2.33.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clap 2.33.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "console 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dialoguer 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "escargot 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -74,7 +74,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "clap"
-version = "2.33.2"
+version = "2.33.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "ansi_term 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -477,7 +477,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum bitflags 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "3d155346769a6855b86399e9bc3814ab343cd3d62c7e985113d46a0ec3c281fd"
 "checksum c2-chacha 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "7d64d04786e0f528460fc884753cf8dddcc466be308f6026f8e355c41a0e4101"
 "checksum cfg-if 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)" = "b486ce3ccf7ffd79fdeb678eac06a9e6c09fc88d33836340becb8fffe87c5e33"
-"checksum clap 2.33.2 (registry+https://github.com/rust-lang/crates.io-index)" = "10040cdf04294b565d9e0319955430099ec3813a64c952b86a41200ad714ae48"
+"checksum clap 2.33.3 (registry+https://github.com/rust-lang/crates.io-index)" = "37e58ac78573c40708d45522f0d80fa2f01cc4f9b4e2bf749807255454312002"
 "checksum console 0.11.3 (registry+https://github.com/rust-lang/crates.io-index)" = "8c0994e656bba7b922d8dd1245db90672ffb701e684e45be58f20719d69abc5a"
 "checksum console 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c0b1aacfaffdbff75be81c15a399b4bedf78aaefe840e8af1d299ac2ade885d2"
 "checksum dialoguer 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)" = "f4aa86af7b19b40ef9cbef761ed411a49f0afa06b7b6dcd3dfe2f96a3c546138"
