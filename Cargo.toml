@@ -29,7 +29,7 @@ clap = "2.33.3"
 toml = "0.5.6"
 console = "0.12.0"
 lazy_static = "1.4.0"
-dialoguer = "0.6.2"
+dialoguer = "0.7.0"
 glob = "0.3.0"
 
 [dependencies.regex]
