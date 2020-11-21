@@ -1,5 +1,7 @@
 use crate::def_file;
+use std::collections::HashSet;
 use std::path::Path;
+use std::process;
 use console;
 
 pub fn run(fix: bool) {
@@ -28,14 +30,19 @@ pub fn run(fix: bool) {
         println!();
     }
 
+    let mut defs_to_remove = HashSet::new();
     for (command, versions) in defs {
         for (version, bin) in versions {
             let has_problem = def_has_problem(&command, &version, &bin);
             if has_problem {
                 problem_count += 1;
+
+                defs_to_remove.insert(
+                    (command.to_string(), version.to_string())
+                );
+
                 if fix {
                     fixed_count += 1;
-                    // TODO: fix
                     print_fixed(&format!(
                         "Removed entry for {} version {}.",
                         command, version
@@ -52,7 +59,19 @@ pub fn run(fix: bool) {
         }
     }
 
-    // TODO: check all defs point to real files
+    if fix {
+        let mut defs = def_file::load();
+        for (command, version) in defs_to_remove {
+            let versions = defs.get_mut(&command).unwrap();
+            versions.remove(&version);
+            if versions.is_empty() {
+                defs.remove(&command);
+            }
+        }
+        def_file::save(&defs)
+            .expect("failed to write command versions definition");
+    }
+
     // TODO: check all used versions point to real versions
     // TODO: check that shims are defined
 
@@ -77,6 +96,11 @@ pub fn run(fix: bool) {
                     problem_count
                 );
             }
+        }
+
+        let problems_left = 0.max(problem_count - fixed_count);
+        if problems_left > 1 {
+            process::exit(1);
         }
     } else {
         println!(
