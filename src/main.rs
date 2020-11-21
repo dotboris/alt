@@ -15,6 +15,7 @@ mod which_cmd;
 mod scan_cmd;
 mod use_cmd;
 mod show_cmd;
+mod doctor_cmd;
 mod def_cmd;
 mod cli;
 mod shim;
@@ -64,6 +65,8 @@ fn main() {
                     matches.value_of("version")
                 ),
             ("show", Some(_)) => show_cmd::run(),
+            ("doctor", Some(matches)) =>
+                doctor_cmd::run(matches.is_present("fix")),
             ("def", Some(matches)) =>
                 def_cmd::run(
                     matches.value_of("command").unwrap(),

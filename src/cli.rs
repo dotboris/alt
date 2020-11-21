@@ -51,6 +51,10 @@ pub fn make_app() -> App<'static, 'static> {
         (@subcommand show =>
             (about: "Print commands and their versions")
         )
+        (@subcommand doctor =>
+            (about: "Checks if alt is setup correctly. Helps debug problems.")
+            (@arg fix: --fix -f "Attempts to automatically fix issues")
+        )
         (@subcommand def =>
             (about: "Define a new version")
             (@arg command: +required "Command to define the version for")
