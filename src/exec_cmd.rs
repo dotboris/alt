@@ -30,7 +30,7 @@ pub fn run(command: &str, command_args: &[String]) {
 
             let pretty_command_version = command_version
                 .as_deref()
-                .unwrap_or("(system)");
+                .unwrap_or("(not set, falling back on system version)");
 
             // Since we're calling exec, either our process will be replaced
             // (and this code will never be called) or something's wrong and
