@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Display relevant debugging information when `alt` fails to execute a command.
+  This applies for both the `alt exec` command as well as executing commands
+  through shims (the usual way of running commands through `alt`). This should
+  help people figure out what's going on when `alt` fails. Note that previously
+  `alt` only displayed the generic underlying error.
+
 ## v1.1.1 - 2019-11-16
 
 ### Added

@@ -28,17 +28,19 @@ pub fn run(command: &str, command_args: &[String]) {
                 .args(command_args)
                 .exec();
 
+            let pretty_command_version = command_version
+                .as_deref()
+                .unwrap_or("(not set, falling back on system version)");
+
             // Since we're calling exec, either our process will be replaced
             // (and this code will never be called) or something's wrong and
             // we get this error
-            eprintln!("🔥 alt failed to run {}!", command);
+            eprintln!("🔥 alt failed to run {} version {}!",
+                command, pretty_command_version
+            );
             eprintln!("error: {:?}", err);
             eprintln!("command: {}", command);
-            eprintln!("command version: {}",
-                command_version
-                    .as_deref()
-                    .unwrap_or("(using system version)")
-            );
+            eprintln!("command version: {}", pretty_command_version);
             eprintln!("args: {:?}", command_args);
             eprintln!("bin: {}", bin.display());
             eprintln!("current dir: {:?}", env::current_dir());
