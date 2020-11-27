@@ -65,8 +65,15 @@ fn main() {
                     matches.value_of("version")
                 ),
             ("show", Some(_)) => show_cmd::run(),
-            ("doctor", Some(matches)) =>
-                doctor_cmd::run(matches.is_present("fix")),
+            ("doctor", Some(matches)) => {
+                let fix = match matches.value_of("fix_mode") {
+                    Some("auto") => doctor_cmd::FixMode::Auto,
+                    Some("never") => doctor_cmd::FixMode::Never,
+                    Some("prompt") => doctor_cmd::FixMode::Prompt,
+                    _ => unreachable!()
+                };
+                doctor_cmd::run(fix)
+            },
             ("def", Some(matches)) =>
                 def_cmd::run(
                     matches.value_of("command").unwrap(),

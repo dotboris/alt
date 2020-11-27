@@ -53,7 +53,15 @@ pub fn make_app() -> App<'static, 'static> {
         )
         (@subcommand doctor =>
             (about: "Checks if alt is setup correctly. Helps debug problems.")
-            (@arg fix: --fix -f "Attempts to automatically fix issues")
+            (@arg fix_mode:
+                // TODO: use a dash instead of an underscore
+                --fix_mode -f
+                +required
+                +takes_value
+                possible_value[auto never prompt]
+                default_value[prompt]
+                "Control how automatic fixes are applied."
+            )
         )
         (@subcommand def =>
             (about: "Define a new version")

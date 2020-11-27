@@ -34,6 +34,14 @@ pub fn find_bin<'a>(defs: &'a CommandDefs, command: &str, version: &str) -> Opti
     defs.get(command).and_then(|def| def.get(version))
 }
 
+pub fn remove_version(defs: &mut CommandDefs, command: &str, version: &str) {
+    let versions = defs.get_mut(command).unwrap();
+    versions.remove(version);
+    if versions.is_empty() {
+        defs.remove(command);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
