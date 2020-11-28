@@ -15,7 +15,7 @@ pub fn load() -> CommandDefs {
     let path = config::home_dir().join(DEFS_FILE_NAME);
     if path.is_file() {
         let bytes = fs::read(path).expect("failed to read defs file");
-        toml::from_slice(&bytes).expect("failted to parse defs file toml")
+        toml::from_slice(&bytes).expect("failed to parse defs file toml")
     } else {
         CommandDefs::new()
     }
@@ -35,10 +35,12 @@ pub fn find_bin<'a>(defs: &'a CommandDefs, command: &str, version: &str) -> Opti
 }
 
 pub fn remove_version(defs: &mut CommandDefs, command: &str, version: &str) {
-    let versions = defs.get_mut(command).unwrap();
-    versions.remove(version);
-    if versions.is_empty() {
-        defs.remove(command);
+    let versions = defs.get_mut(command);
+    if let Some(versions) = versions {
+        versions.remove(version);
+        if versions.is_empty() {
+            defs.remove(command);
+        }
     }
 }
 
@@ -94,6 +96,103 @@ mod tests {
         assert_eq!(
             Some(&PathBuf::from("/path/to/ruby2.4/bin/ruby")),
             res
+        )
+    }
+
+    #[test]
+    fn remove_version_removes_given_command_version_pair() {
+        let mut defs: CommandDefs = [
+            ("node".to_string(),
+                [
+                    ("10".to_string(), PathBuf::from("/path/to/node10/bin/node")),
+                    ("12".to_string(), PathBuf::from("/path/to/node12/bin/node")),
+                ].iter().cloned().collect()
+            ),
+            ("python".to_string(),
+                [
+                    ("2.7".to_string(), PathBuf::from("/path/to/python-2.7/bin/python")),
+                    ("3.9".to_string(), PathBuf::from("/path/to/python-3.9/bin/python")),
+                ].iter().cloned().collect()
+            ),
+        ].iter().cloned().collect();
+
+        let expected_defs: CommandDefs = [
+            ("node".to_string(),
+                [
+                    ("12".to_string(), PathBuf::from("/path/to/node12/bin/node")),
+                ].iter().cloned().collect()
+            ),
+            ("python".to_string(),
+                [
+                    ("2.7".to_string(), PathBuf::from("/path/to/python-2.7/bin/python")),
+                    ("3.9".to_string(), PathBuf::from("/path/to/python-3.9/bin/python")),
+                ].iter().cloned().collect()
+            ),
+        ].iter().cloned().collect();
+
+        remove_version(&mut defs, "node", "10");
+        assert_eq!(defs, expected_defs)
+    }
+
+    #[test]
+    fn remove_version_removed_whole_command_def_when_left_empty() {
+        let mut defs: CommandDefs = [
+            ("node".to_string(),
+                [
+                    ("10".to_string(), PathBuf::from("/path/to/node10/bin/node")),
+                    ("12".to_string(), PathBuf::from("/path/to/node12/bin/node")),
+                ].iter().cloned().collect()
+            ),
+            ("python".to_string(),
+                [
+                    ("3.9".to_string(), PathBuf::from("/path/to/python-3.9/bin/python")),
+                ].iter().cloned().collect()
+            ),
+        ].iter().cloned().collect();
+
+        let expected_defs: CommandDefs = [
+            ("node".to_string(),
+                [
+                    ("10".to_string(), PathBuf::from("/path/to/node10/bin/node")),
+                    ("12".to_string(), PathBuf::from("/path/to/node12/bin/node")),
+                ].iter().cloned().collect()
+            ),
+        ].iter().cloned().collect();
+
+        remove_version(&mut defs, "python", "3.9");
+        assert_eq!(defs, expected_defs)
+    }
+
+    #[test]
+    fn remove_version_does_nothing_when_given_version_that_does_not_exist() {
+        let mut defs: CommandDefs = [
+            ("node".to_string(),
+                [
+                    ("10".to_string(), PathBuf::from("/path/to/node10/bin/node")),
+                    ("12".to_string(), PathBuf::from("/path/to/node12/bin/node")),
+                ].iter().cloned().collect()
+            ),
+            ("python".to_string(),
+                [
+                    ("2.7".to_string(), PathBuf::from("/path/to/python-2.7/bin/python")),
+                    ("3.9".to_string(), PathBuf::from("/path/to/python-3.9/bin/python")),
+                ].iter().cloned().collect()
+            ),
+        ].iter().cloned().collect();
+
+        let expected_defs = defs.clone();
+
+        remove_version(&mut defs, "ruby", "1.9");
+        assert_eq!(defs, expected_defs)
+    }
+
+    #[test]
+    fn remove_version_does_nothing_on_empty_defs() {
+        let mut defs = CommandDefs::new();
+        remove_version(&mut defs, "something", "something");
+        assert_eq!(
+            defs,
+            CommandDefs::new()
         )
     }
 }
