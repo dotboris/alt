@@ -1,5 +1,6 @@
 use crate::def_file;
 use std::process;
+use std::os::unix::fs::MetadataExt;
 use console;
 
 pub enum FixMode { Auto, Never, Prompt }
@@ -27,13 +28,19 @@ pub fn run(fix_mode: FixMode) {
             let has_problem = {
                 if !bin.exists() {
                     print_problem(&format!(
-                        "Executable for {} version {} ({}) does not exist.",
+                        "Bin for {} version {} ({}) does not exist.",
                         command, version, bin.display()
                     ));
                     true
                 } else if !bin.is_file() {
                     print_problem(&format!(
-                        "Executable for {} version {} ({}) is not a file.",
+                        "Bin for {} version {} ({}) is not a file.",
+                        command, version, bin.display()
+                    ));
+                    true
+                } else if bin.metadata().unwrap().mode() & 0o111 == 0 {
+                    print_problem(&format!(
+                        "Bin for {} version {} ({}) is not executable.",
                         command, version, bin.display()
                     ));
                     true
