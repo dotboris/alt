@@ -99,7 +99,7 @@ pub fn run(fix_mode: FixMode) {
             "{}: Found no problems. Alt should be working correctly. If you're \
             still experiencing problems, please file an issue: \
             https://github.com/dotboris/alt/issues/new",
-            console::style("All is good").green().bold()
+            console::style("All is good").bold().green()
         );
     }
 }
