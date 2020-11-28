@@ -2,6 +2,7 @@ use crate::def_file;
 use std::process;
 use std::os::unix::fs::MetadataExt;
 use console;
+use dialoguer::Confirm;
 
 pub enum FixMode { Auto, Never, Prompt }
 
@@ -114,8 +115,10 @@ fn should_fix(fix_mode: &FixMode) -> bool {
             false
         },
         FixMode::Prompt => {
-            // TODO: prompt user for fix
-            false
+            Confirm::new()
+                .with_prompt("Would you like to apply this fix?")
+                .interact()
+                .unwrap_or(false)
         },
     }
 }
