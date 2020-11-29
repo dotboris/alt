@@ -25,7 +25,7 @@ fn success_with_no_problems() -> IoResult<()> {
     env.def("thingy", "1", &bin_v1_path).assert().success();
     env.def("thingy", "2", &bin_v2_path).assert().success();
 
-    env._use("thingy", "1");
+    env._use("thingy", "1").assert().success();
 
     env.alt()
         .args(&["doctor", "--fix-mode", "auto"])
