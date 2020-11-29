@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `alt doctor` command that can find and detect certain common problems
+  with `alt` and sometimes automatically fix them. This first version of `alt
+  doctor` currently only knowns how to find and fix broken command version
+  definitions.
+
 ### Changed
 
 - Display relevant debugging information when `alt` fails to execute a command.
