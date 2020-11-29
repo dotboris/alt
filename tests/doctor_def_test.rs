@@ -9,6 +9,33 @@ use std::io::Result as IoResult;
 use std::os::unix::fs::PermissionsExt;
 
 #[test]
+fn success_with_no_problems() -> IoResult<()> {
+    let env = TestEnv::new();
+
+    env.create_stub_command("thingy", "this is thingy system version")?;
+    let bin_v1_path = env.create_stub_command(
+        "thingy-1",
+        "this is thingy v1"
+    )?;
+    let bin_v2_path = env.create_stub_command(
+        "thingy-2",
+        "this is thingy v2"
+    )?;
+
+    env.def("thingy", "1", &bin_v1_path).assert().success();
+    env.def("thingy", "2", &bin_v2_path).assert().success();
+
+    env._use("thingy", "1");
+
+    env.alt()
+        .args(&["doctor", "--fix-mode", "auto"])
+        .assert()
+        .success();
+
+    Ok(())
+}
+
+#[test]
 fn remove_entry_for_missing_bin() -> IoResult<()> {
     let env = TestEnv::new();
 
