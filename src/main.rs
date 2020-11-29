@@ -66,13 +66,13 @@ fn main() {
                 ),
             ("show", Some(_)) => show_cmd::run(),
             ("doctor", Some(matches)) => {
-                let fix = match matches.value_of("fix_mode") {
+                let fix_mode = match matches.value_of("fix_mode") {
                     Some("auto") => doctor_cmd::FixMode::Auto,
                     Some("never") => doctor_cmd::FixMode::Never,
                     Some("prompt") => doctor_cmd::FixMode::Prompt,
                     _ => unreachable!()
                 };
-                doctor_cmd::run(fix)
+                doctor_cmd::run(fix_mode)
             },
             ("def", Some(matches)) =>
                 def_cmd::run(
