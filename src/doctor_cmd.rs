@@ -12,17 +12,6 @@ pub fn run(fix_mode: FixMode) {
     let defs = def_file::load();
     let mut fixed_defs = defs.clone();
 
-    if defs.is_empty() {
-        problem_count += 1;
-        print_problem(
-            "No commands or command versions are defined. This is normal if \
-            you've just installed alt. You will need to define some commands \
-            & command versions in order to use alt. See: \
-            https://github.com/dotboris/alt#define-command-versions"
-        );
-        println!();
-    }
-
     for (command, versions) in defs {
         for (version, bin) in versions {
             let has_problem = {
@@ -77,6 +66,18 @@ pub fn run(fix_mode: FixMode) {
             }
         }
     }
+
+    if fixed_defs.is_empty() {
+        problem_count += 1;
+        print_problem(
+            "No commands or command versions are defined. This is normal if \
+            you've just installed alt. You will need to define some commands \
+            & command versions in order to use alt. See: \
+            https://github.com/dotboris/alt#define-command-versions"
+        );
+        println!();
+    }
+
 
     // TODO: check all used versions point to real versions
     // TODO: check that shims are defined
