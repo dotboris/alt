@@ -152,6 +152,21 @@ The above command will show you:
 
 ## Troubleshooting
 
+If you are experiencing issues with `alt`, you should try running `alt`'s
+built-in self-healing command:
+
+```sh
+alt doctor
+```
+
+This command will look for problems, report them to you and, in some cases,
+propose an automatic fix.
+
+If `alt doctor` is not able to find or fix your problem, you can try looking at
+the sections below. If that doesn't help, feel free to [open an
+issue](https://github.com/dotboris/alt/issues/new). We'll be happy to help you
+out.
+
 ### Warning about shims directory not being in `PATH`
 
 Behind the scenes, `alt` manages a directory of "shims"
