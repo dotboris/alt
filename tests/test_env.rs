@@ -6,7 +6,10 @@ use self::rand::prelude::*;
 use self::rand::distributions::Alphanumeric;
 use std::ffi::OsStr;
 use std::env;
+use std::io::{Write, BufWriter, Result as IoResult};
 use std::fs;
+use std::fs::File;
+use std::os::unix::fs::PermissionsExt;
 use std::path::*;
 use std::process::Command;
 use self::escargot::CargoBuild;
@@ -16,6 +19,7 @@ pub struct TestEnv {
     pub root: PathBuf,
     project_root: PathBuf,
     alt_bin: PathBuf,
+    stub_bin_dir: PathBuf,
 }
 
 impl TestEnv {
@@ -27,9 +31,18 @@ impl TestEnv {
 
         let root = env::temp_dir()
             .join(format!("alt-tests-{}", rand_ns));
-
         fs::create_dir(&root)
-            .expect(&format!("failed to created tmp env {:?}", &root));
+            .expect(&format!(
+                "failed to created tmp env {}",
+                root.display()
+            ));
+
+        let stub_bin_dir = root.join("stub-bins");
+        fs::create_dir(&stub_bin_dir)
+            .expect(&format!(
+                "Failed to create directory for stub bins ({})",
+                stub_bin_dir.display()
+            ));
 
         let bin = CargoBuild::new()
             .bin("alt")
@@ -40,15 +53,28 @@ impl TestEnv {
 
         TestEnv {
             root: root,
+            stub_bin_dir: stub_bin_dir,
             project_root: env::current_dir().unwrap(),
-            alt_bin: PathBuf::from(bin.path())
+            alt_bin: PathBuf::from(bin.path()),
         }
     }
 
-    pub fn fixture_path(&self, command: &str, version: i32) -> PathBuf {
-        self.project_root
-            .join("fixtures/commands")
-            .join(format!("{}{}", command, version))
+    pub fn create_stub_command(&self, command: &str, display_text: &str) -> IoResult<PathBuf> {
+        let command_path = self.stub_bin_dir.join(command);
+
+        let file = File::create(&command_path)?;
+
+        let mut writer = BufWriter::new(&file);
+        writeln!(&mut writer, "#!/bin/bash")?;
+        writeln!(&mut writer, "echo -n '{}'", display_text)?;
+        writer.flush()?;
+
+        let mut perms = file.metadata()?
+            .permissions();
+        perms.set_mode(0o755);
+        file.set_permissions(perms)?;
+
+        Ok(command_path)
     }
 
     pub fn command<T: AsRef<OsStr>>(&self, name: T) -> Command {
@@ -59,7 +85,7 @@ impl TestEnv {
         c.env("ALT_SHIM_DIR", self.root.join("shims"));
         c.env("PATH", env::join_paths(&[
             self.root.join("shims"),
-            self.project_root.join("fixtures/system_commands")
+            self.stub_bin_dir.clone(),
         ]).unwrap());
         c
     }

@@ -4,24 +4,34 @@ use assert_cmd::prelude::*;
 mod test_env;
 use test_env::TestEnv;
 use std::fs;
+use std::io::Result as IoResult;
 
-fn def_all(env: &TestEnv) {
+fn def_all(env: &TestEnv) -> IoResult<()> {
     for command in &["alfa", "bravo", "charlie"] {
-        for version in &[1, 2, 3] {
-            env.def(
-                command, &version.to_string(),
-                &env.fixture_path(command, version.clone())
-            )
+        env.create_stub_command(
+            command,
+            &format!("{} system version", command)
+        )?;
+
+        for version in &["1", "2", "3"] {
+            let stub_path = env.create_stub_command(
+                &format!("{}{}", command, version),
+                &format!("{} version {}", command, version)
+            )?;
+
+            env.def(command, version, &stub_path)
                 .assert()
                 .success();
         }
     }
+
+    Ok(())
 }
 
 #[test]
-fn def_and_use() {
+fn def_and_use() -> IoResult<()> {
     let env = TestEnv::new();
-    def_all(&env);
+    def_all(&env)?;
 
     env._use("alfa", "1")
         .assert()
@@ -30,24 +40,28 @@ fn def_and_use() {
     env.command("alfa")
         .assert()
         .success()
-        .stdout("alfa1\n");
+        .stdout("alfa version 1");
+
+    Ok(())
 }
 
 #[test]
-fn system_with_no_use() {
+fn system_with_no_use() -> IoResult<()> {
     let env = TestEnv::new();
-    def_all(&env);
+    def_all(&env)?;
 
     env.command("bravo")
         .assert()
         .success()
-        .stdout("bravo system\n");
+        .stdout("bravo system version");
+
+    Ok(())
 }
 
 #[test]
-fn reset_with_use_system() {
+fn reset_with_use_system() -> IoResult<()> {
     let env = TestEnv::new();
-    def_all(&env);
+    def_all(&env)?;
 
     env._use("charlie", "3")
         .assert()
@@ -56,7 +70,7 @@ fn reset_with_use_system() {
     env.command("charlie")
         .assert()
         .success()
-        .stdout("charlie3\n");
+        .stdout("charlie version 3");
 
     env._use("charlie", "system")
         .assert()
@@ -65,13 +79,15 @@ fn reset_with_use_system() {
     env.command("charlie")
         .assert()
         .success()
-        .stdout("charlie system\n");
+        .stdout("charlie system version");
+
+    Ok(())
 }
 
 #[test]
-fn use_with_subdir() {
+fn use_with_subdir() -> IoResult<()> {
     let env = TestEnv::new();
-    def_all(&env);
+    def_all(&env)?;
 
     env._use("alfa", "3")
         .assert()
@@ -83,13 +99,15 @@ fn use_with_subdir() {
         .current_dir(&subdir)
         .assert()
         .success()
-        .stdout("alfa3\n");
+        .stdout("alfa version 3");
+
+    Ok(())
 }
 
 #[test]
-fn use_with_subdir_overwrite() {
+fn use_with_subdir_overwrite() -> IoResult<()> {
     let env = TestEnv::new();
-    def_all(&env);
+    def_all(&env)?;
 
     env._use("bravo", "1")
         .assert()
@@ -98,7 +116,7 @@ fn use_with_subdir_overwrite() {
     env.command("bravo")
         .assert()
         .success()
-        .stdout("bravo1\n");
+        .stdout("bravo version 1");
 
     let subdir = env.root.join("subdir");
     fs::create_dir(&subdir).unwrap();
@@ -111,5 +129,7 @@ fn use_with_subdir_overwrite() {
         .current_dir(&subdir)
         .assert()
         .success()
-        .stdout("bravo2\n");
+        .stdout("bravo version 2");
+
+    Ok(())
 }
