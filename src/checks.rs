@@ -1,7 +1,6 @@
 use crate::config;
 use std::env;
 use std::iter;
-use console;
 use console::style;
 
 fn line(width: usize) -> String {

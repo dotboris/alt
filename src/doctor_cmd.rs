@@ -1,7 +1,6 @@
 use crate::def_file;
 use std::process;
 use std::os::unix::fs::MetadataExt;
-use console;
 use dialoguer::Confirm;
 
 pub enum FixMode { Auto, Never, Prompt }
