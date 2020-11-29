@@ -13,15 +13,15 @@ pub fn make_app() -> App<'static, 'static> {
             .about("Run the given command")
             .after_help(
 "ARGS NOTE:
-Note that `alt exec` handles some flags on its own (`--help` for example).
-If you want to pass such arguments to the executed command instead of
-`alt exec`, you will need to use `--` to tell alt exec to stop parsing
-arguments.
+    Note that `alt exec` handles some flags on its own (`--help` for example).
+    If you want to pass such arguments to the executed command instead of
+    `alt exec`, you will need to use `--` to tell alt exec to stop parsing
+    arguments.
 
-Example:
+    Example:
 
-alt exec node --help        # --help passed to alt (shows this message)
-alt exec node -- --help     # --help passed to node (shows node's help)"
+    alt exec node --help        # --help passed to alt (shows this message)
+    alt exec node -- --help     # --help passed to node (shows node's help)"
             )
             .arg(Arg::with_name("command")
                 .help("The command to run")
