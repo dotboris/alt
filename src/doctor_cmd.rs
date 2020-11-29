@@ -120,7 +120,7 @@ fn should_fix(fix_mode: &FixMode) -> bool {
                 .expect(
                     "Failed to prompt for fix action. \
                     If you're trying to use this command non-interactively, \
-                    try passing in --fix-mod <auto|never>"
+                    try passing in --fix-mode <auto|never>"
                 )
         },
     }
