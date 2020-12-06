@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## v1.2.0 - 2020-12-06
+
 ### Added
 
 - Added `alt doctor` command that can find and detect certain common problems
