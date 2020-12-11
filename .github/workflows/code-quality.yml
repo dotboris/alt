@@ -1,0 +1,48 @@
+name: Code Quality
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    name: Check
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macoslatest
+
+    runs-on: ${matrix.os}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+
+  test:
+    name: Test Suite
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macoslatest
+
+    runs-on: ${matrix.os}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
