@@ -1,6 +1,6 @@
 name: Code Quality
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   check:
