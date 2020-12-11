@@ -32,7 +32,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macoslatest
+          - macos-latest
 
     runs-on: ${{ matrix.os }}
 
