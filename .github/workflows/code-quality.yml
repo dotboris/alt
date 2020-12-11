@@ -12,7 +12,7 @@ jobs:
           - ubuntu-latest
           - macos-latest
 
-    runs-on: ${matrix.os}
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +34,7 @@ jobs:
           - ubuntu-latest
           - macoslatest
 
-    runs-on: ${matrix.os}
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
