@@ -46,3 +46,26 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: test
+
+  run-help:
+    name: Run help command
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: help
