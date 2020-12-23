@@ -115,4 +115,4 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install fish
       - name: Fish syntax check
-        run: find . -iname '*.fish' -print0 | xargs -n1 -0t fish -c
+        run: find . -iname '*.fish' -print0 | xargs -n1 -0t fish -n
