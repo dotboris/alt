@@ -25,8 +25,9 @@ pub struct TestEnv {
 impl TestEnv {
     pub fn new() -> Self {
         let rand_ns: String = thread_rng()
-            .sample_iter(&Alphanumeric)
+            .sample_iter(Alphanumeric)
             .take(10)
+            .map(char::from)
             .collect();
 
         let root = env::temp_dir()
