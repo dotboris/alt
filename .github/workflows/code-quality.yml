@@ -89,6 +89,7 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
+          target: ${{ matrix.target }}
           override: true
       - uses: actions/setup-python@v2
         with:
