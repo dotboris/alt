@@ -1,4 +1,4 @@
-#!/usr/bin/env python3 -u
+#!/usr/bin/env python3
 import subprocess
 import sys
 import tarfile
@@ -9,7 +9,7 @@ from tempfile import mkdtemp
 
 
 def step(message):
-    print("\033[1m>>> {0}\033[0m".format(message))
+    print(f"\033[1m>>> {message}\033[0m", flush=True)
 
 
 def sh(*args):
@@ -34,7 +34,7 @@ def is_platform(platform):
 
 
 def build_release(rust_target):
-    step('Building release build for target {}'.format(rust_target))
+    step(f'Building release build for target {rust_target}')
     sh('cargo', 'build', '--release', '--locked', '--target', rust_target)
 
 
@@ -43,16 +43,16 @@ def build_deb(rust_target, dest_dir):
         step('Installing `cargo-deb` tool')
         sh('cargo', 'install', 'cargo-deb')
 
-    step('Building deb package for {}'.format(rust_target))
+    step(f'Building deb package for {rust_target}')
     sh('cargo', 'deb', '--target', rust_target, '-o', dest_dir, '--', '--locked')
 
 
 def build_tarbal(bin_path, version, rust_target, dest_dir):
-    dest_file_name = 'alt_v{0}_{1}.tar.gz'.format(version, rust_target)
-    step('Packinging {}'.format(dest_file_name))
+    dest_file_name = f'alt_v{version}_{rust_target}.tar.gz'
+    step(f'Packinging {dest_file_name}')
 
     work_dir = mkdtemp()
-    install_slug = 'alt_{0}_{1}'.format(version, rust_target)
+    install_slug = f'alt_{version}_{rust_target}'
     install_dir = path.join(work_dir, install_slug)
 
     install(bin_path, path.join(install_dir, 'bin/alt'), '755')
@@ -85,7 +85,7 @@ def build_tarbal(bin_path, version, rust_target, dest_dir):
 
 
 def list_output(dest_dir):
-    step('Contents of {}'.format(dest_dir))
+    step(f'Contents of {dest_dir}')
     sh('ls', '-lh', dest_dir)
 
 
@@ -102,14 +102,14 @@ def main(
     rust_target=None,
     lazy_build=None
 ):
-    step('Emptying {}'.format(dest_dir))
+    step(f'Emptying {dest_dir}')
     if (path.exists(dest_dir)):
         rmtree(dest_dir)
     makedirs(dest_dir)
 
     alt_bin = path.join('target', rust_target, 'release/alt')
     if lazy_build and path.exists(alt_bin):
-        step('Release {} already built, skipping because of --lazy-build'.format(alt_bin))
+        step(f'Release {alt_bin} already built, skipping because of --lazy-build')
     else:
         build_release(rust_target)
 
@@ -117,7 +117,7 @@ def main(
     version = sh_capture(alt_bin, '--version')
     version = version.decode()
     version = version.strip().split(' ')[1]
-    print(version)
+    print(version, flush=True)
 
     build_tarbal(alt_bin, version, rust_target, dest_dir)
 
@@ -127,6 +127,6 @@ def main(
     list_output(dest_dir)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     args = parse()
     main(**vars(args))
