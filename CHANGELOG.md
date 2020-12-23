@@ -86,4 +86,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]: https://github.com/dotboris/alt/compare/v1.2.0..HEAD
 [v1.2.0]: https://github.com/dotboris/alt/compare/v1.1.1..v1.2.0
 [v1.1.1]: https://github.com/dotboris/alt/compare/v1.1.0..v1.1.1
-[v1.1.0]: https://github.com/dotboris/alt/releases/tags/v1.1.0
+[v1.1.0]: https://github.com/dotboris/alt/releases/tag/v1.1.0
