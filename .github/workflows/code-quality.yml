@@ -1,0 +1,165 @@
+name: Code Quality
+
+on: [push]
+
+jobs:
+  check:
+    name: Check
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+
+  test:
+    name: Test Suite
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+
+  run-help:
+    name: Run help command
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: help
+
+  test-package:
+    name: Package release artifacts (dry run)
+
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+          - os: macos-latest
+            target: x86_64-apple-darwin
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: |
+          ./ci/package.py \
+            --rust-target ${{ matrix.target }} \
+            --dest-dir dist/release
+
+  clippy:
+    name: Lint rust code
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup component add clippy
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
+
+  shellcheck:
+    name: Lint shell code
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ludeeus/action-shellcheck@1.0.0
+        with:
+          check_together: 'yes'
+
+  fish-check:
+    name: Check fish code
+
+    strategy:
+      matrix:
+        ppa:
+          - ppa:fish-shell/release-3
+          - ppa:fish-shell/release-2
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y software-properties-common
+          sudo apt-add-repository -y ${{ matrix.ppa }}
+          sudo apt-get update -y
+          sudo apt-get install fish
+      - name: Fish syntax check
+        run: find . -iname '*.fish' -print0 | xargs -n1 -0t fish -n
+
+  python-lint:
+    name: Lint python code
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install linter
+        run: pip install flake8
+      - uses: suo/flake8-github-action@releases/v1
+        with:
+          checkName: python-lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
