@@ -13,29 +13,29 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: Configure git user.*
-        run: |
-          git config user.name 'Github Actions'
-          git config user.email noreply@github.com
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Configure git user.*
+  #       run: |
+  #         git config user.name 'Github Actions'
+  #         git config user.email noreply@github.com
 
-      # Bump version in Cargo.toml & Cargo.lock
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: toml-cli
-      - name: Bump version in Cargo.toml
-        run: toml set package.version '${{ github.event.inputs.version }}'
-      - name: Update Cargo.lock (using cargo build)
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
+  #     # Bump version in Cargo.toml & Cargo.lock
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         override: true
+  #     - uses: actions-rs/cargo@v1
+  #       with:
+  #         command: install
+  #         args: toml-cli
+  #     - name: Bump version in Cargo.toml
+  #       run: toml set package.version '${{ github.event.inputs.version }}'
+  #     - name: Update Cargo.lock (using cargo build)
+  #       uses: actions-rs/cargo@v1
+  #       with:
+  #         command: build
 
-      - name: Changes about to be committed
-        run: git diff --color
+  #     - name: Changes about to be committed
+  #       run: git diff --color
