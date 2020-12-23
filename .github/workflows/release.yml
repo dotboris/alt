@@ -31,11 +31,16 @@ jobs:
           command: install
           args: toml-cli
       - name: Bump version in Cargo.toml
-        run: toml set package.version '${{ github.event.inputs.version }}'
+        run: |
+          toml set Cargo.toml \
+            package.version '${{ github.event.inputs.version }}' \
+            > Cargo.toml.new
+          rm Cargo.toml
+          mv Cargo.toml.new Cargo.toml
       - name: Update Cargo.lock (using cargo build)
         uses: actions-rs/cargo@v1
         with:
           command: build
 
-      - name: Changes about to be committed
+      - name: Show changes about to be committed
         run: git diff --color
