@@ -12,8 +12,10 @@ pub fn main() {
     let completion_dir = PathBuf::from(&out_dir);
     let mut completion_dir = completion_dir
         .ancestors()  // .../target/<debug|release>/build/example-<SHA>/out
-        .skip(3)      // .../target/<debug|release>
-        .next().unwrap().to_owned();
+        .nth(3) // .../target/<debug|release>
+        .unwrap()
+        .to_owned();
+
     completion_dir.push("completion");
 
     if !completion_dir.exists() {
