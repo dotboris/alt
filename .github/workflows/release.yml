@@ -20,6 +20,12 @@ jobs:
           git config user.name 'Github Actions'
           git config user.email noreply@github.com
 
+      # Update Changelog
+      - name: Update changelog
+        uses: thomaseizinger/keep-a-changelog-new-release@v1
+        with:
+          version: v${{ github.event.inputs.version }}
+
       # Bump version in Cargo.toml & Cargo.lock
       - uses: actions-rs/toolchain@v1
         with:
@@ -42,12 +48,6 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-
-      # Update Changelog
-      - name: Update changelog
-        uses: thomaseizinger/keep-a-changelog-new-release@v1
-        with:
-          version: v${{ github.event.inputs.version }}
 
       - name: Show changes about to be committed
         run: git diff --color
