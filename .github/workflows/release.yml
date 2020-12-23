@@ -26,7 +26,8 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: actions-rs/cargo@v1
+      - name: Install toml-cli
+        uses: actions-rs/cargo@v1
         with:
           command: install
           args: toml-cli
