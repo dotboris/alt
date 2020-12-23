@@ -93,7 +93,10 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.x
-      - run: ./ci/package.py --target ${{ matrix.target }} --dest-dir dist/release
+      - run: |
+          ./ci/package.py \
+            --rust-target ${{ matrix.target }} \
+            --dest-dir dist/release
 
   clippy:
     name: Lint rust code
