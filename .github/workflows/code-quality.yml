@@ -69,3 +69,16 @@ jobs:
         with:
           command: run
           args: help
+
+  clippy:
+    name: Lint rust code
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - run: rustup component add clippy
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
