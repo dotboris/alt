@@ -93,3 +93,26 @@ jobs:
       - uses: ludeeus/action-shellcheck@1.0.0
         with:
           check_together: 'yes'
+
+  fish-check:
+    name: Check fish code
+
+    strategy:
+      matrix:
+        ppa:
+          - ppa:fish-shell/release-3
+          - ppa:fish-shell/release-2
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y software-properties-common
+          sudo apt-add-repository -y ${{ matrix.ppa }}
+          sudo apt-get update -y
+          sudo apt-get install fish
+      - name: Fish syntax check
+        run: find . -iname '*.fish' -print0 | xargs -n1 -0t fish -c
