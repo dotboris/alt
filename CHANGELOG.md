@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
 
-## v1.2.0 - 2020-12-06
+## [v1.2.0] - 2020-12-06
 
 ### Added
 
@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   help people figure out what's going on when `alt` fails. Note that previously
   `alt` only displayed the generic underlying error.
 
-## v1.1.1 - 2019-11-16
+## [v1.1.1] - 2019-11-16
 
 ### Added
 
@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix bug where `alt scan` would not find single letter commands with a version
   suffix. Example: `a2`, `a-2`, `a2.2` `a-2.2`.
 
-## v1.1.0 - 2019-10-27
+## [v1.1.0] - 2019-10-27
 
 ### Added
 
@@ -82,3 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix crash when `alt` is run without the `PATH` environment variable set.
+
+[Unreleased]: https://github.com/dotboris/alt/compare/v1.2.0..HEAD
+[v1.2.0]: https://github.com/dotboris/alt/compare/v1.1.1..v1.2.0
+[v1.1.1]: https://github.com/dotboris/alt/compare/v1.1.0..v1.1.1
