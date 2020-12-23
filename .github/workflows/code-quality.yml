@@ -145,3 +145,21 @@ jobs:
           sudo apt-get install fish
       - name: Fish syntax check
         run: find . -iname '*.fish' -print0 | xargs -n1 -0t fish -n
+
+  python-lint:
+    name: Lint python code
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install linter
+        run: pip install flake8
+      - uses: suo/flake8-github-action@releases/v1
+        with:
+          checkName: python-lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

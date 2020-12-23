@@ -4,7 +4,7 @@ import sys
 import tarfile
 from argparse import ArgumentParser
 from os import path, makedirs
-from shutil import copy, copytree, move, rmtree, which
+from shutil import rmtree, which
 from tempfile import mkdtemp
 
 
@@ -44,7 +44,13 @@ def build_deb(rust_target, dest_dir):
         sh('cargo', 'install', 'cargo-deb')
 
     step(f'Building deb package for {rust_target}')
-    sh('cargo', 'deb', '--target', rust_target, '-o', dest_dir, '--', '--locked')
+    sh(
+        'cargo', 'deb',
+        '--target', rust_target,
+        '-o', dest_dir,
+        '--',
+        '--locked'
+    )
 
 
 def build_tarbal(bin_path, version, rust_target, dest_dir):
@@ -58,12 +64,25 @@ def build_tarbal(bin_path, version, rust_target, dest_dir):
     install(bin_path, path.join(install_dir, 'bin/alt'), '755')
     install('./README.md', path.join(install_dir, 'README.md'), '644')
     install('./LICENSE', path.join(install_dir, 'LICENSE'), '644')
-    install('./etc/profile.d/alt.sh', path.join(install_dir, 'etc/profile.d/alt.sh'), '644')
-    install('./etc/fish/conf.d/alt.fish', path.join(install_dir, 'etc/fish/conf.d/alt.fish'), '644')
+    install(
+        './etc/profile.d/alt.sh',
+        path.join(install_dir, 'etc/profile.d/alt.sh'),
+        '644'
+    )
+    install(
+        './etc/fish/conf.d/alt.fish',
+        path.join(install_dir, 'etc/fish/conf.d/alt.fish'),
+        '644'
+    )
 
     for completion_file in ['_alt', 'alt.bash', 'alt.fish']:
         install(
-            path.join('target', rust_target, 'release/completion', completion_file),
+            path.join(
+                'target',
+                rust_target,
+                'release/completion',
+                completion_file
+            ),
             path.join(install_dir, 'completion', completion_file),
             '644'
         )
@@ -109,7 +128,10 @@ def main(
 
     alt_bin = path.join('target', rust_target, 'release/alt')
     if lazy_build and path.exists(alt_bin):
-        step(f'Release {alt_bin} already built, skipping because of --lazy-build')
+        step(
+            f'Release {alt_bin} already built, '
+            'skipping because of --lazy-build'
+        )
     else:
         build_release(rust_target)
 
