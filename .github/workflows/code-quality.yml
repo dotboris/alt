@@ -82,3 +82,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-features
+
+  shellcheck:
+    name: Lint shell code
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ludeeus/action-shellcheck@v1
+        with:
+          check_together: 'yes'
