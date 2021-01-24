@@ -54,7 +54,7 @@ pub fn make_app() -> App<'static, 'static> {
         )
 
         .subcommand(SubCommand::with_name("use")
-            .about("Swtich the version of a command")
+            .about("Switch the version of a command")
             .after_help(
 "EXAMPLES:
     alt use node 8        Use version 8 of node
