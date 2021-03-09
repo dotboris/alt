@@ -128,7 +128,7 @@ jobs:
 
     strategy:
       matrix:
-        includes:
+        include:
           - ppa: ppa:fish-shell/release-3
             os: ubuntu-latest
           - ppa: ppa:fish-shell/release-2
