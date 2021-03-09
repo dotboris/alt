@@ -128,11 +128,14 @@ jobs:
 
     strategy:
       matrix:
-        ppa:
-          - ppa:fish-shell/release-3
-          - ppa:fish-shell/release-2
+        includes:
+          - ppa: ppa:fish-shell/release-3
+            os: ubuntu-latest
+          - ppa: ppa:fish-shell/release-2
+            # fish 2 ppa doesn't support ubuntu 20.04
+            os: ubuntu-18.04
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
