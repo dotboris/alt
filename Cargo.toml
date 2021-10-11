@@ -40,7 +40,7 @@ features = ["std", "perf", "unicode-perl"]
 [dev-dependencies]
 assert_cmd = "1.0"
 escargot = "0.5"
-predicates = "2.0.0"
+predicates = "2.0.3"
 rand = "0.8"
 
 [build-dependencies]
