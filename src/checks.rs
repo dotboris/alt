@@ -1,10 +1,10 @@
 use crate::config;
 use std::env;
-use std::iter;
+
 use console::style;
 
 fn line(width: usize) -> String {
-    let line: String = iter::repeat("=").take(width).collect();
+    let line: String = "=".repeat(width);
     return format!("{}", style(line).bold());
 }
 
@@ -13,8 +13,8 @@ fn line_label(width: usize, label: &str) -> String {
     let left_size = (width - label_size) / 2;
     let right_size = width - left_size - label_size;
 
-    let left: String = iter::repeat("=").take(left_size).collect();
-    let right: String = iter::repeat("=").take(right_size).collect();
+    let left: String = "=".repeat(left_size);
+    let right: String = "=".repeat(right_size);
 
     return format!(
         "{} {} {}",

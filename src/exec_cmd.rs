@@ -7,7 +7,7 @@ use std::env;
 
 pub fn run(command: &str, command_args: &[String]) {
     let defs = def_file::load();
-    let command_version = command::find_selected_version(&command);
+    let command_version = command::find_selected_version(command);
 
     let bin = command_version
         .clone()

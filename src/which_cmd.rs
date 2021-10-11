@@ -4,7 +4,7 @@ use std::process;
 
 pub fn run(command: &str) {
     let defs = def_file::load();
-    let command_version = command::find_selected_version(&command);
+    let command_version = command::find_selected_version(command);
 
     let bin = command_version
         .and_then(|version| def_file::find_bin(&defs, command, &version))

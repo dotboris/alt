@@ -33,17 +33,13 @@ impl TestEnv {
         let root = env::temp_dir()
             .join(format!("alt-tests-{}", rand_ns));
         fs::create_dir(&root)
-            .expect(&format!(
-                "failed to created tmp env {}",
-                root.display()
-            ));
+            .unwrap_or_else(|_| panic!("failed to created tmp env {}",
+                root.display()));
 
         let stub_bin_dir = root.join("stub-bins");
         fs::create_dir(&stub_bin_dir)
-            .expect(&format!(
-                "Failed to create directory for stub bins ({})",
-                stub_bin_dir.display()
-            ));
+            .unwrap_or_else(|_| panic!("Failed to create directory for stub bins ({})",
+                stub_bin_dir.display()));
 
         let bin = CargoBuild::new()
             .bin("alt")
@@ -53,8 +49,8 @@ impl TestEnv {
             .unwrap();
 
         TestEnv {
-            root: root,
-            stub_bin_dir: stub_bin_dir,
+            root,
+            stub_bin_dir,
             project_root: env::current_dir().unwrap(),
             alt_bin: PathBuf::from(bin.path()),
         }
@@ -108,9 +104,15 @@ impl TestEnv {
     }
 }
 
+impl Default for TestEnv {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Drop for TestEnv {
     fn drop(&mut self) {
         fs::remove_dir_all(&self.root)
-            .expect(&format!("failed to remove {:?}", &self.root));
+            .unwrap_or_else(|_| panic!("failed to remove {:?}", &self.root));
     }
 }
