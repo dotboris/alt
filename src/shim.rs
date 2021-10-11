@@ -41,32 +41,32 @@ mod tests {
 
     #[test]
     fn test_non_alt_command_is_shim() {
-        assert_eq!(true, is_shim("node"))
+        assert!(is_shim("node"))
     }
 
     #[test]
     fn test_absolute_non_alt_is_not_shim() {
-        assert_eq!(true, is_shim("/home/whatever/.local/alt/shims/node"))
+        assert!(is_shim("/home/whatever/.local/alt/shims/node"))
     }
 
     #[test]
     fn test_relative_non_alt_is_not_shim() {
-        assert_eq!(true, is_shim("./my/node"))
+        assert!(is_shim("./my/node"))
     }
 
     #[test]
     fn test_alt_command_is_not_shim() {
-        assert_eq!(false, is_shim("alt"))
+        assert!(!is_shim("alt"))
     }
 
     #[test]
     fn test_absolute_alt_is_not_shim() {
-        assert_eq!(false, is_shim("/usr/bin/alt"))
+        assert!(!is_shim("/usr/bin/alt"))
     }
 
     #[test]
     fn test_relative_alt_is_not_shim() {
-        assert_eq!(false, is_shim("./target/debug/alt"))
+        assert!(!is_shim("./target/debug/alt"))
     }
 
     #[test]
