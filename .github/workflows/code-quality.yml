@@ -107,7 +107,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: rustup component add clippy
-      - run: cargo clippy --all-targets --all-features -- -D warning
+      - run: cargo clippy --all-targets --all-features -- -D warnings
 
   shellcheck:
     name: Lint shell code
