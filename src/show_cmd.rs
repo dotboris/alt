@@ -15,7 +15,7 @@ pub fn run() {
 
     let use_file = use_file::find(&env::current_dir().unwrap());
     let used_versions = use_file.as_ref()
-        .and_then(|path| use_file::load(&path));
+        .and_then(|path| use_file::load(path));
 
     if let Some(use_file_path) = use_file {
         println!("Versions from: {}", use_file_path.to_str().unwrap());
