@@ -104,6 +104,12 @@ impl TestEnv {
     }
 }
 
+impl Default for TestEnv {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Drop for TestEnv {
     fn drop(&mut self) {
         fs::remove_dir_all(&self.root)
