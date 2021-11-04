@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed typo in help text for the `alt use` command.
+
 ## [v1.2.0] - 2020-12-06
 
 ### Added
