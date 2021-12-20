@@ -17,7 +17,6 @@ use self::escargot::CargoBuild;
 #[derive(Debug)]
 pub struct TestEnv {
     pub root: PathBuf,
-    project_root: PathBuf,
     alt_bin: PathBuf,
     stub_bin_dir: PathBuf,
 }
@@ -51,7 +50,6 @@ impl TestEnv {
         TestEnv {
             root,
             stub_bin_dir,
-            project_root: env::current_dir().unwrap(),
             alt_bin: PathBuf::from(bin.path()),
         }
     }
