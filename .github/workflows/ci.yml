@@ -1,19 +1,21 @@
-name: Code Quality
+name: CI
 
-on: [push]
+on:
+  pull_request: {}
+  push:
+    branches:
+      - master
 
 jobs:
   check:
-    name: Check
+    name: cargo check
 
     strategy:
       matrix:
         os:
           - ubuntu-latest
           - macos-latest
-
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -25,17 +27,15 @@ jobs:
         with:
           command: check
 
-  test:
-    name: Test Suite
+  test-rust:
+    name: cargo test
 
     strategy:
       matrix:
         os:
           - ubuntu-latest
           - macos-latest
-
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -48,16 +48,14 @@ jobs:
           command: test
 
   run-help:
-    name: Run help command
+    name: run help command
 
     strategy:
       matrix:
         os:
           - ubuntu-latest
           - macos-latest
-
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -70,8 +68,8 @@ jobs:
           command: run
           args: help
 
-  test-package:
-    name: Package release artifacts (dry run)
+  package:
+    name: package artifacts
 
     strategy:
       matrix:
@@ -80,9 +78,7 @@ jobs:
             target: x86_64-unknown-linux-musl
           - os: macos-latest
             target: x86_64-apple-darwin
-
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -100,20 +96,14 @@ jobs:
             --dest-dir dist/release
 
   clippy:
-    name: Lint rust code
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - run: rustup component add clippy
       - run: cargo clippy --all-targets --all-features -- -D warnings
 
   shellcheck:
-    name: Lint shell code
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - uses: ludeeus/action-shellcheck@1.0.0
@@ -121,7 +111,7 @@ jobs:
           check_together: 'yes'
 
   fish-check:
-    name: Check fish code
+    name: check fish code
 
     strategy:
       matrix:
@@ -131,9 +121,7 @@ jobs:
           - ppa: ppa:fish-shell/release-2
             # fish 2 ppa doesn't support ubuntu 20.04
             os: ubuntu-18.04
-
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
@@ -147,10 +135,9 @@ jobs:
         run: find . -iname '*.fish' -print0 | xargs -n1 -0t fish -n
 
   python-lint:
-    name: Lint python code
+    name: lint python code
 
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
