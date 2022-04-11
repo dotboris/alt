@@ -25,7 +25,7 @@
 1.  Push everything
 
     ```sh
-    git push --tags origin master
+    git push --tags origin main
     ```
 
 1.  Travis CI will build the release and push it to github
