@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Rename default branch from `master` to `main`. This should have no effect on
+  users but may affect people building from source.
+
 ### Fixed
 
 - Fixed typo in help text for the `alt use` command.
