@@ -44,8 +44,8 @@ jobs:
 
       - name: Update CHANGELOG.md
         env:
-          OLD_VERSION: ${{ stesp.getOldVersion.outputs.version }}
-          NEW_VERSION: ${{ stesp.getNewVersion.outputs.version }}
+          OLD_VERSION: ${{ steps.getOldVersion.outputs.version }}
+          NEW_VERSION: ${{ steps.getNewVersion.outputs.version }}
         run: |
           ./ci/add_changelog_version.py \
             --old-version "$OLD_VERSION" \
