@@ -1,19 +1,25 @@
-extern crate toml;
 extern crate dialoguer;
+extern crate toml;
 
-use std::env;
-use std::process;
-use dialoguer::MultiSelect;
 use crate::def_file;
-use crate::shim;
 use crate::scan;
 use crate::scan::CommandVersion;
+use crate::shim;
+use dialoguer::MultiSelect;
+use std::env;
+use std::process;
 
 fn prompt_versions(versions: &[CommandVersion]) -> Vec<usize> {
-    let items: Vec<_> = versions.iter()
-        .map(|version| format!("{} {} ({})",
-            version.command, version.version, version.path.to_str().unwrap()
-        ))
+    let items: Vec<_> = versions
+        .iter()
+        .map(|version| {
+            format!(
+                "{} {} ({})",
+                version.command,
+                version.version,
+                version.path.to_str().unwrap()
+            )
+        })
         .collect();
 
     println!("Here are the versions I found.");
@@ -47,7 +53,8 @@ pub fn run(command: &str) {
         } else {
             let mut defs = def_file::load();
             {
-                let def = defs.entry(command.to_string())
+                let def = defs
+                    .entry(command.to_string())
                     .or_insert_with(def_file::CommandVersions::new);
 
                 for choice in choices {
@@ -55,14 +62,10 @@ pub fn run(command: &str) {
                     def.insert(version.version.clone(), version.path.clone());
                 }
             }
-            def_file::save(&defs)
-                .expect("failed to save defs file");
+            def_file::save(&defs).expect("failed to save defs file");
 
             shim::make_shim(command, env::current_exe().unwrap().as_path())
-                .unwrap_or_else(|err| panic!(
-                    "failed to create shim for {}: {}",
-                    command, err
-                ));
+                .unwrap_or_else(|err| panic!("failed to create shim for {}: {}", command, err));
         }
     }
 }

@@ -1,5 +1,5 @@
-use std::path::{Path, PathBuf};
 use std::env;
+use std::path::{Path, PathBuf};
 
 const DEFAULT_HOME: &str = ".config/alt";
 const DEFAULT_SHIM_DIR: &str = ".local/alt/shims";
@@ -10,7 +10,7 @@ pub fn home_dir() -> PathBuf {
         Err(_) => {
             let home = env::var("HOME").unwrap();
             Path::new(&home).join(DEFAULT_HOME)
-        },
+        }
     }
 }
 
@@ -25,8 +25,8 @@ pub fn shim_dir() -> PathBuf {
 
 #[cfg(test)]
 mod tests {
-    use std::env;
     use crate::config;
+    use std::env;
     use std::path::{Path, PathBuf};
     use std::sync::Mutex;
 
@@ -44,8 +44,7 @@ mod tests {
 
         assert_eq!(
             res,
-            Path::new(&env::var("HOME").unwrap())
-                .join(config::DEFAULT_HOME)
+            Path::new(&env::var("HOME").unwrap()).join(config::DEFAULT_HOME)
         );
     }
 

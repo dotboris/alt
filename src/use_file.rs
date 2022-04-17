@@ -3,7 +3,7 @@ extern crate toml;
 use std::collections::HashMap;
 use std::fs;
 use std::io;
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 
 const FILE_NAME: &str = ".alt.toml";
 
@@ -22,8 +22,7 @@ pub fn find(start: &Path) -> Option<PathBuf> {
 }
 
 pub fn find_or_dir(start: &Path) -> PathBuf {
-    find(start)
-        .unwrap_or_else(|| start.join(FILE_NAME))
+    find(start).unwrap_or_else(|| start.join(FILE_NAME))
 }
 
 pub type UseFile = HashMap<String, String>;
@@ -35,7 +34,6 @@ pub fn load(path: &Path) -> Option<UseFile> {
 }
 
 pub fn save(use_def: &UseFile, path: &Path) -> Result<(), io::Error> {
-    let toml = toml::to_string_pretty(use_def)
-        .expect("failed to serialize use toml");
+    let toml = toml::to_string_pretty(use_def).expect("failed to serialize use toml");
     fs::write(path, toml)
 }

@@ -1,8 +1,8 @@
 use crate::def_file;
 use crate::use_file;
-use std::process;
-use std::env;
 use console::style;
+use std::env;
+use std::process;
 
 pub fn run() {
     let defs = def_file::load();
@@ -14,8 +14,7 @@ pub fn run() {
     }
 
     let use_file = use_file::find(&env::current_dir().unwrap());
-    let used_versions = use_file.as_ref()
-        .and_then(|path| use_file::load(path));
+    let used_versions = use_file.as_ref().and_then(|path| use_file::load(path));
 
     if let Some(use_file_path) = use_file {
         println!("Versions from: {}", use_file_path.to_str().unwrap());
@@ -25,8 +24,7 @@ pub fn run() {
     sorted_defs.sort_by_key(|t| t.0);
 
     for (command, versions) in sorted_defs {
-        let current_version = used_versions.as_ref()
-            .and_then(|vs| vs.get(command));
+        let current_version = used_versions.as_ref().and_then(|vs| vs.get(command));
 
         let command_display = style(command).bold();
 

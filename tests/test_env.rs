@@ -1,18 +1,18 @@
-extern crate rand;
 extern crate assert_cmd;
 extern crate escargot;
+extern crate rand;
 
-use self::rand::prelude::*;
+use self::escargot::CargoBuild;
 use self::rand::distributions::Alphanumeric;
-use std::ffi::OsStr;
+use self::rand::prelude::*;
 use std::env;
-use std::io::{Write, BufWriter, Result as IoResult};
+use std::ffi::OsStr;
 use std::fs;
 use std::fs::File;
+use std::io::{BufWriter, Result as IoResult, Write};
 use std::os::unix::fs::PermissionsExt;
 use std::path::*;
 use std::process::Command;
-use self::escargot::CargoBuild;
 
 #[derive(Debug)]
 pub struct TestEnv {
@@ -29,16 +29,17 @@ impl TestEnv {
             .map(char::from)
             .collect();
 
-        let root = env::temp_dir()
-            .join(format!("alt-tests-{}", rand_ns));
+        let root = env::temp_dir().join(format!("alt-tests-{}", rand_ns));
         fs::create_dir(&root)
-            .unwrap_or_else(|_| panic!("failed to created tmp env {}",
-                root.display()));
+            .unwrap_or_else(|_| panic!("failed to created tmp env {}", root.display()));
 
         let stub_bin_dir = root.join("stub-bins");
-        fs::create_dir(&stub_bin_dir)
-            .unwrap_or_else(|_| panic!("Failed to create directory for stub bins ({})",
-                stub_bin_dir.display()));
+        fs::create_dir(&stub_bin_dir).unwrap_or_else(|_| {
+            panic!(
+                "Failed to create directory for stub bins ({})",
+                stub_bin_dir.display()
+            )
+        });
 
         let bin = CargoBuild::new()
             .bin("alt")
@@ -64,8 +65,7 @@ impl TestEnv {
         writeln!(&mut writer, "echo -n '{}'", display_text)?;
         writer.flush()?;
 
-        let mut perms = file.metadata()?
-            .permissions();
+        let mut perms = file.metadata()?.permissions();
         perms.set_mode(0o755);
         file.set_permissions(perms)?;
 
@@ -78,10 +78,10 @@ impl TestEnv {
         c.env_clear();
         c.env("ALT_HOME", self.root.join("alt-home"));
         c.env("ALT_SHIM_DIR", self.root.join("shims"));
-        c.env("PATH", env::join_paths(&[
-            self.root.join("shims"),
-            self.stub_bin_dir.clone(),
-        ]).unwrap());
+        c.env(
+            "PATH",
+            env::join_paths(&[self.root.join("shims"), self.stub_bin_dir.clone()]).unwrap(),
+        );
         c
     }
 
