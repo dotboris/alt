@@ -25,12 +25,16 @@ assets = [
 lto = true
 
 [dependencies]
-clap = "2.33.3"
 toml = "0.5.9"
 console = "0.15.0"
 lazy_static = "1.4.0"
 dialoguer = "0.10.0"
 glob = "0.3.0"
+
+[dependencies.clap]
+version = "3.1.8"
+default-features = true
+features = ["cargo"]
 
 [dependencies.regex]
 version = "1"
@@ -44,4 +48,5 @@ predicates = "2.1.0"
 rand = "0.8"
 
 [build-dependencies]
-clap = "2.33.3"
+clap = "3.1.8"
+clap_complete = "3.1.1"
