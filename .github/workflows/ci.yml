@@ -39,6 +39,10 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: fmt
+          args: --version
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
           args: --all -- --check --color=always
 
   test-rust:
@@ -115,7 +119,14 @@ jobs:
           profile: minimal
           toolchain: stable
           components: clippy
-      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --version
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --all-targets --all-features -- -D warnings
 
   shellcheck:
     runs-on: ubuntu-latest
