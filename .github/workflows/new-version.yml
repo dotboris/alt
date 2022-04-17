@@ -1,11 +1,11 @@
-name: Release
+name: New Version
 
 on:
   workflow_dispatch:
     inputs:
       bumpType:
         required: true
-        description: Bump Type (major|minor|patch)
+        description: Version Bump
         type: choice
         options:
           - major
