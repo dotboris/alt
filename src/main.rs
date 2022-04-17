@@ -1,4 +1,3 @@
-#[macro_use]
 extern crate clap;
 extern crate console;
 #[macro_use]
@@ -43,7 +42,7 @@ fn main() {
         let matches = cli::make_app().get_matches();
 
         match matches.subcommand() {
-            ("exec", Some(matches)) => {
+            Some(("exec", matches)) => {
                 let args = matches.values_of("command_args")
                     .unwrap_or_default()
                     .map(|i| i.to_owned())
@@ -54,18 +53,18 @@ fn main() {
                     &args
                 )
             },
-            ("which", Some(matches)) =>
+            Some(("which", matches)) =>
                 which_cmd::run(matches.value_of("command").unwrap()),
-            ("shim", Some(_)) => shim_cmd::run(),
-            ("scan", Some(matches)) =>
+            Some(("shim", _)) => shim_cmd::run(),
+            Some(("scan", matches)) =>
                 scan_cmd::run(matches.value_of("command").unwrap()),
-            ("use", Some(matches)) =>
+            Some(("use", matches)) =>
                 use_cmd::run(
                     matches.value_of("command").unwrap(),
                     matches.value_of("version")
                 ),
-            ("show", Some(_)) => show_cmd::run(),
-            ("doctor", Some(matches)) => {
+            Some(("show", _)) => show_cmd::run(),
+            Some(("doctor", matches)) => {
                 let fix_mode = match matches.value_of("fix_mode") {
                     Some("auto") => doctor_cmd::FixMode::Auto,
                     Some("never") => doctor_cmd::FixMode::Never,
@@ -74,7 +73,7 @@ fn main() {
                 };
                 doctor_cmd::run(fix_mode)
             },
-            ("def", Some(matches)) =>
+            Some(("def", matches)) =>
                 def_cmd::run(
                     matches.value_of("command").unwrap(),
                     matches.value_of("version").unwrap(),

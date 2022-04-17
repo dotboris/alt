@@ -1,13 +1,10 @@
-use clap::{ App, AppSettings, SubCommand, Arg };
+use clap::{ App, AppSettings, SubCommand, Arg, crate_version };
 
-pub fn make_app() -> App<'static, 'static> {
+pub fn make_app() -> App<'static> {
     return App::new("alt")
         .version(crate_version!())
         .about("Switch between different versions of commands")
-        .settings(&[
-            AppSettings::SubcommandRequiredElseHelp,
-            AppSettings::VersionlessSubcommands
-        ])
+        .settings(&[AppSettings::SubcommandRequiredElseHelp])
 
         .subcommand(SubCommand::with_name("exec")
             .about("Run the given command")
@@ -93,7 +90,7 @@ pub fn make_app() -> App<'static, 'static> {
         .subcommand(SubCommand::with_name("doctor")
             .about("Checks if alt is setup correctly. Helps debug problems.")
             .arg(Arg::with_name("fix_mode")
-                .short("f")
+                .short('f')
                 .long("fix-mode")
                 .takes_value(true)
                 .possible_values(&["auto", "never", "prompt"])

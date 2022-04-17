@@ -17,6 +17,7 @@ version = "1.2.0"
 dependencies = [
  "assert_cmd",
  "clap",
+ "clap_complete",
  "console",
  "dialoguer",
  "escargot",
@@ -106,10 +107,20 @@ dependencies = [
  "atty",
  "bitflags",
  "indexmap",
+ "lazy_static",
  "os_str_bytes",
  "strsim",
  "termcolor",
  "textwrap",
+]
+
+[[package]]
+name = "clap_complete"
+version = "3.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "df6f3613c0a3cddfd78b41b10203eb322cb29b600cbdf808a7d3db95691b8e25"
+dependencies = [
+ "clap",
 ]
 
 [[package]]
