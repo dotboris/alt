@@ -36,7 +36,8 @@ jobs:
           profile: minimal
           toolchain: stable
           components: rustfmt
-      - uses: actions-rs/cargo@v1
+      - name: print rustfmt version
+        uses: actions-rs/cargo@v1
         with:
           command: fmt
           args: --version
@@ -119,7 +120,8 @@ jobs:
           profile: minimal
           toolchain: stable
           components: clippy
-      - uses: actions-rs/cargo@v1
+      - name: print clippy version
+        uses: actions-rs/cargo@v1
         with:
           command: clippy
           args: --version
