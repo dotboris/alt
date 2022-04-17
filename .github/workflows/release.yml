@@ -32,11 +32,16 @@ jobs:
         id: getOldVersion
         run: echo "::set-output name=version::$(./ci/get_version.py)"
 
-      - name: Bump ${{ github.event.inputs.bumpType }} in Cargo.toml & Cargo.lock
+      - name: Bump ${{ github.event.inputs.bumpType }} in Cargo.toml
         uses: actions-rs/cargo@v1
         with:
           command: set-version
           args: --bump ${{ github.event.inputs.bumpType }}
+      - name: Update Cargo.lock
+        uses: actions-rs/cargo@v1
+        with:
+          command: update
+          args: -p alt
 
       - name: Determine next version
         id: getNewVersion
