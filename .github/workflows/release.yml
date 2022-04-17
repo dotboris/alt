@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bumpType:
+        required: true
+        description: Bump Type (major|minor|patch)
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - name: Install cargo-edit
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-edit
+      - uses: actions/setup-python@v3
+
+      - name: Determine current version
+        id: getOldVersion
+        run: echo "::set-output name=version::$(./ci/get_version.py)"
+
+      - name: Bump ${{ inputs.bumpType }} in Cargo.toml & Cargo.lock
+        uses: actions-rs/cargo@v1
+        with:
+          command: set-version
+          args: --bump ${{ inputs.bumpType }}
+
+      - name: Determine next version
+        id: getNewVersion
+        run: echo "::set-output name=version::$(./ci/get_version.py)"
+
+      - name: Update CHANGELOG.md
+        env:
+          OLD_VERSION: ${{ stesp.getOldVersion.outputs.version }}
+          NEW_VERSION: ${{ stesp.getNewVersion.outputs.version }}
+        run: |
+          ./ci/add_changelog_version.py \
+            --old-version "$OLD_VERSION" \
+            --new-version "$NEW_VERSION"
+
+      - run: git diff
