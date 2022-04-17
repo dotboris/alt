@@ -101,3 +101,8 @@ pub fn make_app() -> Command<'static> {
                 ),
         );
 }
+
+#[test]
+fn verify_app() {
+    make_app().debug_assert();
+}
