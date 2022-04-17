@@ -162,19 +162,18 @@ jobs:
       - name: Fish syntax check
         run: find . -iname '*.fish' -print0 | xargs -n1 -0t fish -n
 
-  python-lint:
-    name: lint python code
-
+  python-flake8:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
-        with:
-          python-version: 3.x
-      - name: Install linter
-        run: pip install flake8
-      - uses: suo/flake8-github-action@releases/v1
-        with:
-          checkName: python-lint
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: pip install flake8
+      - run: flake8 .
+
+  python-black:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - run: pip install black
+      - run: black --check .

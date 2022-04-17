@@ -27,7 +27,8 @@ def main(*, old_version, new_version):
                 new_changelog.append(f"\n## [{new_version}] {today.isoformat()}\n")
             elif "<!-- release:new-version-ref -->" in line:
                 new_changelog.append(
-                    f"[{new_version}]: {REPO_URL}/compare/{old_version}..{new_version}\n"
+                    f"[{new_version}]: "
+                    f"{REPO_URL}/compare/{old_version}..{new_version}\n"
                 )
 
     with changelog_path.open("w") as fh:
