@@ -1,12 +1,13 @@
-use clap::{ App, AppSettings, SubCommand, Arg, crate_version };
+use clap::{ Arg, Command, crate_version };
 
-pub fn make_app() -> App<'static> {
-    return App::new("alt")
+pub fn make_app() -> Command<'static> {
+    return Command::new("alt")
         .version(crate_version!())
         .about("Switch between different versions of commands")
-        .settings(&[AppSettings::SubcommandRequiredElseHelp])
+        .subcommand_required(true)
+        .arg_required_else_help(true)
 
-        .subcommand(SubCommand::with_name("exec")
+        .subcommand(Command::new("exec")
             .about("Run the given command")
             .after_help(
 "ARGS NOTE:
@@ -20,37 +21,37 @@ pub fn make_app() -> App<'static> {
     alt exec node --help        # --help passed to alt (shows this message)
     alt exec node -- --help     # --help passed to node (shows node's help)"
             )
-            .arg(Arg::with_name("command")
+            .arg(Arg::new("command")
                 .help("The command to run")
                 .required(true)
             )
-            .arg(Arg::with_name("command_args")
+            .arg(Arg::new("command_args")
                 .help("Arguments to pass to the command")
-                .multiple(true),
+                .multiple_values(true),
             )
         )
 
-        .subcommand(SubCommand::with_name("shim")
+        .subcommand(Command::new("shim")
             .about("Generate shims for all managed commands")
         )
 
-        .subcommand(SubCommand::with_name("which")
+        .subcommand(Command::new("which")
             .about("Print the resolved path of a command")
-            .arg(Arg::with_name("command")
+            .arg(Arg::new("command")
                 .required(true)
                 .help("Command to look up")
             )
         )
 
-        .subcommand(SubCommand::with_name("scan")
+        .subcommand(Command::new("scan")
             .about("Scan for different versions of the given command")
-            .arg(Arg::with_name("command")
+            .arg(Arg::new("command")
                 .required(true)
                 .help("Command to scan for")
             )
         )
 
-        .subcommand(SubCommand::with_name("use")
+        .subcommand(Command::new("use")
             .about("Switch the version of a command")
             .after_help(
 "EXAMPLES:
@@ -58,38 +59,38 @@ pub fn make_app() -> App<'static> {
     alt use node          Prompt for a version of node to use
     alt use node system   Use the system version of node"
             )
-            .arg(Arg::with_name("command")
+            .arg(Arg::new("command")
                 .required(true)
                 .help("Command to switch the version of")
             )
-            .arg(Arg::with_name("version")
+            .arg(Arg::new("version")
                 .help("Version to use (optional)")
             )
         )
 
-        .subcommand(SubCommand::with_name("show")
+        .subcommand(Command::new("show")
             .about("Print commands and their versions")
         )
 
-        .subcommand(SubCommand::with_name("def")
+        .subcommand(Command::new("def")
             .about("Define a new version")
-            .arg(Arg::with_name("command")
+            .arg(Arg::new("command")
                 .required(true)
                 .help("Command to define the version for")
             )
-            .arg(Arg::with_name("version")
+            .arg(Arg::new("version")
                 .required(true)
                 .help("The name of the version")
             )
-            .arg(Arg::with_name("bin")
+            .arg(Arg::new("bin")
                 .required(true)
                 .help("Path to the executable for the version")
             )
         )
 
-        .subcommand(SubCommand::with_name("doctor")
+        .subcommand(Command::new("doctor")
             .about("Checks if alt is setup correctly. Helps debug problems.")
-            .arg(Arg::with_name("fix_mode")
+            .arg(Arg::new("fix_mode")
                 .short('f')
                 .long("fix-mode")
                 .takes_value(true)

@@ -1,4 +1,3 @@
-#[macro_use]
 use clap_complete::{generate_to, shells::Bash, shells::Fish, shells::Zsh};
 use std::env;
 use std::path::PathBuf;
@@ -8,7 +7,7 @@ use std::fs;
 
 include!("src/cli.rs");
 
-fn main() -> Result<(), Box<Error>> {
+fn main() -> Result<(), Box<dyn Error>> {
     let out_dir = env::var("OUT_DIR")?;
     let completion_dir = PathBuf::from(&out_dir);
     let mut completion_dir = completion_dir
