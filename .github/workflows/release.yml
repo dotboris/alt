@@ -62,6 +62,8 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.getNewVersion.outputs.version }}
         run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
           git add .
           git commit -m "Release $NEW_VERSION"
           git tag "$NEW_VERSION"
