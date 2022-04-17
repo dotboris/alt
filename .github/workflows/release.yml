@@ -56,4 +56,4 @@ jobs:
             --old-version "$OLD_VERSION" \
             --new-version "$NEW_VERSION"
 
-      - run: git diff
+      - run: git diff --color
