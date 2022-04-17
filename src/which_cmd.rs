@@ -1,5 +1,5 @@
-use crate::def_file;
 use crate::command;
+use crate::def_file;
 use std::process;
 
 pub fn run(command: &str) {
@@ -16,6 +16,6 @@ pub fn run(command: &str) {
         None => {
             println!("command not found: {}", command);
             process::exit(1)
-        },
+        }
     };
 }

@@ -22,10 +22,29 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-          override: true
       - uses: actions-rs/cargo@v1
         with:
           command: check
+
+  fmt-check:
+    name: cargo fmt --check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt
+      - name: print rustfmt version
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --version
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check --color=always
 
   test-rust:
     name: cargo test
@@ -42,7 +61,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-          override: true
       - uses: actions-rs/cargo@v1
         with:
           command: test
@@ -62,7 +80,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-          override: true
       - uses: actions-rs/cargo@v1
         with:
           command: run
@@ -86,7 +103,6 @@ jobs:
           profile: minimal
           toolchain: stable
           target: ${{ matrix.target }}
-          override: true
       - uses: actions/setup-python@v3
         with:
           python-version: 3.x
@@ -99,8 +115,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: rustup component add clippy
-      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: clippy
+      - name: print clippy version
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --version
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --all-targets --all-features -- -D warnings
 
   shellcheck:
     runs-on: ubuntu-latest

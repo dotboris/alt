@@ -1,15 +1,15 @@
-use std::path::Path;
 use crate::config;
 use std::fs;
-use std::os::unix::fs as unix_fs;
 use std::io;
+use std::os::unix::fs as unix_fs;
+use std::path::Path;
 
 pub fn is_shim(arg0: &str) -> bool {
     get_command(arg0) != "alt"
 }
 
 pub fn get_command(arg0: &str) -> &str {
-     Path::new(arg0)
+    Path::new(arg0)
         .file_stem()
         .and_then(|stem| stem.to_str())
         .unwrap()

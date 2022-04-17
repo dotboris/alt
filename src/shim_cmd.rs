@@ -1,11 +1,10 @@
 use crate::def_file;
 use crate::shim;
-use std::env;
 use console::style;
+use std::env;
 
 pub fn run() {
-    shim::empty_shim_dir()
-        .expect("failed to empty shim dir");
+    shim::empty_shim_dir().expect("failed to empty shim dir");
 
     let defs = def_file::load();
     for command in defs.keys() {

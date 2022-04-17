@@ -18,7 +18,7 @@ fn extract_command_and_version(path: &Path) -> (String, String) {
             let package = part.to_str().unwrap();
             let version = package.split('@').last().unwrap();
             String::from(version)
-        },
+        }
         _ => panic!(),
     };
 
@@ -28,7 +28,11 @@ fn extract_command_and_version(path: &Path) -> (String, String) {
 fn parse_version_path(path: PathBuf) -> CommandVersion {
     let (command, version) = extract_command_and_version(&path);
 
-    CommandVersion { command, version, path }
+    CommandVersion {
+        command,
+        version,
+        path,
+    }
 }
 
 pub fn scan(command: &str) -> Vec<CommandVersion> {
@@ -42,7 +46,6 @@ pub fn scan(command: &str) -> Vec<CommandVersion> {
         .filter(|c| c.command == command)
         .collect()
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -75,7 +78,9 @@ mod tests {
     #[test]
     fn test_parse_linuxbrew_path_node() {
         assert_eq!(
-            parse_version_path(PathBuf::from("/home/linuxbrew/.linuxbrew/opt/node@8/bin/node")),
+            parse_version_path(PathBuf::from(
+                "/home/linuxbrew/.linuxbrew/opt/node@8/bin/node"
+            )),
             CommandVersion {
                 command: "node".to_string(),
                 version: "8".to_string(),

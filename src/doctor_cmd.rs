@@ -1,9 +1,13 @@
 use crate::def_file;
-use std::process;
-use std::os::unix::fs::MetadataExt;
 use dialoguer::Confirm;
+use std::os::unix::fs::MetadataExt;
+use std::process;
 
-pub enum FixMode { Auto, Never, Prompt }
+pub enum FixMode {
+    Auto,
+    Never,
+    Prompt,
+}
 
 pub fn run(fix_mode: FixMode) {
     let mut problem_count: u32 = 0;
@@ -18,19 +22,25 @@ pub fn run(fix_mode: FixMode) {
                 if !bin.exists() {
                     print_problem(&format!(
                         "Bin for {} version {} ({}) does not exist.",
-                        command, version, bin.display()
+                        command,
+                        version,
+                        bin.display()
                     ));
                     true
                 } else if !bin.is_file() {
                     print_problem(&format!(
                         "Bin for {} version {} ({}) is not a file.",
-                        command, version, bin.display()
+                        command,
+                        version,
+                        bin.display()
                     ));
                     true
                 } else if bin.metadata().unwrap().mode() & 0o111 == 0 {
                     print_problem(&format!(
                         "Bin for {} version {} ({}) is not executable.",
-                        command, version, bin.display()
+                        command,
+                        version,
+                        bin.display()
                     ));
                     true
                 } else {
@@ -73,11 +83,10 @@ pub fn run(fix_mode: FixMode) {
             "No commands or command versions are defined. This is normal if \
             you've just installed alt. You will need to define some commands \
             & command versions in order to use alt. See: \
-            https://github.com/dotboris/alt#define-command-versions"
+            https://github.com/dotboris/alt#define-command-versions",
         );
         println!();
     }
-
 
     // TODO: check all used versions point to real versions
     // TODO: check that shims are defined
@@ -86,9 +95,7 @@ pub fn run(fix_mode: FixMode) {
     if problem_count > 0 {
         println!(
             "Found {} problems. Fixed {}/{}.",
-            problem_count,
-            fixed_count,
-            problem_count
+            problem_count, fixed_count, problem_count
         );
 
         if problem_count > fixed_count {
@@ -109,41 +116,34 @@ fn should_fix(fix_mode: &FixMode) -> bool {
         FixMode::Auto => {
             println!("Applying fix because command was called with --fix-mode auto");
             true
-        },
+        }
         FixMode::Never => {
             println!("Did not apply fix because command was called with --fix-mode never");
             false
-        },
-        FixMode::Prompt => {
-            Confirm::new()
-                .with_prompt("Would you like to apply this fix?")
-                .interact()
-                .expect(
-                    "Failed to prompt for fix action. \
+        }
+        FixMode::Prompt => Confirm::new()
+            .with_prompt("Would you like to apply this fix?")
+            .interact()
+            .expect(
+                "Failed to prompt for fix action. \
                     If you're trying to use this command non-interactively, \
-                    try passing in --fix-mode <auto|never>"
-                )
-        },
+                    try passing in --fix-mode <auto|never>",
+            ),
     }
 }
 
 fn print_problem(message: &str) {
-    println!("{}: {}",
-        console::style("Problem").bold().yellow(),
-        message
-    );
+    println!("{}: {}", console::style("Problem").bold().yellow(), message);
 }
 
 fn print_fix_available(message: &str) {
-    println!("{}: {}",
+    println!(
+        "{}: {}",
         console::style("Fix Available").bold().cyan(),
         message
     );
 }
 
 fn print_fixed(message: &str) {
-    println!("{}: {}",
-        console::style("Fixed").bold().green(),
-        message
-    );
+    println!("{}: {}", console::style("Fixed").bold().green(), message);
 }

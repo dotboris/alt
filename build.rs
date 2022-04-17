@@ -1,9 +1,9 @@
 use clap_complete::{generate_to, shells::Bash, shells::Fish, shells::Zsh};
-use std::env;
-use std::path::PathBuf;
-use std::error::Error;
 use std::boxed::Box;
+use std::env;
+use std::error::Error;
 use std::fs;
+use std::path::PathBuf;
 
 include!("src/cli.rs");
 
@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let out_dir = env::var("OUT_DIR")?;
     let completion_dir = PathBuf::from(&out_dir);
     let mut completion_dir = completion_dir
-        .ancestors()  // .../target/<debug|release>/build/example-<SHA>/out
+        .ancestors() // .../target/<debug|release>/build/example-<SHA>/out
         .nth(3) // .../target/<debug|release>
         .unwrap()
         .to_owned();

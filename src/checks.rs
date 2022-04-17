@@ -56,13 +56,13 @@ If the problem persists, please see:
 {bottom_line}
 
 ",
-            warning_line=line_label(term_width as usize, "WARNING"),
-            bottom_line=line(term_width as usize),
-            shim_dir=shim_dir,
-            path_env_var=path_env_var,
-            reopen_terminal=style("re-open your terminal").bold(),
-            relogin=style("log out and log back into your user session").bold(),
-            troubleshooting_link=style("https://github.com/dotboris/alt#troubleshooting").cyan()
+            warning_line = line_label(term_width as usize, "WARNING"),
+            bottom_line = line(term_width as usize),
+            shim_dir = shim_dir,
+            path_env_var = path_env_var,
+            reopen_terminal = style("re-open your terminal").bold(),
+            relogin = style("log out and log back into your user session").bold(),
+            troubleshooting_link = style("https://github.com/dotboris/alt#troubleshooting").cyan()
         );
     }
 }

@@ -1,7 +1,7 @@
 use std::path::*;
 
-pub mod path_suffix;
 pub mod homebrew;
+pub mod path_suffix;
 
 #[derive(Debug, PartialEq)]
 pub struct CommandVersion {

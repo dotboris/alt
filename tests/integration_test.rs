@@ -2,26 +2,21 @@ extern crate assert_cmd;
 
 use assert_cmd::prelude::*;
 mod test_env;
-use test_env::TestEnv;
 use std::fs;
 use std::io::Result as IoResult;
+use test_env::TestEnv;
 
 fn def_all(env: &TestEnv) -> IoResult<()> {
     for command in &["alfa", "bravo", "charlie"] {
-        env.create_stub_command(
-            command,
-            &format!("{} system version", command)
-        )?;
+        env.create_stub_command(command, &format!("{} system version", command))?;
 
         for version in &["1", "2", "3"] {
             let stub_path = env.create_stub_command(
                 &format!("{}{}", command, version),
-                &format!("{} version {}", command, version)
+                &format!("{} version {}", command, version),
             )?;
 
-            env.def(command, version, &stub_path)
-                .assert()
-                .success();
+            env.def(command, version, &stub_path).assert().success();
         }
     }
 
@@ -33,9 +28,7 @@ fn def_and_use() -> IoResult<()> {
     let env = TestEnv::new();
     def_all(&env)?;
 
-    env._use("alfa", "1")
-        .assert()
-        .success();
+    env._use("alfa", "1").assert().success();
 
     env.command("alfa")
         .assert()
@@ -63,18 +56,14 @@ fn reset_with_use_system() -> IoResult<()> {
     let env = TestEnv::new();
     def_all(&env)?;
 
-    env._use("charlie", "3")
-        .assert()
-        .success();
+    env._use("charlie", "3").assert().success();
 
     env.command("charlie")
         .assert()
         .success()
         .stdout("charlie version 3");
 
-    env._use("charlie", "system")
-        .assert()
-        .success();
+    env._use("charlie", "system").assert().success();
 
     env.command("charlie")
         .assert()
@@ -89,9 +78,7 @@ fn use_with_subdir() -> IoResult<()> {
     let env = TestEnv::new();
     def_all(&env)?;
 
-    env._use("alfa", "3")
-        .assert()
-        .success();
+    env._use("alfa", "3").assert().success();
 
     let subdir = env.root.join("subdir");
     fs::create_dir(&subdir).unwrap();
@@ -109,9 +96,7 @@ fn use_with_subdir_overwrite() -> IoResult<()> {
     let env = TestEnv::new();
     def_all(&env)?;
 
-    env._use("bravo", "1")
-        .assert()
-        .success();
+    env._use("bravo", "1").assert().success();
 
     env.command("bravo")
         .assert()
@@ -121,9 +106,7 @@ fn use_with_subdir_overwrite() -> IoResult<()> {
     let subdir = env.root.join("subdir");
     fs::create_dir(&subdir).unwrap();
 
-    env._use("bravo", "2")
-        .assert()
-        .success();
+    env._use("bravo", "2").assert().success();
 
     env.command("bravo")
         .current_dir(&subdir)
