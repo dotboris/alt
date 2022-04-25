@@ -32,7 +32,7 @@ dialoguer = "0.10.0"
 glob = "0.3.0"
 
 [dependencies.clap]
-version = "3.1.10"
+version = "3.1.12"
 default-features = true
 features = ["cargo"]
 
@@ -48,5 +48,5 @@ predicates = "2.1.0"
 rand = "0.8"
 
 [build-dependencies]
-clap = "3.1.10"
+clap = "3.1.12"
 clap_complete = "3.1.2"
