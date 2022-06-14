@@ -1,3 +1,4 @@
+use clap::builder::PossibleValuesParser;
 use clap::{crate_version, Arg, Command};
 
 pub fn make_app() -> Command<'static> {
@@ -94,8 +95,8 @@ pub fn make_app() -> Command<'static> {
                     Arg::new("fix_mode")
                         .short('f')
                         .long("fix-mode")
+                        .value_parser(PossibleValuesParser::new(["auto", "never", "prompt"]))
                         .takes_value(true)
-                        .possible_values(&["auto", "never", "prompt"])
                         .default_value("prompt")
                         .help("Control how automatic fixes are applied."),
                 ),

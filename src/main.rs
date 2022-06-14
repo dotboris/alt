@@ -39,23 +39,25 @@ fn main() {
         match matches.subcommand() {
             Some(("exec", matches)) => {
                 let args = matches
-                    .values_of("command_args")
+                    .get_many::<String>("command_args")
                     .unwrap_or_default()
-                    .map(|i| i.to_owned())
+                    .map(String::to_owned)
                     .collect::<Vec<String>>();
 
-                exec_cmd::run(matches.value_of("command").unwrap(), &args)
+                exec_cmd::run(matches.get_one::<String>("command").unwrap(), &args)
             }
-            Some(("which", matches)) => which_cmd::run(matches.value_of("command").unwrap()),
+            Some(("which", matches)) => {
+                which_cmd::run(matches.get_one::<String>("command").unwrap())
+            }
             Some(("shim", _)) => shim_cmd::run(),
-            Some(("scan", matches)) => scan_cmd::run(matches.value_of("command").unwrap()),
+            Some(("scan", matches)) => scan_cmd::run(matches.get_one::<String>("command").unwrap()),
             Some(("use", matches)) => use_cmd::run(
-                matches.value_of("command").unwrap(),
-                matches.value_of("version"),
+                matches.get_one::<String>("command").unwrap(),
+                matches.get_one::<String>("version").map(String::as_ref),
             ),
             Some(("show", _)) => show_cmd::run(),
             Some(("doctor", matches)) => {
-                let fix_mode = match matches.value_of("fix_mode") {
+                let fix_mode = match matches.get_one::<String>("fix_mode").map(String::as_ref) {
                     Some("auto") => doctor_cmd::FixMode::Auto,
                     Some("never") => doctor_cmd::FixMode::Never,
                     Some("prompt") => doctor_cmd::FixMode::Prompt,
@@ -64,9 +66,9 @@ fn main() {
                 doctor_cmd::run(fix_mode)
             }
             Some(("def", matches)) => def_cmd::run(
-                matches.value_of("command").unwrap(),
-                matches.value_of("version").unwrap(),
-                matches.value_of("bin").unwrap(),
+                matches.get_one::<String>("command").unwrap(),
+                matches.get_one::<String>("version").unwrap(),
+                matches.get_one::<String>("bin").unwrap(),
             ),
             _ => unreachable!(),
         };
