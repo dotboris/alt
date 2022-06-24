@@ -110,6 +110,10 @@ jobs:
           ./ci/package.py \
             --rust-target ${{ matrix.target }} \
             --dest-dir dist/release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: alt-package-${{ matrix.target }}
+          path: dist/release/
 
   clippy:
     runs-on: ubuntu-latest
