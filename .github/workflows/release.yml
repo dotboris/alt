@@ -1,14 +1,14 @@
 # DEVELOPMENT NOTES: Making changes to this file and testing them can be quite
 # tricky. This is because this release workflow makes changes to the repository
 # that it runs in. Specifically it commits and tags in the `main` branch and
-# then creates a GitHub release from that tag. Also, since this is a manual
-# manual workflow, it needs to run off the `main` branch.
+# then creates a GitHub release from those tags. Also, since this is a manual
+# workflow, it needs to run off the `main` branch.
 #
-# To test make changes to this file and be able to test them you need to fork
-# this repo and commit directly in the `main` branch of this fork. You'll then
-# be able to run the this workflow in your fork which will create all the
-# commits, tags and releases in that fork. This ensures that you don't create
-# bogus commits, tags and releases in the original repo.
+# To make changes to this file and be able to test them you need to fork this
+# repo and commit directly in the `main` branch of this fork. You'll then be
+# able to run the this workflow in your fork which will create all the commits,
+# tags and releases in that fork. This ensures that you don't create bogus
+# commits, tags and releases in the original repo.
 #
 # Here's a few bits of advice that will make your life much easier:
 # - Make sure that your fork is public. This repo has a pretty heavy CI. If you
