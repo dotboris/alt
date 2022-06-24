@@ -114,6 +114,7 @@ jobs:
         with:
           name: alt-package-${{ matrix.target }}
           path: dist/release/
+          if-no-files-found: error
 
   clippy:
     runs-on: ubuntu-latest
