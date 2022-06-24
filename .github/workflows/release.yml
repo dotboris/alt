@@ -30,7 +30,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: cargo-edit
+          args: --no-default-features --features set-version cargo-edit
       - uses: actions/setup-python@v3
 
       - name: Determine current version
