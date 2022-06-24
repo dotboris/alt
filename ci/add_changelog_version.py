@@ -46,10 +46,11 @@ def main(*, old_version, new_version):
     today = date.today()
     new_changelog = [
         *sections[Section.PREAMBLE],
-        "<!-- section:unreleased-body -->\n",
-        f"\n## [{new_version}] {today.isoformat()}\n",
+        "<!-- section:unreleased-body -->\n\n",
+        "<!-- section:previous-releases -->\n"
+        f"## [{new_version}] {today.isoformat()}\n",
         *sections[Section.UNRELEASED_BODY][1:],
-        *sections[Section.PREVIOUS_RELEASES],
+        *sections[Section.PREVIOUS_RELEASES][1:],
         "<!-- section:refs -->\n",
         f"[{new_version}]: {REPO_URL}/compare/{old_version}..{new_version}\n",
         *sections[Section.REFS][1:],
