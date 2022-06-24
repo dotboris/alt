@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser
 from datetime import date
-from enum import Enum, auto
+from enum import Enum
 from pathlib import Path
-from pprint import pprint
 import re
-from urllib.parse import quote
 
 REPO_URL = "https://github.com/dotboris/alt"
 
@@ -60,12 +58,15 @@ def main(*, old_version, new_version):
     with changelog_path.open("w") as fh:
         fh.writelines(new_changelog)
 
-    # This is a multiline string and needs to be quoted (URL encoded to be
-    # specific). The source that I found talks about the %, \n and \r characters
-    # but looking at their examples, it's URL encoding.
+    # This is a multiline string and needs to be quoted. This looks like full
+    # blown URL encoding but it actually only supports the %, \n and \r
+    # characters.
     # See: https://github.community/t/set-output-truncates-multiline-strings/16852/3
     unreleased_body = "".join(sections[Section.UNRELEASED_BODY][1:]).strip()
-    print(f"::set-output name=unreleasedBody::{quote(unreleased_body)}")
+    unreleased_body = unreleased_body.replace("%", "%25")
+    unreleased_body = unreleased_body.replace("\n", "%0A")
+    unreleased_body = unreleased_body.replace("\r", "%0D")
+    print(f"::set-output name=unreleasedBody::{unreleased_body}")
 
 
 if __name__ == "__main__":
