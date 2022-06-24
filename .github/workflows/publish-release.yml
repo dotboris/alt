@@ -1,0 +1,20 @@
+name: Publish Release
+
+on: [workflow_dispatch]
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Assert Git Tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log(`context.ref=${context.ref}`)
+
+            if (!/^refs\/tags\/v.*$/g.test(context.ref)) {
+              core.error(`Publishing a release on ${context.ref} is not supported.`)
+            }
+
+      - run: echo this is the rest of the job
