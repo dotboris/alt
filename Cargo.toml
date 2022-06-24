@@ -1,6 +1,6 @@
 [package]
 name = "alt"
-version = "1.2.0"
+version = "1.2.1"
 description = "A tool for switching between different version so commands based on the current directory."
 authors = ["Boris Bera <bera.boris@gmail.com>"]
 edition = "2018"
