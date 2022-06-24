@@ -15,6 +15,10 @@ on:
 jobs:
   tag:
     name: Tag new nersion (${{ github.event.inputs.bumpType }})
+
+    outputs:
+      newVersion: ${{ steps.getNewVersion.version }}
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -73,3 +77,22 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.getNewVersion.outputs.version }}
         run: git push --tags origin main
+
+  package:
+    needs: tag
+    uses: ./.github/workflows/package.yml
+    with:
+      checkoutRef: ${{ needs.tag.outputs.newVersion }}
+
+  create-release:
+    needs: [package, tag]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: alt-package
+          path: packages
+      - name: Create release
+        env:
+          VERSION: ${{ needs.tag.outputs.newVersion }}
+        run: gh release create "$VERSION" package/*
