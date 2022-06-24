@@ -40,6 +40,7 @@ jobs:
 
     outputs:
       newVersion: ${{ steps.getNewVersion.outputs.version }}
+      newVersionChangelog: ${{ steps.updateChangelog.outputs.unreleasedBody }}
 
     runs-on: ubuntu-latest
     steps:
@@ -75,6 +76,7 @@ jobs:
         run: ./ci/get_version.py
 
       - name: Update CHANGELOG.md
+        id: updateChangelog
         env:
           OLD_VERSION: ${{ steps.getOldVersion.outputs.version }}
           NEW_VERSION: ${{ steps.getNewVersion.outputs.version }}
@@ -123,4 +125,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           VERSION: ${{ needs.tag.outputs.newVersion }}
-        run: gh release create "$VERSION" packages/*
+          BODY: ${{ needs.tag.outputs.newVersionChangelog }}
+        run: gh release create "$VERSION" --notes "$BODY" packages/*
