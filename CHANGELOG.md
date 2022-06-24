@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed typo in help text for the `alt use` command.
 
+<!-- section:previous-releases -->
 ## [v1.2.0] - 2020-12-06
 
 ### Added
@@ -34,7 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   help people figure out what's going on when `alt` fails. Note that previously
   `alt` only displayed the generic underlying error.
 
-<!-- section:previous-releases -->
 ## [v1.1.1] - 2019-11-16
 
 ### Added
