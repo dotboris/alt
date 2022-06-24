@@ -30,7 +30,7 @@ jobs:
 
       - name: Determine current version
         id: getOldVersion
-        run: echo "::set-output name=version::$(./ci/get_version.py)"
+        run: ./ci/get_version.py
 
       - name: Bump ${{ github.event.inputs.bumpType }} in Cargo.toml
         uses: actions-rs/cargo@v1
@@ -45,7 +45,7 @@ jobs:
 
       - name: Determine next version
         id: getNewVersion
-        run: echo "::set-output name=version::$(./ci/get_version.py)"
+        run: ./ci/get_version.py
 
       - name: Update CHANGELOG.md
         env:

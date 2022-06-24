@@ -19,7 +19,8 @@ def main():
     assert len(packages) == 1, "Expected exactly 1 package named alt"
 
     package = packages[0]
-    print(f"v{package['version']}", end="")
+    version = f"v{package['version']}"
+    print(f"::set-output name=version::{version}")
 
 
 if __name__ == "__main__":
