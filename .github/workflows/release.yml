@@ -94,5 +94,6 @@ jobs:
           path: packages
       - name: Create release
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ needs.tag.outputs.newVersion }}
         run: gh release create "$VERSION" package/*
