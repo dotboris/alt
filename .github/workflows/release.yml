@@ -1,4 +1,4 @@
-name: New Version
+name: Release
 
 on:
   workflow_dispatch:
@@ -13,7 +13,8 @@ on:
           - patch
 
 jobs:
-  release:
+  tag:
+    name: Tag new nersion (${{ github.event.inputs.bumpType }})
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
