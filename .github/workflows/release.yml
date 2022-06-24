@@ -17,7 +17,7 @@ jobs:
     name: Tag new nersion (${{ github.event.inputs.bumpType }})
 
     outputs:
-      newVersion: ${{ steps.getNewVersion.version }}
+      newVersion: ${{ steps.getNewVersion.outputs.version }}
 
     runs-on: ubuntu-latest
     steps:
