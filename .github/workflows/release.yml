@@ -79,13 +79,17 @@ jobs:
         run: git push --tags origin main
 
   package:
+    name: Package (${{ needs.tag.outputs.newVersion }})
     needs: tag
+
     uses: ./.github/workflows/package.yml
     with:
       checkoutRef: ${{ needs.tag.outputs.newVersion }}
 
   create-release:
+    name: Create Release (${{ needs.tag.outputs.newVersion }})
     needs: [package, tag]
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
