@@ -1,0 +1,129 @@
+# DEVELOPMENT NOTES: Making changes to this file and testing them can be quite
+# tricky. This is because this release workflow makes changes to the repository
+# that it runs in. Specifically it commits and tags in the `main` branch and
+# then creates a GitHub release from those tags. Also, since this is a manual
+# workflow, it needs to run off the `main` branch.
+#
+# To make changes to this file and be able to test them you need to fork this
+# repo and commit directly in the `main` branch of this fork. You'll then be
+# able to run the this workflow in your fork which will create all the commits,
+# tags and releases in that fork. This ensures that you don't create bogus
+# commits, tags and releases in the original repo.
+#
+# Here's a few bits of advice that will make your life much easier:
+# - Make sure that your fork is public. This repo has a pretty heavy CI. If you
+#   have a private fork, you'll run out of CI credits very fast.
+# - After you've run this workflow, make sure to delete any release or tags that
+#   it created.
+# - After you've run this workflow, the next time you push to the `main` branch
+#   of your fork, you'll need to do a force push. This is because the workflow
+#   creates a commit on top of the `main` branch and git won't let you do a
+#   normal push. Doing a force push here effectively removes this commit.
+
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bumpType:
+        required: true
+        description: Version Bump
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  tag:
+    name: Tag new nersion (${{ github.event.inputs.bumpType }})
+
+    outputs:
+      newVersion: ${{ steps.getNewVersion.outputs.version }}
+      newVersionChangelog: ${{ steps.updateChangelog.outputs.unreleasedBody }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - name: Install cargo-edit
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: --no-default-features --features set-version cargo-edit
+      - uses: actions/setup-python@v3
+
+      - name: Determine current version
+        id: getOldVersion
+        run: ./ci/get_version.py
+
+      - name: Bump ${{ github.event.inputs.bumpType }} in Cargo.toml
+        uses: actions-rs/cargo@v1
+        with:
+          command: set-version
+          args: --bump ${{ github.event.inputs.bumpType }}
+      - name: Update Cargo.lock
+        uses: actions-rs/cargo@v1
+        with:
+          command: update
+          args: -p alt
+
+      - name: Determine next version
+        id: getNewVersion
+        run: ./ci/get_version.py
+
+      - name: Update CHANGELOG.md
+        id: updateChangelog
+        env:
+          OLD_VERSION: ${{ steps.getOldVersion.outputs.version }}
+          NEW_VERSION: ${{ steps.getNewVersion.outputs.version }}
+        run: |
+          ./ci/add_changelog_version.py \
+            --old-version "$OLD_VERSION" \
+            --new-version "$NEW_VERSION"
+
+      - run: git diff --color
+
+      - name: Commit & tag ${{ steps.getNewVersion.outputs.version }}
+        env:
+          NEW_VERSION: ${{ steps.getNewVersion.outputs.version }}
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
+          git add .
+          git commit -m "Release $NEW_VERSION"
+          git tag "$NEW_VERSION"
+
+      - name: Push ${{ steps.getNewVersion.outputs.version }}
+        env:
+          NEW_VERSION: ${{ steps.getNewVersion.outputs.version }}
+        run: git push --tags origin main
+
+  package:
+    name: Package (${{ needs.tag.outputs.newVersion }})
+    needs: tag
+
+    uses: ./.github/workflows/package.yml
+    with:
+      checkoutRef: ${{ needs.tag.outputs.newVersion }}
+
+  create-release:
+    name: Create Release (${{ needs.tag.outputs.newVersion }})
+    needs: [package, tag]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: alt-package
+          path: packages
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.tag.outputs.newVersion }}
+          BODY: ${{ needs.tag.outputs.newVersionChangelog }}
+        run: gh release create "$VERSION" --notes "$BODY" packages/*

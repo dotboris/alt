@@ -1,0 +1,41 @@
+on:
+  workflow_call:
+    inputs:
+      checkoutRef:
+        type: string
+        required: false
+
+jobs:
+  package:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+          - os: macos-latest
+            target: x86_64-apple-darwin
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.checkoutRef }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: ${{ matrix.target }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: |
+          ./ci/package.py \
+            --rust-target ${{ matrix.target }} \
+            --dest-dir dist/release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: alt-package
+          path: dist/release/
+          if-no-files-found: error
+

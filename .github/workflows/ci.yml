@@ -86,30 +86,7 @@ jobs:
           args: help
 
   package:
-    name: package artifacts
-
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-musl
-          - os: macos-latest
-            target: x86_64-apple-darwin
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: ${{ matrix.target }}
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-      - run: |
-          ./ci/package.py \
-            --rust-target ${{ matrix.target }} \
-            --dest-dir dist/release
+    uses: ./.github/workflows/package.yml
 
   clippy:
     runs-on: ubuntu-latest
@@ -162,19 +139,22 @@ jobs:
       - name: Fish syntax check
         run: find . -iname '*.fish' -print0 | xargs -n1 -0t fish -n
 
-  python-lint:
-    name: lint python code
-
+  python-flake8:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
-      - name: Install linter
-        run: pip install flake8
-      - uses: suo/flake8-github-action@releases/v1
+      - run: pip install flake8
+      - run: flake8 .
+
+  python-black:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          checkName: python-lint
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          python-version: 3.x
+      - run: pip install black
+      - run: black --check .
