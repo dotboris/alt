@@ -54,7 +54,7 @@ jobs:
         with:
           command: install
           args: --no-default-features --features set-version cargo-edit
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
 
       - name: Determine current version
         id: getOldVersion
