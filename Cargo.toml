@@ -32,7 +32,7 @@ dialoguer = "0.10.1"
 glob = "0.3.0"
 
 [dependencies.clap]
-version = "3.2.2"
+version = "3.2.13"
 default-features = true
 features = ["cargo"]
 
@@ -44,9 +44,9 @@ features = ["std", "perf", "unicode-perl"]
 [dev-dependencies]
 assert_cmd = "2.0"
 escargot = "0.5"
-predicates = "2.1.0"
+predicates = "2.1.1"
 rand = "0.8"
 
 [build-dependencies]
-clap = "3.2.2"
+clap = "3.2.13"
 clap_complete = "3.2.3"
