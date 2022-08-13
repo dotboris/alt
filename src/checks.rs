@@ -5,7 +5,7 @@ use console::style;
 
 fn line(width: usize) -> String {
     let line: String = "=".repeat(width);
-    return format!("{}", style(line).bold());
+    format!("{}", style(line).bold())
 }
 
 fn line_label(width: usize, label: &str) -> String {
@@ -16,12 +16,12 @@ fn line_label(width: usize, label: &str) -> String {
     let left: String = "=".repeat(left_size);
     let right: String = "=".repeat(right_size);
 
-    return format!(
+    format!(
         "{} {} {}",
         style(format!("{}>", left)).bold(),
         style(label).bold().red(),
         style(format!("<{}", right)).bold(),
-    );
+    )
 }
 
 pub fn check_shim_in_path() {
