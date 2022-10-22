@@ -3,7 +3,7 @@ name = "alt"
 version = "1.2.1"
 description = "A tool for switching between different version so commands based on the current directory."
 authors = ["Boris Bera <bera.boris@gmail.com>"]
-edition = "2018"
+edition = "2021"
 license = "MIT"
 readme = "README.md"
 
@@ -48,5 +48,9 @@ predicates = "2.1.1"
 rand = "0.8"
 
 [build-dependencies]
-clap = "3.2.22"
 clap_complete = "3.2.5"
+
+[build-dependencies.clap]
+version = "3.2.22"
+default-features = true
+features = ["cargo"]
