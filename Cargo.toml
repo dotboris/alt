@@ -48,7 +48,7 @@ predicates = "2.1.1"
 rand = "0.8"
 
 [build-dependencies]
-clap_complete = "3.2.5"
+clap_complete = "4.0.3"
 
 [build-dependencies.clap]
 version = "3.2.22"
