@@ -4,18 +4,16 @@ expression: snapshot
 ---
 status = 0
 stdout = '''
-alt-use 
 Switch the version of a command
 
-USAGE:
-    alt use <command> [version]
+Usage: alt use <command> [version]
 
-ARGS:
-    <command>    Command to switch the version of
-    <version>    Version to use (optional)
+Arguments:
+  <command>  Command to switch the version of
+  [version]  Version to use (optional)
 
-OPTIONS:
-    -h, --help    Print help information
+Options:
+  -h, --help  Print help information
 
 EXAMPLES:
     alt use node 8        Use version 8 of node

@@ -1,8 +1,8 @@
 use clap::builder::PossibleValuesParser;
-use clap::ArgAction::StoreValue;
+use clap::ArgAction;
 use clap::{crate_version, Arg, Command};
 
-pub fn make_app() -> Command<'static> {
+pub fn make_app() -> Command {
     return Command::new("alt")
         .version(crate_version!())
         .about("Switch between different versions of commands")
@@ -25,15 +25,13 @@ pub fn make_app() -> Command<'static> {
                 )
                 .arg(
                     Arg::new("command")
-                        .action(StoreValue)
                         .help("The command to run")
                         .required(true),
                 )
                 .arg(
                     Arg::new("command_args")
-                        .action(StoreValue)
-                        .help("Arguments to pass to the command")
-                        .multiple_values(true),
+                        .action(ArgAction::Append)
+                        .help("Arguments to pass to the command"),
                 ),
         )
         .subcommand(Command::new("shim").about("Generate shims for all managed commands"))
@@ -42,7 +40,6 @@ pub fn make_app() -> Command<'static> {
                 .about("Print the resolved path of a command")
                 .arg(
                     Arg::new("command")
-                        .action(StoreValue)
                         .required(true)
                         .help("Command to look up"),
                 ),
@@ -52,7 +49,6 @@ pub fn make_app() -> Command<'static> {
                 .about("Scan for different versions of the given command")
                 .arg(
                     Arg::new("command")
-                        .action(StoreValue)
                         .required(true)
                         .help("Command to scan for"),
                 ),
@@ -68,13 +64,11 @@ pub fn make_app() -> Command<'static> {
                 )
                 .arg(
                     Arg::new("command")
-                        .action(StoreValue)
                         .required(true)
                         .help("Command to switch the version of"),
                 )
                 .arg(
                     Arg::new("version")
-                        .action(StoreValue)
                         .help("Version to use (optional)"),
                 ),
         )
@@ -84,19 +78,16 @@ pub fn make_app() -> Command<'static> {
                 .about("Define a new version")
                 .arg(
                     Arg::new("command")
-                        .action(StoreValue)
                         .required(true)
                         .help("Command to define the version for"),
                 )
                 .arg(
                     Arg::new("version")
-                        .action(StoreValue)
                         .required(true)
                         .help("The name of the version"),
                 )
                 .arg(
                     Arg::new("bin")
-                        .action(StoreValue)
                         .required(true)
                         .help("Path to the executable for the version"),
                 ),
@@ -108,9 +99,7 @@ pub fn make_app() -> Command<'static> {
                     Arg::new("fix_mode")
                         .short('f')
                         .long("fix-mode")
-                        .action(StoreValue)
                         .value_parser(PossibleValuesParser::new(["auto", "never", "prompt"]))
-                        .takes_value(true)
                         .default_value("prompt")
                         .help("Control how automatic fixes are applied."),
                 ),

@@ -4,16 +4,14 @@ expression: snapshot
 ---
 status = 0
 stdout = '''
-alt-which 
 Print the resolved path of a command
 
-USAGE:
-    alt which <command>
+Usage: alt which <command>
 
-ARGS:
-    <command>    Command to look up
+Arguments:
+  <command>  Command to look up
 
-OPTIONS:
-    -h, --help    Print help information
+Options:
+  -h, --help  Print help information
 '''
 stderr = ''

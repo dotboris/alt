@@ -4,13 +4,11 @@ expression: snapshot
 ---
 status = 0
 stdout = '''
-alt-shim 
 Generate shims for all managed commands
 
-USAGE:
-    alt shim
+Usage: alt shim
 
-OPTIONS:
-    -h, --help    Print help information
+Options:
+  -h, --help  Print help information
 '''
 stderr = ''

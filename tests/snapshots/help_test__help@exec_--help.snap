@@ -4,18 +4,16 @@ expression: snapshot
 ---
 status = 0
 stdout = '''
-alt-exec 
 Run the given command
 
-USAGE:
-    alt exec <command> [command_args]...
+Usage: alt exec <command> [command_args]...
 
-ARGS:
-    <command>            The command to run
-    <command_args>...    Arguments to pass to the command
+Arguments:
+  <command>          The command to run
+  [command_args]...  Arguments to pass to the command
 
-OPTIONS:
-    -h, --help    Print help information
+Options:
+  -h, --help  Print help information
 
 ARGS NOTE:
     Note that `alt exec` handles some flags on its own (`--help` for example).

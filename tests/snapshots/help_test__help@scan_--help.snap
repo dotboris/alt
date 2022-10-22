@@ -4,16 +4,14 @@ expression: snapshot
 ---
 status = 0
 stdout = '''
-alt-scan 
 Scan for different versions of the given command
 
-USAGE:
-    alt scan <command>
+Usage: alt scan <command>
 
-ARGS:
-    <command>    Command to scan for
+Arguments:
+  <command>  Command to scan for
 
-OPTIONS:
-    -h, --help    Print help information
+Options:
+  -h, --help  Print help information
 '''
 stderr = ''

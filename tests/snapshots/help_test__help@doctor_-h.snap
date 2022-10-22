@@ -4,15 +4,13 @@ expression: snapshot
 ---
 status = 0
 stdout = '''
-alt-doctor 
 Checks if alt is setup correctly. Helps debug problems.
 
-USAGE:
-    alt doctor [OPTIONS]
+Usage: alt doctor [OPTIONS]
 
-OPTIONS:
-    -f, --fix-mode <fix_mode>    Control how automatic fixes are applied. [default: prompt]
-                                 [possible values: auto, never, prompt]
-    -h, --help                   Print help information
+Options:
+  -f, --fix-mode <fix_mode>  Control how automatic fixes are applied. [default: prompt] [possible
+                             values: auto, never, prompt]
+  -h, --help                 Print help information
 '''
 stderr = ''

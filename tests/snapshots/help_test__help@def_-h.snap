@@ -4,18 +4,16 @@ expression: snapshot
 ---
 status = 0
 stdout = '''
-alt-def 
 Define a new version
 
-USAGE:
-    alt def <command> <version> <bin>
+Usage: alt def <command> <version> <bin>
 
-ARGS:
-    <command>    Command to define the version for
-    <version>    The name of the version
-    <bin>        Path to the executable for the version
+Arguments:
+  <command>  Command to define the version for
+  <version>  The name of the version
+  <bin>      Path to the executable for the version
 
-OPTIONS:
-    -h, --help    Print help information
+Options:
+  -h, --help  Print help information
 '''
 stderr = ''
