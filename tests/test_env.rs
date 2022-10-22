@@ -1,10 +1,6 @@
-extern crate assert_cmd;
-extern crate escargot;
-extern crate rand;
-
-use self::escargot::CargoBuild;
-use self::rand::distributions::Alphanumeric;
-use self::rand::prelude::*;
+use escargot::CargoBuild;
+use rand::distributions::Alphanumeric;
+use rand::prelude::*;
 use std::env;
 use std::ffi::OsStr;
 use std::fs;

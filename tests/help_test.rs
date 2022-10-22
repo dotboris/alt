@@ -1,6 +1,7 @@
 #![cfg(test)]
 
 mod test_env;
+
 use clap::crate_version;
 use serde::Serialize;
 use std::{convert::TryFrom, error::Error, process::Output};

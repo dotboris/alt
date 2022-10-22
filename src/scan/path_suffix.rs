@@ -1,5 +1,6 @@
 use super::CommandVersion;
 use crate::config;
+use lazy_static::lazy_static;
 use regex::Regex;
 use std::env;
 use std::fs;
