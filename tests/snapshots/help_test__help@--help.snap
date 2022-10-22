@@ -1,0 +1,28 @@
+---
+source: tests/help_test.rs
+expression: snapshot
+---
+status = 0
+stdout = '''
+alt [version]
+Switch between different versions of commands
+
+USAGE:
+    alt <SUBCOMMAND>
+
+OPTIONS:
+    -h, --help       Print help information
+    -V, --version    Print version information
+
+SUBCOMMANDS:
+    def       Define a new version
+    doctor    Checks if alt is setup correctly. Helps debug problems.
+    exec      Run the given command
+    help      Print this message or the help of the given subcommand(s)
+    scan      Scan for different versions of the given command
+    shim      Generate shims for all managed commands
+    show      Print commands and their versions
+    use       Switch the version of a command
+    which     Print the resolved path of a command
+'''
+stderr = ''

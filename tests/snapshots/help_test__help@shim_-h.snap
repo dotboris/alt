@@ -1,0 +1,16 @@
+---
+source: tests/help_test.rs
+expression: snapshot
+---
+status = 0
+stdout = '''
+alt-shim 
+Generate shims for all managed commands
+
+USAGE:
+    alt shim
+
+OPTIONS:
+    -h, --help    Print help information
+'''
+stderr = ''

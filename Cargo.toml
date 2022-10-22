@@ -24,6 +24,12 @@ assets = [
 [profile.release]
 lto = true
 
+[profile.dev.package.insta]
+opt-level = 3
+
+[profile.dev.package.similar]
+opt-level = 3
+
 [dependencies]
 toml = "0.5.9"
 console = "0.15.2"
@@ -44,8 +50,11 @@ features = ["std", "perf", "unicode-perl"]
 [dev-dependencies]
 assert_cmd = "2.0"
 escargot = "0.5"
+insta = { version = "1.21.0", features = ["filters", "toml"] }
 predicates = "2.1.1"
 rand = "0.8"
+serde = "1.0.147"
+test-case = "2.2.2"
 
 [build-dependencies]
 clap_complete = "3.2.5"

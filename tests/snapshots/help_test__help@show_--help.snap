@@ -1,0 +1,16 @@
+---
+source: tests/help_test.rs
+expression: snapshot
+---
+status = 0
+stdout = '''
+alt-show 
+Print commands and their versions
+
+USAGE:
+    alt show
+
+OPTIONS:
+    -h, --help    Print help information
+'''
+stderr = ''

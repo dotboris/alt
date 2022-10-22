@@ -1,0 +1,21 @@
+---
+source: tests/help_test.rs
+expression: snapshot
+---
+status = 0
+stdout = '''
+alt-def 
+Define a new version
+
+USAGE:
+    alt def <command> <version> <bin>
+
+ARGS:
+    <command>    Command to define the version for
+    <version>    The name of the version
+    <bin>        Path to the executable for the version
+
+OPTIONS:
+    -h, --help    Print help information
+'''
+stderr = ''
