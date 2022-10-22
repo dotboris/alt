@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 <!-- section:unreleased-body -->
 
+### Changed
+
+- Migrate to Rust 2021 Edition. This should have no effect on users but may
+  affect people building from source.
+
 <!-- section:previous-releases -->
 ## [v1.2.1] 2022-06-24
 
