@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrate to Rust 2021 Edition. This should have no effect on users but may
   affect people building from source.
+- Migrate to `clap@v4`. This changes the way the help text is rendered. In terms
+  of behavior, nothing should change.
 
 <!-- section:previous-releases -->
 ## [v1.2.1] 2022-06-24
