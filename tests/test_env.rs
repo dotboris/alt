@@ -1,3 +1,13 @@
+// We have to disable the `dead_code` warning here because while all of the code
+// here is used at least once, it's not used in every single test file which
+// causes a false positive on the warning. This happens because every test file
+// is built as its own executable and every single one of those can potentially
+// emit that warnings.
+// See:
+// - https://github.com/rust-lang/rust/issues/46379
+// - https://stackoverflow.com/a/67902444
+#![allow(dead_code)]
+
 use escargot::CargoBuild;
 use rand::distributions::Alphanumeric;
 use rand::prelude::*;
