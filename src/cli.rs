@@ -3,7 +3,7 @@ use clap::ArgAction;
 use clap::{crate_version, Arg, Command};
 
 pub fn make_app() -> Command {
-    return Command::new("alt")
+    Command::new("alt")
         .version(crate_version!())
         .about("Switch between different versions of commands")
         .subcommand_required(true)
@@ -67,10 +67,7 @@ pub fn make_app() -> Command {
                         .required(true)
                         .help("Command to switch the version of"),
                 )
-                .arg(
-                    Arg::new("version")
-                        .help("Version to use (optional)"),
-                ),
+                .arg(Arg::new("version").help("Version to use (optional)")),
         )
         .subcommand(Command::new("show").about("Print commands and their versions"))
         .subcommand(
@@ -103,7 +100,7 @@ pub fn make_app() -> Command {
                         .default_value("prompt")
                         .help("Control how automatic fixes are applied."),
                 ),
-        );
+        )
 }
 
 #[test]
