@@ -1,5 +1,3 @@
-extern crate toml;
-
 use std::collections::HashMap;
 use std::fs;
 use std::io;

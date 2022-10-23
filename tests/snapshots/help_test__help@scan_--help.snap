@@ -1,0 +1,17 @@
+---
+source: tests/help_test.rs
+expression: snapshot
+---
+status = 0
+stdout = '''
+Scan for different versions of the given command
+
+Usage: alt scan <command>
+
+Arguments:
+  <command>  Command to scan for
+
+Options:
+  -h, --help  Print help information
+'''
+stderr = ''

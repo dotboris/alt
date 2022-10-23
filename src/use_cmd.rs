@@ -1,5 +1,3 @@
-extern crate dialoguer;
-
 use crate::def_file;
 use crate::use_file;
 use dialoguer::Select;

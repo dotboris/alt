@@ -1,0 +1,29 @@
+---
+source: tests/help_test.rs
+expression: snapshot
+---
+status = 0
+stdout = '''
+Run the given command
+
+Usage: alt exec <command> [command_args]...
+
+Arguments:
+  <command>          The command to run
+  [command_args]...  Arguments to pass to the command
+
+Options:
+  -h, --help  Print help information
+
+ARGS NOTE:
+    Note that `alt exec` handles some flags on its own (`--help` for example).
+    If you want to pass such arguments to the executed command instead of
+    `alt exec`, you will need to use `--` to tell alt exec to stop parsing
+    arguments.
+
+    Example:
+
+    alt exec node --help        # --help passed to alt (shows this message)
+    alt exec node -- --help     # --help passed to node (shows node's help)
+'''
+stderr = ''

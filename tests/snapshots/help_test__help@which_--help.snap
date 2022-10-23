@@ -1,0 +1,17 @@
+---
+source: tests/help_test.rs
+expression: snapshot
+---
+status = 0
+stdout = '''
+Print the resolved path of a command
+
+Usage: alt which <command>
+
+Arguments:
+  <command>  Command to look up
+
+Options:
+  -h, --help  Print help information
+'''
+stderr = ''

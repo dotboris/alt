@@ -1,8 +1,7 @@
-extern crate assert_cmd;
+mod test_env;
 
 use assert_cmd::prelude::*;
 use predicates::prelude::*;
-mod test_env;
 use std::fs;
 use std::io::Result as IoResult;
 use std::os::unix::fs::PermissionsExt;

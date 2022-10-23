@@ -1,8 +1,9 @@
 use clap::builder::PossibleValuesParser;
+use clap::ArgAction;
 use clap::{crate_version, Arg, Command};
 
-pub fn make_app() -> Command<'static> {
-    return Command::new("alt")
+pub fn make_app() -> Command {
+    Command::new("alt")
         .version(crate_version!())
         .about("Switch between different versions of commands")
         .subcommand_required(true)
@@ -29,8 +30,8 @@ pub fn make_app() -> Command<'static> {
                 )
                 .arg(
                     Arg::new("command_args")
-                        .help("Arguments to pass to the command")
-                        .multiple_values(true),
+                        .action(ArgAction::Append)
+                        .help("Arguments to pass to the command"),
                 ),
         )
         .subcommand(Command::new("shim").about("Generate shims for all managed commands"))
@@ -96,11 +97,10 @@ pub fn make_app() -> Command<'static> {
                         .short('f')
                         .long("fix-mode")
                         .value_parser(PossibleValuesParser::new(["auto", "never", "prompt"]))
-                        .takes_value(true)
                         .default_value("prompt")
                         .help("Control how automatic fixes are applied."),
                 ),
-        );
+        )
 }
 
 #[test]

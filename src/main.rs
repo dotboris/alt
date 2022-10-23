@@ -1,10 +1,3 @@
-extern crate clap;
-extern crate console;
-#[macro_use]
-extern crate lazy_static;
-extern crate glob;
-extern crate regex;
-
 mod checks;
 mod cli;
 mod command;

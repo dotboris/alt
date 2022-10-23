@@ -1,0 +1,16 @@
+---
+source: tests/help_test.rs
+expression: snapshot
+---
+status = 0
+stdout = '''
+Checks if alt is setup correctly. Helps debug problems.
+
+Usage: alt doctor [OPTIONS]
+
+Options:
+  -f, --fix-mode <fix_mode>  Control how automatic fixes are applied. [default: prompt] [possible
+                             values: auto, never, prompt]
+  -h, --help                 Print help information
+'''
+stderr = ''

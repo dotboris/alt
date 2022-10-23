@@ -1,6 +1,3 @@
-extern crate dialoguer;
-extern crate toml;
-
 use crate::def_file;
 use crate::scan;
 use crate::scan::CommandVersion;
