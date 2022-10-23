@@ -211,22 +211,4 @@ https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
 echo '.alt.toml' >> path/to/your/global-gitgnore
 ```
 
-## Development
-
-### Setup
-
-See: <https://www.rust-lang.org/tools/install>
-
-### Run
-
-```sh
-cargo run ...
-```
-
-### Test
-
-```sh
-cargo test
-```
-
 [latest-release]: https://github.com/dotboris/alt/releases/latest
