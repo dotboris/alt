@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from pathlib import Path
 import subprocess
 import sys
 import tarfile
@@ -73,6 +74,9 @@ def build_tarbal(bin_path, version, rust_target, dest_dir):
             path.join(install_dir, "completion", completion_file),
             "644",
         )
+
+    for man_page in (Path("target") / rust_target).glob("release/man/*.1"):
+        install(str(man_page), str(Path(install_dir) / "man" / man_page.name), "644")
 
     def as_root(tarinfo):
         tarinfo.uid = 0
