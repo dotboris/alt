@@ -40,6 +40,13 @@ You may need to adjust some of the paths here to match your system.
     sudo cp completion/alt.fish /etc/fish/completions/alt.fish
     ```
 
+1.  (Optional) Install man pages
+
+    ```sh
+    sudo mkdir -p /usr/local/share/man/man1
+    sudo cp man/* /usr/local/share/man/man1/
+    ```
+
 You will probably need to log out & log back in to your desktop session so that
 the `PATH` configuration scripts you installed will load.
 
