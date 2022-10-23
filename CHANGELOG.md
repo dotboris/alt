@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 <!-- section:unreleased-body -->
 
+### Added
+
+- Add man pages. Users will now be able to run `man alt` as well as `man
+  alt-{subcommand}` in order to get documentation `alt` and its subcommands.
+
 ### Changed
 
 - Migrate to Rust 2021 Edition. This should have no effect on users but may
