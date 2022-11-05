@@ -97,13 +97,13 @@ impl TestEnv {
 
     pub fn def(&self, command: &str, version: &str, path: &Path) -> Command {
         let mut c = self.alt();
-        c.args(&["def", command, version, path.to_str().unwrap()]);
+        c.args(["def", command, version, path.to_str().unwrap()]);
         c
     }
 
     pub fn _use(&self, command: &str, version: &str) -> Command {
         let mut c = self.alt();
-        c.args(&["use", command, version]);
+        c.args(["use", command, version]);
         c
     }
 }
