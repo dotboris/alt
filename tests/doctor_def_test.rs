@@ -21,7 +21,7 @@ fn success_with_no_problems() -> IoResult<()> {
     env._use("thingy", "1").assert().success();
 
     env.alt()
-        .args(&["doctor", "--fix-mode", "auto"])
+        .args(["doctor", "--fix-mode", "auto"])
         .assert()
         .success();
 
@@ -48,7 +48,7 @@ fn remove_entry_for_missing_bin() -> IoResult<()> {
         .stdout(predicate::str::contains("thingy-1").and(predicate::str::contains("thingy-2")));
 
     env.alt()
-        .args(&["doctor", "--fix-mode", "auto"])
+        .args(["doctor", "--fix-mode", "auto"])
         .spawn()?
         .wait()?;
 
@@ -80,7 +80,7 @@ fn remove_entry_for_defined_dir() -> IoResult<()> {
         .stdout(predicate::str::contains("thingy-1").and(predicate::str::contains("thingy-2")));
 
     env.alt()
-        .args(&["doctor", "--fix-mode", "auto"])
+        .args(["doctor", "--fix-mode", "auto"])
         .spawn()?
         .wait()?;
 
@@ -115,7 +115,7 @@ fn remove_entry_for_non_executable_bin() -> IoResult<()> {
         .stdout(predicate::str::contains("thingy-1").and(predicate::str::contains("thingy-2")));
 
     env.alt()
-        .args(&["doctor", "--fix-mode", "auto"])
+        .args(["doctor", "--fix-mode", "auto"])
         .spawn()?
         .wait()?;
 
