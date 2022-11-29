@@ -32,7 +32,7 @@ opt-level = 3
 opt-level = 3
 
 [dependencies]
-clap = { version = "4.0.27", features = ["cargo", "wrap_help"] }
+clap = { version = "4.0.29", features = ["cargo", "wrap_help"] }
 toml = "0.5.9"
 console = "0.15.2"
 lazy_static = "1.4.0"
@@ -54,6 +54,6 @@ serde = "1.0.148"
 test-case = "2.2.2"
 
 [build-dependencies]
-clap = { version = "4.0.27", features = ["cargo"] }
+clap = { version = "4.0.29", features = ["cargo"] }
 clap_complete = "4.0.6"
 clap_mangen = "0.2.5"
