@@ -47,7 +47,7 @@ features = ["std", "perf", "unicode-perl"]
 [dev-dependencies]
 assert_cmd = "2.0"
 escargot = "0.5"
-insta = { version = "1.21.2", features = ["filters", "toml"] }
+insta = { version = "1.22.0", features = ["filters", "toml"] }
 predicates = "2.1.4"
 rand = "0.8"
 serde = "1.0.148"
