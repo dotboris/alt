@@ -33,7 +33,7 @@ opt-level = 3
 
 [dependencies]
 clap = { version = "4.0.29", features = ["cargo", "wrap_help"] }
-toml = "0.5.9"
+toml = "0.5.10"
 console = "0.15.2"
 lazy_static = "1.4.0"
 dialoguer = "0.10.2"
@@ -47,10 +47,10 @@ features = ["std", "perf", "unicode-perl"]
 [dev-dependencies]
 assert_cmd = "2.0"
 escargot = "0.5"
-insta = { version = "1.22.0", features = ["filters", "toml"] }
+insta = { version = "1.23.0", features = ["filters", "toml"] }
 predicates = "2.1.4"
 rand = "0.8"
-serde = "1.0.149"
+serde = "1.0.151"
 test-case = "2.2.2"
 
 [build-dependencies]
