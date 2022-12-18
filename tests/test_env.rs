@@ -86,7 +86,7 @@ impl TestEnv {
         c.env("ALT_SHIM_DIR", self.root.join("shims"));
         c.env(
             "PATH",
-            env::join_paths(&[self.root.join("shims"), self.stub_bin_dir.clone()]).unwrap(),
+            env::join_paths([self.root.join("shims"), self.stub_bin_dir.clone()]).unwrap(),
         );
         c
     }

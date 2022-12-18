@@ -18,6 +18,6 @@ pub fn find_system_bin(command: &str) -> Option<PathBuf> {
     env::split_paths(&system_path)
         .map(|p| p.join(command))
         .filter(|p| p.exists())
-        .map(|p| fs::canonicalize(&p).unwrap())
+        .map(|p| fs::canonicalize(p).unwrap())
         .find(|p| p != &current_exe)
 }
