@@ -50,7 +50,7 @@ escargot = "0.5"
 insta = { version = "1.23.0", features = ["filters", "toml"] }
 predicates = "2.1.4"
 rand = "0.8"
-serde = "1.0.151"
+serde = "1.0.152"
 test-case = "2.2.2"
 
 [build-dependencies]
