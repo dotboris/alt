@@ -1,4 +1,5 @@
-use crate::def_file;
+use crate::config;
+use crate::definitions::Definitions;
 use crate::shim;
 use std::env;
 use std::path::*;
@@ -12,15 +13,14 @@ pub fn run(command: &str, version: &str, bin: &str) {
         process::exit(1);
     }
 
-    let mut defs = def_file::load();
-    {
-        let def = defs
-            .entry(command.to_string())
-            .or_insert_with(def_file::CommandVersions::new);
-        def.insert(version.to_owned(), PathBuf::from(bin));
-    }
+    let definitions_file_path = config::home_dir().join("defs.toml");
 
-    def_file::save(&defs).expect("failed to save defs file");
+    let mut definitions = Definitions::load_or_default(&definitions_file_path)
+        .expect("TODO: manage command errors better somehow");
+    definitions.add_version(command, version, &bin_path);
+    definitions
+        .save(&definitions_file_path)
+        .expect("TODO: nice errors maybe");
 
     shim::make_shim(command, env::current_exe().unwrap().as_path())
         .unwrap_or_else(|err| panic!("failed to create shim for {}: {}", command, err));
