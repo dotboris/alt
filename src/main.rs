@@ -4,6 +4,7 @@ mod command;
 mod config;
 mod def_cmd;
 mod def_file;
+mod definitions;
 mod doctor_cmd;
 mod exec_cmd;
 mod scan;
