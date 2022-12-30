@@ -3,8 +3,6 @@ use std::{
     fs, io,
     path::{Path, PathBuf},
 };
-use thiserror;
-use toml;
 
 type DefinitionsState = HashMap<String, HashMap<String, PathBuf>>;
 
