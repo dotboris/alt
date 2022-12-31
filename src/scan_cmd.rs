@@ -1,4 +1,5 @@
-use crate::def_file;
+use crate::config;
+use crate::definitions::Definitions;
 use crate::scan;
 use crate::scan::CommandVersion;
 use crate::shim;
@@ -48,18 +49,18 @@ pub fn run(command: &str) {
             println!("Looks like you didn't choose anything.");
             println!("Did you forget to select versions with <space>?");
         } else {
-            let mut defs = def_file::load();
-            {
-                let def = defs
-                    .entry(command.to_string())
-                    .or_insert_with(def_file::CommandVersions::new);
+            let definitions_file_path = config::definitions_file();
+            let mut definitions =
+                Definitions::load_or_default(&definitions_file_path).expect("TODO: error handling");
 
-                for choice in choices {
-                    let version = &versions[choice];
-                    def.insert(version.version.clone(), version.path.clone());
-                }
+            for choice in choices {
+                let version = &versions[choice];
+                definitions.add_version(&version.command, &version.version, &version.path);
             }
-            def_file::save(&defs).expect("failed to save defs file");
+
+            definitions
+                .save(&definitions_file_path)
+                .expect("TODO: error handling");
 
             shim::make_shim(command, env::current_exe().unwrap().as_path())
                 .unwrap_or_else(|err| panic!("failed to create shim for {}: {}", command, err));
