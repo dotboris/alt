@@ -27,10 +27,6 @@ pub fn save(defs: &CommandDefs) -> Result<(), io::Error> {
     fs::write(home_dir.join(DEFS_FILE_NAME), toml)
 }
 
-pub fn find_bin<'a>(defs: &'a CommandDefs, command: &str, version: &str) -> Option<&'a PathBuf> {
-    defs.get(command).and_then(|def| def.get(version))
-}
-
 pub fn remove_version(defs: &mut CommandDefs, command: &str, version: &str) {
     let versions = defs.get_mut(command);
     if let Some(versions) = versions {
@@ -44,72 +40,6 @@ pub fn remove_version(defs: &mut CommandDefs, command: &str, version: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn find_bin_returns_none_on_empty_defs() {
-        let defs = CommandDefs::new();
-
-        let res = find_bin(&defs, "python", "2");
-
-        assert_eq!(None, res)
-    }
-
-    #[test]
-    fn find_bin_returns_none_when_command_not_defined() {
-        let mut defs = CommandDefs::new();
-        let mut ruby = CommandVersions::new();
-        ruby.insert(
-            "2.4".to_string(),
-            PathBuf::from("/path/to/ruby2.4/bin/ruby"),
-        );
-        ruby.insert(
-            "2.5".to_string(),
-            PathBuf::from("/path/to/ruby2.5/bin/ruby"),
-        );
-        defs.insert("ruby".to_string(), ruby);
-
-        let res = find_bin(&defs, "python", "2");
-
-        assert_eq!(None, res)
-    }
-
-    #[test]
-    fn find_bin_returns_none_when_version_not_defined() {
-        let mut defs = CommandDefs::new();
-        let mut ruby = CommandVersions::new();
-        ruby.insert(
-            "2.4".to_string(),
-            PathBuf::from("/path/to/ruby2.4/bin/ruby"),
-        );
-        ruby.insert(
-            "2.5".to_string(),
-            PathBuf::from("/path/to/ruby2.5/bin/ruby"),
-        );
-        defs.insert("ruby".to_string(), ruby);
-
-        let res = find_bin(&defs, "ruby", "1.9");
-
-        assert_eq!(None, res)
-    }
-
-    #[test]
-    fn find_bin_returns_path_when_command_and_version_defined() {
-        let mut defs = CommandDefs::new();
-        let mut ruby = CommandVersions::new();
-        ruby.insert(
-            "2.4".to_string(),
-            PathBuf::from("/path/to/ruby2.4/bin/ruby"),
-        );
-        ruby.insert(
-            "2.5".to_string(),
-            PathBuf::from("/path/to/ruby2.5/bin/ruby"),
-        );
-        defs.insert("ruby".to_string(), ruby);
-
-        let res = find_bin(&defs, "ruby", "2.4");
-
-        assert_eq!(Some(&PathBuf::from("/path/to/ruby2.4/bin/ruby")), res)
-    }
 
     #[test]
     fn remove_version_removes_given_command_version_pair() {

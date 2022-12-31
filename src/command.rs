@@ -1,3 +1,4 @@
+use crate::definitions::Definitions;
 use crate::use_file;
 use std::env;
 use std::fs;
@@ -20,4 +21,11 @@ pub fn find_system_bin(command: &str) -> Option<PathBuf> {
         .filter(|p| p.exists())
         .map(|p| fs::canonicalize(p).unwrap())
         .find(|p| p != &current_exe)
+}
+
+pub fn find_selected_binary(definitions: &Definitions, command: &str) -> Option<PathBuf> {
+    match find_selected_version(command) {
+        Some(version) => definitions.get_binary(command, &version),
+        None => find_system_bin(command),
+    }
 }
