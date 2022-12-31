@@ -50,6 +50,10 @@ impl Definitions {
         let command_entry = self.0.entry(command.to_string()).or_default();
         command_entry.insert(version.to_string(), binary_path.to_owned());
     }
+
+    pub fn get_binary(&self, command: &str, version: &str) -> Option<PathBuf> {
+        self.0.get(command)?.get(version).cloned()
+    }
 }
 
 #[cfg(test)]
@@ -247,5 +251,38 @@ mod tests {
                 ])
             )])
         );
+    }
+
+    #[test]
+    fn get_binary_returns_path_when_found() {
+        let definitions = Definitions(HashMap::from([(
+            "node".to_string(),
+            HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
+        )]));
+
+        let res = definitions.get_binary("node", "18");
+        assert_eq!(res, Some(PathBuf::from("path/to/node-18")));
+    }
+
+    #[test]
+    fn get_binary_returns_none_on_missing_version() {
+        let definitions = Definitions(HashMap::from([(
+            "node".to_string(),
+            HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
+        )]));
+
+        let res = definitions.get_binary("node", "not-there");
+        assert_eq!(res, None);
+    }
+
+    #[test]
+    fn get_binary_returns_none_on_missing_command() {
+        let definitions = Definitions(HashMap::from([(
+            "node".to_string(),
+            HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
+        )]));
+
+        let res = definitions.get_binary("not-there", "not-there");
+        assert_eq!(res, None);
     }
 }
