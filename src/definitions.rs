@@ -4,8 +4,6 @@ use std::{
     path::{Path, PathBuf},
 };
 
-type DefinitionsState = HashMap<String, HashMap<String, PathBuf>>;
-
 #[derive(thiserror::Error, Debug)]
 pub enum SaveError {
     #[error("failed to serialize definitions as TOML")]
@@ -13,6 +11,8 @@ pub enum SaveError {
     #[error(transparent)]
     IoError(#[from] io::Error),
 }
+
+type DefinitionsState = HashMap<String, HashMap<String, PathBuf>>;
 
 #[derive(Debug, PartialEq, Default)]
 pub struct Definitions(DefinitionsState);
