@@ -13,7 +13,7 @@ pub fn run(command: &str, version: &str, bin: &str) {
         process::exit(1);
     }
 
-    let definitions_file_path = config::home_dir().join("defs.toml");
+    let definitions_file_path = config::definitions_file();
 
     let mut definitions = Definitions::load_or_default(&definitions_file_path)
         .expect("TODO: manage command errors better somehow");

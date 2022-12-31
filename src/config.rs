@@ -3,6 +3,7 @@ use std::path::{Path, PathBuf};
 
 const DEFAULT_HOME: &str = ".config/alt";
 const DEFAULT_SHIM_DIR: &str = ".local/alt/shims";
+const DEFINITIONS_FILE_NAME: &str = "defs.toml";
 
 pub fn home_dir() -> PathBuf {
     match env::var("ALT_HOME") {
@@ -21,6 +22,10 @@ pub fn shim_dir() -> PathBuf {
             let home = env::var("HOME").unwrap();
             Path::new(&home).join(DEFAULT_SHIM_DIR)
         })
+}
+
+pub fn definitions_file() -> PathBuf {
+    home_dir().join(DEFINITIONS_FILE_NAME)
 }
 
 #[cfg(test)]
