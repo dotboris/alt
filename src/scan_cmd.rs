@@ -2,6 +2,7 @@ use crate::command_version::CommandVersion;
 use crate::environment::load_command_version_registry;
 use crate::scan;
 use crate::shim;
+use anyhow::Context;
 use dialoguer::MultiSelect;
 use std::env;
 use std::process;
@@ -32,7 +33,7 @@ fn prompt_versions(versions: &[CommandVersion]) -> Vec<usize> {
         .unwrap()
 }
 
-pub fn run(command: &str) {
+pub fn run(command: &str) -> anyhow::Result<()> {
     let versions: Vec<_> = scan::path_suffix::scan(command)
         .into_iter()
         .chain(scan::homebrew::scan(command))
@@ -48,8 +49,7 @@ pub fn run(command: &str) {
             println!("Looks like you didn't choose anything.");
             println!("Did you forget to select versions with <space>?");
         } else {
-            let mut command_version_registry =
-                load_command_version_registry().expect("TODO: error handling");
+            let mut command_version_registry = load_command_version_registry()?;
 
             for choice in choices {
                 let version = versions[choice].clone();
@@ -58,10 +58,12 @@ pub fn run(command: &str) {
 
             command_version_registry
                 .save()
-                .expect("TODO: error handling");
+                .context("Failed to save command version registry")?;
 
             shim::make_shim(command, env::current_exe().unwrap().as_path())
                 .unwrap_or_else(|err| panic!("failed to create shim for {}: {}", command, err));
         }
     }
+
+    Ok(())
 }

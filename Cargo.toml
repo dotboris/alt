@@ -32,6 +32,7 @@ opt-level = 3
 opt-level = 3
 
 [dependencies]
+anyhow = "1.0"
 clap = { version = "4.0.32", features = ["cargo", "wrap_help"] }
 toml = "0.5.10"
 console = "0.15.3"

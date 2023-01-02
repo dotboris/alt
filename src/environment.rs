@@ -1,7 +1,7 @@
-use std::path::{Path, PathBuf};
-use std::{env, io};
-
 use crate::command_version::CommandVersionRegistry;
+use anyhow::Context;
+use std::env;
+use std::path::{Path, PathBuf};
 
 const DEFAULT_HOME: &str = ".config/alt";
 const DEFAULT_SHIM_DIR: &str = ".local/alt/shims";
@@ -30,8 +30,9 @@ pub fn definitions_file() -> PathBuf {
     home_dir().join(DEFINITIONS_FILE_NAME)
 }
 
-pub fn load_command_version_registry() -> Result<CommandVersionRegistry, io::Error> {
+pub fn load_command_version_registry() -> anyhow::Result<CommandVersionRegistry> {
     CommandVersionRegistry::load_or_new(&definitions_file())
+        .context("failed to load command version registry")
 }
 
 #[cfg(test)]

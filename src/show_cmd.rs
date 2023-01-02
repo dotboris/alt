@@ -4,8 +4,8 @@ use console::style;
 use std::env;
 use std::process;
 
-pub fn run() {
-    let registry = load_command_version_registry().expect("TODO: better errors");
+pub fn run() -> anyhow::Result<()> {
+    let registry = load_command_version_registry()?;
 
     if registry.is_empty() {
         println!("No commands are defined.");
@@ -58,4 +58,6 @@ pub fn run() {
             );
         }
     }
+
+    Ok(())
 }

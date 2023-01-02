@@ -10,8 +10,8 @@ enum SelectedVersion {
     ThisOne(CommandVersion),
 }
 
-pub fn run(command: &str, arg_version: Option<&str>) {
-    let registry = load_command_version_registry().expect("TODO: errors");
+pub fn run(command: &str, arg_version: Option<&str>) -> anyhow::Result<()> {
+    let registry = load_command_version_registry()?;
 
     let command_versions = registry
         .iter()
@@ -76,6 +76,8 @@ pub fn run(command: &str, arg_version: Option<&str>) {
             );
         }
     }
+
+    Ok(())
 }
 
 fn prompt_version(versions: &[CommandVersion]) -> SelectedVersion {

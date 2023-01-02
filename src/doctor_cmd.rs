@@ -1,4 +1,5 @@
 use crate::environment::load_command_version_registry;
+use anyhow::Context;
 use dialoguer::Confirm;
 use std::os::unix::fs::MetadataExt;
 use std::process;
@@ -9,12 +10,11 @@ pub enum FixMode {
     Prompt,
 }
 
-pub fn run(fix_mode: FixMode) {
+pub fn run(fix_mode: FixMode) -> anyhow::Result<()> {
     let mut problem_count: u32 = 0;
     let mut fixed_count: u32 = 0;
 
-    let mut command_version_registry =
-        load_command_version_registry().expect("TODO: handle errors");
+    let mut command_version_registry = load_command_version_registry()?;
 
     for command_version in command_version_registry.iter().collect::<Vec<_>>() {
         let has_problem = {
@@ -66,7 +66,7 @@ pub fn run(fix_mode: FixMode) {
                 // process.
                 command_version_registry
                     .save()
-                    .expect("Failed to save command version definitions");
+                    .context("Failed to save command version definitions")?;
 
                 print_fixed(&format!(
                     "Removed entry for {} version {}.",
@@ -109,6 +109,8 @@ pub fn run(fix_mode: FixMode) {
             console::style("All is good").bold().green()
         );
     }
+
+    Ok(())
 }
 
 fn should_fix(fix_mode: &FixMode) -> bool {

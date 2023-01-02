@@ -6,8 +6,8 @@ use std::os::unix::process::CommandExt;
 use std::process;
 use std::process::Command;
 
-pub fn run(command: &str, command_args: &[String]) {
-    let command_version_registry = load_command_version_registry().expect("TODO: better errors");
+pub fn run(command: &str, command_args: &[String]) -> anyhow::Result<()> {
+    let command_version_registry = load_command_version_registry()?;
 
     match find_selected_binary(&command_version_registry, command) {
         Some(bin) => {
