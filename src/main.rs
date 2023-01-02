@@ -3,7 +3,6 @@ mod cli;
 mod command;
 mod config;
 mod def_cmd;
-mod def_file;
 mod command_version;
 mod doctor_cmd;
 mod exec_cmd;

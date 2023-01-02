@@ -18,7 +18,7 @@ pub fn run(fix_mode: FixMode) {
         CommandVersionRegistry::load_or_default(&config::definitions_file())
             .expect("TODO: handle errors");
 
-    for command_version in command_version_registry.all().collect::<Vec<_>>() {
+    for command_version in command_version_registry.iter().collect::<Vec<_>>() {
         let has_problem = {
             if !command_version.path.exists() {
                 print_problem(&format!(

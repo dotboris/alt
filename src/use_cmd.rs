@@ -16,7 +16,7 @@ pub fn run(command: &str, arg_version: Option<&str>) {
         CommandVersionRegistry::load_or_default(&config::definitions_file()).expect("TODO: errors");
 
     let command_versions = registry
-        .all()
+        .iter()
         .filter(|v| v.command_name == command)
         .collect::<Vec<_>>();
 

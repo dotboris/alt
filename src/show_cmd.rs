@@ -25,7 +25,7 @@ pub fn run() {
         println!("Versions from: {}", use_file_path.to_str().unwrap());
     }
 
-    let mut command_versions = registry.all().collect::<Vec<_>>();
+    let mut command_versions = registry.iter().collect::<Vec<_>>();
     command_versions.sort_by(|a, b| {
         (&a.command_name, &a.version_name).cmp(&(&b.command_name, &b.version_name))
     });

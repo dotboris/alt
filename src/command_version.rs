@@ -83,12 +83,16 @@ impl CommandVersionRegistry {
         }
     }
 
-    pub fn all(&self) -> impl Iterator<Item = CommandVersion> + '_ {
+    pub fn iter(&self) -> impl Iterator<Item = CommandVersion> + '_ {
         self.0.iter().flat_map(|(command_name, versions)| {
             versions
                 .iter()
                 .map(|(version_name, path)| CommandVersion::new(command_name, version_name, path))
         })
+    }
+
+    pub fn command_names(&self) -> impl Iterator<Item = String> + '_ {
+        self.0.keys().cloned()
     }
 
     pub fn is_empty(&self) -> bool {
@@ -424,14 +428,14 @@ mod tests {
     }
 
     #[test]
-    fn all_returns_no_results_on_empty() {
+    fn iter_returns_no_results_on_empty() {
         let registry = CommandVersionRegistry::default();
 
-        assert!(registry.all().next().is_none());
+        assert!(registry.iter().next().is_none());
     }
 
     #[test]
-    fn all_returns_everything() {
+    fn iter_returns_everything() {
         let registry = CommandVersionRegistry(HashMap::from([
             (
                 "the-command".to_string(),
@@ -449,7 +453,7 @@ mod tests {
             ),
         ]));
 
-        let mut res = registry.all().collect::<Vec<_>>();
+        let mut res = registry.iter().collect::<Vec<_>>();
         res.sort_by(|a, b| {
             (&a.command_name, &a.version_name).cmp(&(&b.command_name, &b.version_name))
         });
@@ -463,6 +467,38 @@ mod tests {
                 CommandVersion::new("the-command", "43", Path::new("path/to/the-command-v43")),
             ]
         )
+    }
+
+    #[test]
+    fn command_names_returns_nothing_with_empty_registry() {
+        let registry = CommandVersionRegistry::default();
+
+        assert!(registry.command_names().next().is_none());
+    }
+
+    #[test]
+    fn command_names_returns_names_of_known_commands() {
+        let registry = CommandVersionRegistry(HashMap::from([
+            (
+                "the-command".to_string(),
+                HashMap::from([
+                    ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
+                    ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
+                ]),
+            ),
+            (
+                "node".to_string(),
+                HashMap::from([
+                    ("16".to_string(), PathBuf::from("path/to/node-16")),
+                    ("18".to_string(), PathBuf::from("path/to/node-18")),
+                ]),
+            ),
+        ]));
+
+        let mut res = registry.command_names().collect::<Vec<_>>();
+        res.sort();
+
+        assert_eq!(res, vec!["node", "the-command"]);
     }
 
     #[test]
