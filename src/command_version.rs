@@ -12,7 +12,7 @@ pub enum SaveError {
     IoError(#[from] io::Error),
 }
 
-#[derive(PartialEq, Clone, Debug)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Debug)]
 pub struct CommandVersion {
     pub command_name: String,
     pub version_name: String,
