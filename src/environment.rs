@@ -1,5 +1,7 @@
-use std::env;
 use std::path::{Path, PathBuf};
+use std::{env, io};
+
+use crate::command_version::CommandVersionRegistry;
 
 const DEFAULT_HOME: &str = ".config/alt";
 const DEFAULT_SHIM_DIR: &str = ".local/alt/shims";
@@ -28,9 +30,13 @@ pub fn definitions_file() -> PathBuf {
     home_dir().join(DEFINITIONS_FILE_NAME)
 }
 
+pub fn load_command_version_registry() -> Result<CommandVersionRegistry, io::Error> {
+    CommandVersionRegistry::load_or_new(&definitions_file())
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::config;
+    use crate::environment;
     use lazy_static::lazy_static;
     use std::env;
     use std::path::{Path, PathBuf};
@@ -45,12 +51,12 @@ mod tests {
         let res = {
             let _guard = ENV_MUTEX.lock().unwrap();
             env::remove_var("ALT_HOME");
-            config::home_dir()
+            environment::home_dir()
         };
 
         assert_eq!(
             res,
-            Path::new(&env::var("HOME").unwrap()).join(config::DEFAULT_HOME)
+            Path::new(&env::var("HOME").unwrap()).join(environment::DEFAULT_HOME)
         );
     }
 
@@ -59,7 +65,7 @@ mod tests {
         let res = {
             let _guard = ENV_MUTEX.lock().unwrap();
             env::set_var("ALT_HOME", "/path/to/phony/home");
-            config::home_dir()
+            environment::home_dir()
         };
 
         assert_eq!(res, PathBuf::from("/path/to/phony/home"));

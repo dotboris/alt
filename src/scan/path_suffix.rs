@@ -1,5 +1,5 @@
 use crate::command_version::CommandVersion;
-use crate::config;
+use crate::environment;
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::env;
@@ -25,7 +25,7 @@ fn parse_command_version(bin: PathBuf) -> Option<CommandVersion> {
 
 pub fn scan(command: &str) -> Vec<CommandVersion> {
     let path = env::var("PATH").expect("env var PATH is not defined");
-    let shim_dir = config::shim_dir();
+    let shim_dir = environment::shim_dir();
 
     env::split_paths(&path)
         .filter(|p| p != &shim_dir)

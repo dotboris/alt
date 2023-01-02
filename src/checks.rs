@@ -1,4 +1,4 @@
-use crate::config;
+use crate::environment;
 use std::env;
 
 use console::style;
@@ -28,7 +28,7 @@ pub fn check_shim_in_path() {
     let path = env::var("PATH").unwrap_or_default();
     let mut parts = env::split_paths(&path);
 
-    let shim_dir = config::shim_dir();
+    let shim_dir = environment::shim_dir();
     if !parts.any(|part| part == shim_dir) {
         let term = console::Term::stdout();
         let (_, term_width) = term.size();

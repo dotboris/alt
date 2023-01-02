@@ -1,4 +1,4 @@
-use crate::config;
+use crate::environment;
 use std::fs;
 use std::io;
 use std::os::unix::fs as unix_fs;
@@ -16,7 +16,7 @@ pub fn get_command(arg0: &str) -> &str {
 }
 
 pub fn empty_shim_dir() -> Result<(), io::Error> {
-    let root = config::shim_dir();
+    let root = environment::shim_dir();
 
     if root.is_dir() {
         fs::remove_dir_all(&root)?;
@@ -26,7 +26,7 @@ pub fn empty_shim_dir() -> Result<(), io::Error> {
 }
 
 pub fn make_shim(command: &str, exe: &Path) -> Result<(), io::Error> {
-    let root = config::shim_dir();
+    let root = environment::shim_dir();
     fs::create_dir_all(&root)?;
     let link = root.join(command);
     if link.exists() {

@@ -1,6 +1,5 @@
 use crate::command_version::CommandVersion;
-use crate::command_version::CommandVersionRegistry;
-use crate::config;
+use crate::environment::load_command_version_registry;
 use crate::use_file;
 use dialoguer::Select;
 use std::env;
@@ -12,8 +11,7 @@ enum SelectedVersion {
 }
 
 pub fn run(command: &str, arg_version: Option<&str>) {
-    let registry =
-        CommandVersionRegistry::load_or_default(&config::definitions_file()).expect("TODO: errors");
+    let registry = load_command_version_registry().expect("TODO: errors");
 
     let command_versions = registry
         .iter()

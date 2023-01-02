@@ -1,13 +1,11 @@
-use crate::command_version::CommandVersionRegistry;
-use crate::config;
+use crate::environment::load_command_version_registry;
 use crate::use_file;
 use console::style;
 use std::env;
 use std::process;
 
 pub fn run() {
-    let registry = CommandVersionRegistry::load_or_default(&config::definitions_file())
-        .expect("TODO: better errors");
+    let registry = load_command_version_registry().expect("TODO: better errors");
 
     if registry.is_empty() {
         println!("No commands are defined.");

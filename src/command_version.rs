@@ -31,60 +31,73 @@ impl CommandVersion {
 
 type RegistryState = HashMap<String, HashMap<String, PathBuf>>;
 
-#[derive(Debug, PartialEq, Default)]
-pub struct CommandVersionRegistry(RegistryState);
+#[derive(Debug)]
+pub struct CommandVersionRegistry {
+    path: PathBuf,
+    state: RegistryState,
+}
 
 impl CommandVersionRegistry {
     pub fn load(path: &Path) -> Result<Self, io::Error> {
         let bytes = fs::read(path)?;
         let state: RegistryState = toml::from_slice(&bytes)?;
 
-        Ok(CommandVersionRegistry(state))
+        Ok(CommandVersionRegistry {
+            path: path.to_owned(),
+            state,
+        })
     }
 
-    pub fn load_or_default(path: &Path) -> Result<Self, io::Error> {
+    pub fn new(path: &Path) -> Self {
+        CommandVersionRegistry {
+            path: path.to_owned(),
+            state: RegistryState::default(),
+        }
+    }
+
+    pub fn load_or_new(path: &Path) -> Result<Self, io::Error> {
         let res = Self::load(path);
         res.or_else(|error| {
             if error.kind() == io::ErrorKind::NotFound {
-                Ok(Default::default())
+                Ok(Self::new(path))
             } else {
                 Err(error)
             }
         })
     }
 
-    pub fn save(&self, path: &Path) -> Result<(), SaveError> {
-        if let Some(parent) = path.parent() {
+    pub fn save(&self) -> Result<(), SaveError> {
+        if let Some(parent) = self.path.parent() {
             fs::create_dir_all(parent)?;
         }
 
-        let toml = toml::to_string_pretty(&self.0)?;
-        fs::write(path, toml)?;
+        let toml = toml::to_string_pretty(&self.state)?;
+        fs::write(&self.path, toml)?;
         Ok(())
     }
 
     pub fn get(&self, command: &str, version: &str) -> Option<CommandVersion> {
-        let path = self.0.get(command)?.get(version).cloned()?;
+        let path = self.state.get(command)?.get(version).cloned()?;
         Some(CommandVersion::new(command, version, &path))
     }
 
     pub fn add(&mut self, command_version: CommandVersion) {
-        let command_entry = self.0.entry(command_version.command_name).or_default();
+        let command_entry = self.state.entry(command_version.command_name).or_default();
         command_entry.insert(command_version.version_name, command_version.path);
     }
 
     pub fn remove(&mut self, command: &str, version: &str) {
-        let versions = self.0.get_mut(command);
+        let versions = self.state.get_mut(command);
         if let Some(versions) = versions {
             versions.remove(version);
             if versions.is_empty() {
-                self.0.remove(command);
+                self.state.remove(command);
             }
         }
     }
 
     pub fn iter(&self) -> impl Iterator<Item = CommandVersion> + '_ {
-        self.0.iter().flat_map(|(command_name, versions)| {
+        self.state.iter().flat_map(|(command_name, versions)| {
             versions
                 .iter()
                 .map(|(version_name, path)| CommandVersion::new(command_name, version_name, path))
@@ -92,11 +105,11 @@ impl CommandVersionRegistry {
     }
 
     pub fn command_names(&self) -> impl Iterator<Item = String> + '_ {
-        self.0.keys().cloned()
+        self.state.keys().cloned()
     }
 
     pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
+        self.state.is_empty()
     }
 }
 
@@ -110,8 +123,8 @@ mod tests {
 
     #[test]
     fn default_is_empty() {
-        let registry: CommandVersionRegistry = Default::default();
-        assert!(registry.0.is_empty())
+        let registry = CommandVersionRegistry::new(Path::new("not-important"));
+        assert!(registry.state.is_empty())
     }
 
     #[test]
@@ -120,7 +133,7 @@ mod tests {
 
         let registry = CommandVersionRegistry::load(tmpfile.path())?;
 
-        assert_eq!(registry.0, RegistryState::default());
+        assert_eq!(registry.state, RegistryState::default());
 
         Ok(())
     }
@@ -140,7 +153,7 @@ mod tests {
         let registry = CommandVersionRegistry::load(tmpfile.path())?;
 
         assert_eq!(
-            registry.0,
+            registry.state,
             HashMap::from([(
                 "the-command".to_string(),
                 HashMap::from([
@@ -160,23 +173,23 @@ mod tests {
     }
 
     #[test]
-    fn load_or_default_returns_default_on_missing_file() -> TestResult {
-        let registry = CommandVersionRegistry::load_or_default(Path::new("does/not/exist"))?;
+    fn load_or_new_returns_default_on_missing_file() -> TestResult {
+        let registry = CommandVersionRegistry::load_or_new(Path::new("does/not/exist"))?;
 
-        assert_eq!(registry, CommandVersionRegistry::default());
+        assert_eq!(registry.state, RegistryState::default());
 
         Ok(())
     }
 
     #[test]
-    fn load_or_default_crashes_with_io_error() -> TestResult {
+    fn load_or_new_crashes_with_io_error() -> TestResult {
         let workdir = tempfile::tempdir()?;
         let bad_file_path = workdir.path().join("something");
 
         // The file path is actually a directory. This should cause an io::Error
         fs::create_dir(&bad_file_path)?;
 
-        let res = CommandVersionRegistry::load_or_default(&bad_file_path);
+        let res = CommandVersionRegistry::load_or_new(&bad_file_path);
         assert!(res.is_err());
 
         Ok(())
@@ -187,17 +200,20 @@ mod tests {
         let workdir = tempfile::tempdir()?;
         let file_path = workdir.path().join("registry.toml");
 
-        let registry = CommandVersionRegistry(HashMap::from([(
-            "the-command".to_string(),
-            HashMap::from([
-                ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
-                ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
-            ]),
-        )]));
+        let registry = CommandVersionRegistry {
+            path: file_path.clone(),
+            state: HashMap::from([(
+                "the-command".to_string(),
+                HashMap::from([
+                    ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
+                    ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
+                ]),
+            )]),
+        };
 
         assert!(!file_path.exists());
 
-        registry.save(&file_path)?;
+        registry.save()?;
 
         assert!(file_path.exists());
         assert!(file_path.is_file());
@@ -211,18 +227,21 @@ mod tests {
         let parent_dir = workdir.path().join("some-dir");
         let file_path = parent_dir.join("registry.toml");
 
-        let registry = CommandVersionRegistry(HashMap::from([(
-            "the-command".to_string(),
-            HashMap::from([
-                ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
-                ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
-            ]),
-        )]));
+        let registry = CommandVersionRegistry {
+            path: file_path.clone(),
+            state: HashMap::from([(
+                "the-command".to_string(),
+                HashMap::from([
+                    ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
+                    ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
+                ]),
+            )]),
+        };
 
         assert!(!parent_dir.exists());
         assert!(!file_path.exists());
 
-        registry.save(&file_path)?;
+        registry.save()?;
 
         assert!(parent_dir.exists());
         assert!(parent_dir.is_dir());
@@ -235,36 +254,39 @@ mod tests {
     #[test]
     fn save_and_load_preserves_data() -> TestResult {
         let tempfile = NamedTempFile::new()?;
-        let new_registry = CommandVersionRegistry(HashMap::from([
-            (
-                "the-command".to_string(),
-                HashMap::from([
-                    ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
-                    ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
-                ]),
-            ),
-            (
-                "node".to_string(),
-                HashMap::from([
-                    ("16".to_string(), PathBuf::from("path/to/node-16")),
-                    ("18".to_string(), PathBuf::from("path/to/node-18")),
-                ]),
-            ),
-        ]));
+        let new_registry = CommandVersionRegistry {
+            path: tempfile.path().to_owned(),
+            state: HashMap::from([
+                (
+                    "the-command".to_string(),
+                    HashMap::from([
+                        ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
+                        ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
+                    ]),
+                ),
+                (
+                    "node".to_string(),
+                    HashMap::from([
+                        ("16".to_string(), PathBuf::from("path/to/node-16")),
+                        ("18".to_string(), PathBuf::from("path/to/node-18")),
+                    ]),
+                ),
+            ]),
+        };
 
-        new_registry.save(tempfile.path())?;
+        new_registry.save()?;
 
         let loaded_registry = CommandVersionRegistry::load(tempfile.path())?;
 
-        assert_eq!(new_registry, loaded_registry);
+        assert_eq!(new_registry.state, loaded_registry.state);
 
         Ok(())
     }
 
     #[test]
     fn add_creates_new_command() {
-        let mut registry = CommandVersionRegistry::default();
-        assert!(registry.0.is_empty());
+        let mut registry = CommandVersionRegistry::new(Path::new("not-important"));
+        assert!(registry.state.is_empty());
 
         registry.add(CommandVersion::new(
             "the-command",
@@ -273,7 +295,7 @@ mod tests {
         ));
 
         assert_eq!(
-            registry.0,
+            registry.state,
             HashMap::from([(
                 "the-command".to_string(),
                 HashMap::from([("42".to_string(), PathBuf::from("path/to/the-command-v42")),])
@@ -283,14 +305,14 @@ mod tests {
 
     #[test]
     fn add_adds_version_to_existing_command() {
-        let mut registry = CommandVersionRegistry::default();
-        assert!(registry.0.is_empty());
+        let mut registry = CommandVersionRegistry::new(Path::new("not-important"));
+        assert!(registry.state.is_empty());
         registry.add(CommandVersion::new(
             "the-command",
             "42",
             Path::new("path/to/the-command-v42"),
         ));
-        assert!(registry.0.contains_key("the-command"));
+        assert!(registry.state.contains_key("the-command"));
 
         registry.add(CommandVersion::new(
             "the-command",
@@ -298,7 +320,7 @@ mod tests {
             Path::new("path/to/the-command-v43"),
         ));
         assert_eq!(
-            registry.0,
+            registry.state,
             HashMap::from([(
                 "the-command".to_string(),
                 HashMap::from([
@@ -311,10 +333,13 @@ mod tests {
 
     #[test]
     fn get_returns_path_when_found() {
-        let registry = CommandVersionRegistry(HashMap::from([(
-            "node".to_string(),
-            HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
-        )]));
+        let registry = CommandVersionRegistry {
+            path: PathBuf::from("not-important"),
+            state: HashMap::from([(
+                "node".to_string(),
+                HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
+            )]),
+        };
 
         let res = registry.get("node", "18");
         assert_eq!(
@@ -329,10 +354,13 @@ mod tests {
 
     #[test]
     fn get_returns_none_on_missing_version() {
-        let registry = CommandVersionRegistry(HashMap::from([(
-            "node".to_string(),
-            HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
-        )]));
+        let registry = CommandVersionRegistry {
+            path: PathBuf::from("not-important"),
+            state: HashMap::from([(
+                "node".to_string(),
+                HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
+            )]),
+        };
 
         let res = registry.get("node", "not-there");
         assert_eq!(res, None);
@@ -340,10 +368,13 @@ mod tests {
 
     #[test]
     fn get_returns_none_on_missing_command() {
-        let registry = CommandVersionRegistry(HashMap::from([(
-            "node".to_string(),
-            HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
-        )]));
+        let registry = CommandVersionRegistry {
+            path: PathBuf::from("not-important"),
+            state: HashMap::from([(
+                "node".to_string(),
+                HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
+            )]),
+        };
 
         let res = registry.get("not-there", "not-there");
         assert_eq!(res, None);
@@ -351,36 +382,39 @@ mod tests {
 
     #[test]
     fn remove_does_nothing_when_version_does_not_exist() {
-        let mut registry = CommandVersionRegistry::default();
+        let mut registry = CommandVersionRegistry::new(Path::new("not-important"));
 
         registry.remove("some-command", "42");
 
-        assert_eq!(registry.0, RegistryState::default());
+        assert_eq!(registry.state, RegistryState::default());
     }
 
     #[test]
     fn remove_removes_a_version_but_keeps_other_around() {
-        let mut registry = CommandVersionRegistry(HashMap::from([
-            (
-                "foo".to_string(),
-                HashMap::from([
-                    ("42".to_string(), PathBuf::from("path/to/foo-42")),
-                    ("43".to_string(), PathBuf::from("path/to/foo-43")),
-                ]),
-            ),
-            (
-                "node".to_string(),
-                HashMap::from([
-                    ("16".to_string(), PathBuf::from("path/to/node-16")),
-                    ("18".to_string(), PathBuf::from("path/to/node-18")),
-                ]),
-            ),
-        ]));
+        let mut registry = CommandVersionRegistry {
+            path: PathBuf::from("not-important"),
+            state: HashMap::from([
+                (
+                    "foo".to_string(),
+                    HashMap::from([
+                        ("42".to_string(), PathBuf::from("path/to/foo-42")),
+                        ("43".to_string(), PathBuf::from("path/to/foo-43")),
+                    ]),
+                ),
+                (
+                    "node".to_string(),
+                    HashMap::from([
+                        ("16".to_string(), PathBuf::from("path/to/node-16")),
+                        ("18".to_string(), PathBuf::from("path/to/node-18")),
+                    ]),
+                ),
+            ]),
+        };
 
         registry.remove("foo", "42");
 
         assert_eq!(
-            registry.0,
+            registry.state,
             HashMap::from([
                 (
                     "foo".to_string(),
@@ -399,24 +433,27 @@ mod tests {
 
     #[test]
     fn remove_cleans_up_command_hashmap_when_removing_last_version() {
-        let mut registry = CommandVersionRegistry(HashMap::from([
-            (
-                "foo".to_string(),
-                HashMap::from([("43".to_string(), PathBuf::from("path/to/foo-43"))]),
-            ),
-            (
-                "node".to_string(),
-                HashMap::from([
-                    ("16".to_string(), PathBuf::from("path/to/node-16")),
-                    ("18".to_string(), PathBuf::from("path/to/node-18")),
-                ]),
-            ),
-        ]));
+        let mut registry = CommandVersionRegistry {
+            path: PathBuf::from("not-important"),
+            state: HashMap::from([
+                (
+                    "foo".to_string(),
+                    HashMap::from([("43".to_string(), PathBuf::from("path/to/foo-43"))]),
+                ),
+                (
+                    "node".to_string(),
+                    HashMap::from([
+                        ("16".to_string(), PathBuf::from("path/to/node-16")),
+                        ("18".to_string(), PathBuf::from("path/to/node-18")),
+                    ]),
+                ),
+            ]),
+        };
 
         registry.remove("foo", "43");
 
         assert_eq!(
-            registry.0,
+            registry.state,
             HashMap::from([(
                 "node".to_string(),
                 HashMap::from([
@@ -429,29 +466,32 @@ mod tests {
 
     #[test]
     fn iter_returns_no_results_on_empty() {
-        let registry = CommandVersionRegistry::default();
+        let registry = CommandVersionRegistry::new(Path::new("not-important"));
 
         assert!(registry.iter().next().is_none());
     }
 
     #[test]
     fn iter_returns_everything() {
-        let registry = CommandVersionRegistry(HashMap::from([
-            (
-                "the-command".to_string(),
-                HashMap::from([
-                    ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
-                    ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
-                ]),
-            ),
-            (
-                "node".to_string(),
-                HashMap::from([
-                    ("16".to_string(), PathBuf::from("path/to/node-16")),
-                    ("18".to_string(), PathBuf::from("path/to/node-18")),
-                ]),
-            ),
-        ]));
+        let registry = CommandVersionRegistry {
+            path: PathBuf::from("not-important"),
+            state: HashMap::from([
+                (
+                    "the-command".to_string(),
+                    HashMap::from([
+                        ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
+                        ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
+                    ]),
+                ),
+                (
+                    "node".to_string(),
+                    HashMap::from([
+                        ("16".to_string(), PathBuf::from("path/to/node-16")),
+                        ("18".to_string(), PathBuf::from("path/to/node-18")),
+                    ]),
+                ),
+            ]),
+        };
 
         let mut res = registry.iter().collect::<Vec<_>>();
         res.sort_by(|a, b| {
@@ -471,29 +511,32 @@ mod tests {
 
     #[test]
     fn command_names_returns_nothing_with_empty_registry() {
-        let registry = CommandVersionRegistry::default();
+        let registry = CommandVersionRegistry::new(Path::new("not-important"));
 
         assert!(registry.command_names().next().is_none());
     }
 
     #[test]
     fn command_names_returns_names_of_known_commands() {
-        let registry = CommandVersionRegistry(HashMap::from([
-            (
-                "the-command".to_string(),
-                HashMap::from([
-                    ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
-                    ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
-                ]),
-            ),
-            (
-                "node".to_string(),
-                HashMap::from([
-                    ("16".to_string(), PathBuf::from("path/to/node-16")),
-                    ("18".to_string(), PathBuf::from("path/to/node-18")),
-                ]),
-            ),
-        ]));
+        let registry = CommandVersionRegistry {
+            path: PathBuf::from("not-important"),
+            state: HashMap::from([
+                (
+                    "the-command".to_string(),
+                    HashMap::from([
+                        ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
+                        ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
+                    ]),
+                ),
+                (
+                    "node".to_string(),
+                    HashMap::from([
+                        ("16".to_string(), PathBuf::from("path/to/node-16")),
+                        ("18".to_string(), PathBuf::from("path/to/node-18")),
+                    ]),
+                ),
+            ]),
+        };
 
         let mut res = registry.command_names().collect::<Vec<_>>();
         res.sort();
@@ -503,16 +546,19 @@ mod tests {
 
     #[test]
     fn is_empty_returns_true_when_empty() {
-        let registry = CommandVersionRegistry::default();
+        let registry = CommandVersionRegistry::new(Path::new("not-important"));
         assert!(registry.is_empty())
     }
 
     #[test]
     fn is_empty_returns_false_when_not_empty() {
-        let registry = CommandVersionRegistry(HashMap::from([(
-            "node".to_string(),
-            HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
-        )]));
+        let registry = CommandVersionRegistry {
+            path: PathBuf::from("not-important"),
+            state: HashMap::from([(
+                "node".to_string(),
+                HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
+            )]),
+        };
         assert!(!registry.is_empty())
     }
 }

@@ -1,6 +1,5 @@
 use crate::command_version::CommandVersion;
-use crate::command_version::CommandVersionRegistry;
-use crate::config;
+use crate::environment::load_command_version_registry;
 use crate::scan;
 use crate::shim;
 use dialoguer::MultiSelect;
@@ -49,10 +48,8 @@ pub fn run(command: &str) {
             println!("Looks like you didn't choose anything.");
             println!("Did you forget to select versions with <space>?");
         } else {
-            let definitions_file_path = config::definitions_file();
             let mut command_version_registry =
-                CommandVersionRegistry::load_or_default(&definitions_file_path)
-                    .expect("TODO: error handling");
+                load_command_version_registry().expect("TODO: error handling");
 
             for choice in choices {
                 let version = versions[choice].clone();
@@ -60,7 +57,7 @@ pub fn run(command: &str) {
             }
 
             command_version_registry
-                .save(&definitions_file_path)
+                .save()
                 .expect("TODO: error handling");
 
             shim::make_shim(command, env::current_exe().unwrap().as_path())

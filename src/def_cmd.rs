@@ -1,6 +1,5 @@
 use crate::command_version::CommandVersion;
-use crate::command_version::CommandVersionRegistry;
-use crate::config;
+use crate::environment::load_command_version_registry;
 use crate::shim;
 use std::env;
 use std::path::*;
@@ -14,14 +13,10 @@ pub fn run(command: &str, version: &str, bin: &str) {
         process::exit(1);
     }
 
-    let definitions_file_path = config::definitions_file();
-
-    let mut registry = CommandVersionRegistry::load_or_default(&definitions_file_path)
-        .expect("TODO: manage command errors better somehow");
+    let mut registry =
+        load_command_version_registry().expect("TODO: manage command errors better somehow");
     registry.add(CommandVersion::new(command, version, &bin_path));
-    registry
-        .save(&definitions_file_path)
-        .expect("TODO: nice errors maybe");
+    registry.save().expect("TODO: nice errors maybe");
 
     shim::make_shim(command, env::current_exe().unwrap().as_path())
         .unwrap_or_else(|err| panic!("failed to create shim for {}: {}", command, err));

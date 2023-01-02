@@ -1,7 +1,7 @@
 mod checks;
 mod cli;
 mod command;
-mod config;
+mod environment;
 mod def_cmd;
 mod command_version;
 mod doctor_cmd;

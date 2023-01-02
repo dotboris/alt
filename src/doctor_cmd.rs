@@ -1,5 +1,4 @@
-use crate::command_version::CommandVersionRegistry;
-use crate::config;
+use crate::environment::load_command_version_registry;
 use dialoguer::Confirm;
 use std::os::unix::fs::MetadataExt;
 use std::process;
@@ -15,8 +14,7 @@ pub fn run(fix_mode: FixMode) {
     let mut fixed_count: u32 = 0;
 
     let mut command_version_registry =
-        CommandVersionRegistry::load_or_default(&config::definitions_file())
-            .expect("TODO: handle errors");
+        load_command_version_registry().expect("TODO: handle errors");
 
     for command_version in command_version_registry.iter().collect::<Vec<_>>() {
         let has_problem = {
@@ -67,7 +65,7 @@ pub fn run(fix_mode: FixMode) {
                 // no fixes are lost if the user does a Ctrl-C to kill the
                 // process.
                 command_version_registry
-                    .save(&config::definitions_file())
+                    .save()
                     .expect("Failed to save command version definitions");
 
                 print_fixed(&format!(
