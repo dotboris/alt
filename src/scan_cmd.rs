@@ -1,7 +1,7 @@
+use crate::command_version::CommandVersion;
+use crate::command_version::CommandVersionRegistry;
 use crate::config;
-use crate::definitions::Definitions;
 use crate::scan;
-use crate::scan::CommandVersion;
 use crate::shim;
 use dialoguer::MultiSelect;
 use std::env;
@@ -13,8 +13,8 @@ fn prompt_versions(versions: &[CommandVersion]) -> Vec<usize> {
         .map(|version| {
             format!(
                 "{} {} ({})",
-                version.command,
-                version.version,
+                version.command_name,
+                version.version_name,
                 version.path.to_str().unwrap()
             )
         })
@@ -50,15 +50,16 @@ pub fn run(command: &str) {
             println!("Did you forget to select versions with <space>?");
         } else {
             let definitions_file_path = config::definitions_file();
-            let mut definitions =
-                Definitions::load_or_default(&definitions_file_path).expect("TODO: error handling");
+            let mut command_version_registry =
+                CommandVersionRegistry::load_or_default(&definitions_file_path)
+                    .expect("TODO: error handling");
 
             for choice in choices {
-                let version = &versions[choice];
-                definitions.add_version(&version.command, &version.version, &version.path);
+                let version = (&versions[choice]).clone();
+                command_version_registry.add(version);
             }
 
-            definitions
+            command_version_registry
                 .save(&definitions_file_path)
                 .expect("TODO: error handling");
 

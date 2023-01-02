@@ -1,4 +1,4 @@
-use super::CommandVersion;
+use crate::command_version::CommandVersion;
 use crate::config;
 use lazy_static::lazy_static;
 use regex::Regex;
@@ -14,13 +14,13 @@ lazy_static! {
 fn parse_command_version(bin: PathBuf) -> Option<CommandVersion> {
     let name = String::from(bin.file_name().unwrap().to_str().unwrap());
 
-    COMMAND_VERSION_REGEX
-        .captures(&name)
-        .map(|captures| CommandVersion {
-            command: String::from(captures.name("command").unwrap().as_str()),
-            version: String::from(captures.name("version").unwrap().as_str()),
-            path: bin,
-        })
+    COMMAND_VERSION_REGEX.captures(&name).map(|captures| {
+        CommandVersion::new(
+            captures.name("command").unwrap().as_str(),
+            captures.name("version").unwrap().as_str(),
+            &bin,
+        )
+    })
 }
 
 pub fn scan(command: &str) -> Vec<CommandVersion> {
@@ -33,7 +33,7 @@ pub fn scan(command: &str) -> Vec<CommandVersion> {
         .flat_map(|p| fs::read_dir(p).unwrap())
         .map(|bin| bin.unwrap().path())
         .flat_map(parse_command_version)
-        .filter(|c| c.command == command)
+        .filter(|c| c.command_name == command)
         .collect()
 }
 
@@ -52,11 +52,11 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/python2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("python"),
-                version: String::from("2"),
-                path: PathBuf::from("/usr/bin/python2"),
-            })
+            Some(CommandVersion::new(
+                "python",
+                "2",
+                Path::new("/usr/bin/python2"),
+            ))
         )
     }
 
@@ -65,11 +65,11 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/python2.7"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("python"),
-                version: String::from("2.7"),
-                path: PathBuf::from("/usr/bin/python2.7"),
-            })
+            Some(CommandVersion::new(
+                "python",
+                "2.7",
+                Path::new("/usr/bin/python2.7"),
+            ))
         )
     }
 
@@ -78,11 +78,11 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/ruby-2.5"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("ruby"),
-                version: String::from("2.5"),
-                path: PathBuf::from("/usr/bin/ruby-2.5"),
-            })
+            Some(CommandVersion::new(
+                "ruby",
+                "2.5",
+                Path::new("/usr/bin/ruby-2.5"),
+            ))
         )
     }
 
@@ -103,11 +103,7 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/a2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("a"),
-                version: String::from("2"),
-                path: PathBuf::from("/usr/bin/a2"),
-            })
+            Some(CommandVersion::new("a", "2", Path::new("/usr/bin/a2"),))
         );
     }
 
@@ -116,11 +112,7 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/a2.2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("a"),
-                version: String::from("2.2"),
-                path: PathBuf::from("/usr/bin/a2.2"),
-            })
+            Some(CommandVersion::new("a", "2.2", Path::new("/usr/bin/a2.2"),))
         );
     }
 
@@ -129,11 +121,7 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/a-2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("a"),
-                version: String::from("2"),
-                path: PathBuf::from("/usr/bin/a-2"),
-            })
+            Some(CommandVersion::new("a", "2", Path::new("/usr/bin/a-2"),))
         );
     }
 
@@ -142,11 +130,7 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/a-2.2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("a"),
-                version: String::from("2.2"),
-                path: PathBuf::from("/usr/bin/a-2.2"),
-            })
+            Some(CommandVersion::new("a", "2.2", Path::new("/usr/bin/a-2.2"),))
         );
     }
 
@@ -155,11 +139,7 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/💩2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("💩"),
-                version: String::from("2"),
-                path: PathBuf::from("/usr/bin/💩2"),
-            })
+            Some(CommandVersion::new("💩", "2", Path::new("/usr/bin/💩2"),))
         );
     }
 
@@ -168,11 +148,11 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/💩2.2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("💩"),
-                version: String::from("2.2"),
-                path: PathBuf::from("/usr/bin/💩2.2"),
-            })
+            Some(CommandVersion::new(
+                "💩",
+                "2.2",
+                Path::new("/usr/bin/💩2.2"),
+            ))
         );
     }
 
@@ -181,11 +161,7 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/💩-2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("💩"),
-                version: String::from("2"),
-                path: PathBuf::from("/usr/bin/💩-2"),
-            })
+            Some(CommandVersion::new("💩", "2", Path::new("/usr/bin/💩-2"),))
         );
     }
 
@@ -194,11 +170,11 @@ mod tests {
         let res = parse_command_version(PathBuf::from("/usr/bin/💩-2.2"));
         assert_eq!(
             res,
-            Some(CommandVersion {
-                command: String::from("💩"),
-                version: String::from("2.2"),
-                path: PathBuf::from("/usr/bin/💩-2.2"),
-            })
+            Some(CommandVersion::new(
+                "💩",
+                "2.2",
+                Path::new("/usr/bin/💩-2.2"),
+            ))
         );
     }
 }

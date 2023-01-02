@@ -6,23 +6,40 @@ use std::{
 
 #[derive(thiserror::Error, Debug)]
 pub enum SaveError {
-    #[error("failed to serialize definitions as TOML")]
+    #[error("failed to serialize CommandVersionRegistry contents as TOML")]
     TomlError(#[from] toml::ser::Error),
     #[error(transparent)]
     IoError(#[from] io::Error),
 }
 
-type DefinitionsState = HashMap<String, HashMap<String, PathBuf>>;
+#[derive(PartialEq, Clone, Debug)]
+pub struct CommandVersion {
+    pub command_name: String,
+    pub version_name: String,
+    pub path: PathBuf,
+}
+
+impl CommandVersion {
+    pub fn new(command_name: &str, version_name: &str, path: &Path) -> Self {
+        CommandVersion {
+            command_name: command_name.to_owned(),
+            version_name: version_name.to_owned(),
+            path: path.to_owned(),
+        }
+    }
+}
+
+type RegistryState = HashMap<String, HashMap<String, PathBuf>>;
 
 #[derive(Debug, PartialEq, Default)]
-pub struct Definitions(DefinitionsState);
+pub struct CommandVersionRegistry(RegistryState);
 
-impl Definitions {
+impl CommandVersionRegistry {
     pub fn load(path: &Path) -> Result<Self, io::Error> {
         let bytes = fs::read(path)?;
-        let state: DefinitionsState = toml::from_slice(&bytes)?;
+        let state: RegistryState = toml::from_slice(&bytes)?;
 
-        Ok(Definitions(state))
+        Ok(CommandVersionRegistry(state))
     }
 
     pub fn load_or_default(path: &Path) -> Result<Self, io::Error> {
@@ -46,13 +63,14 @@ impl Definitions {
         Ok(())
     }
 
-    pub fn add_version(&mut self, command: &str, version: &str, binary_path: &Path) {
-        let command_entry = self.0.entry(command.to_string()).or_default();
-        command_entry.insert(version.to_string(), binary_path.to_owned());
+    pub fn add(&mut self, command_version: CommandVersion) {
+        let command_entry = self.0.entry(command_version.command_name).or_default();
+        command_entry.insert(command_version.version_name, command_version.path);
     }
 
-    pub fn get_binary(&self, command: &str, version: &str) -> Option<PathBuf> {
-        self.0.get(command)?.get(version).cloned()
+    pub fn get(&self, command: &str, version: &str) -> Option<CommandVersion> {
+        let path = self.0.get(command)?.get(version).cloned()?;
+        Some(CommandVersion::new(command, version, &path))
     }
 }
 
@@ -66,17 +84,17 @@ mod tests {
 
     #[test]
     fn default_is_empty() {
-        let definitions: Definitions = Default::default();
-        assert!(definitions.0.is_empty())
+        let registry: CommandVersionRegistry = Default::default();
+        assert!(registry.0.is_empty())
     }
 
     #[test]
     fn load_reads_empty_file() -> TestResult {
         let tmpfile = NamedTempFile::new()?;
 
-        let definitions = Definitions::load(tmpfile.path())?;
+        let registry = CommandVersionRegistry::load(tmpfile.path())?;
 
-        assert_eq!(definitions.0, DefinitionsState::default());
+        assert_eq!(registry.0, RegistryState::default());
 
         Ok(())
     }
@@ -93,10 +111,10 @@ mod tests {
             ),
         )?;
 
-        let definitions = Definitions::load(tmpfile.path())?;
+        let registry = CommandVersionRegistry::load(tmpfile.path())?;
 
         assert_eq!(
-            definitions.0,
+            registry.0,
             HashMap::from([(
                 "the-command".to_string(),
                 HashMap::from([
@@ -111,15 +129,15 @@ mod tests {
 
     #[test]
     fn load_crashes_on_missing_file() {
-        let res = Definitions::load(Path::new("does/not/exist"));
+        let res = CommandVersionRegistry::load(Path::new("does/not/exist"));
         assert!(res.is_err())
     }
 
     #[test]
     fn load_or_default_returns_default_on_missing_file() -> TestResult {
-        let definitions = Definitions::load_or_default(Path::new("does/not/exist"))?;
+        let registry = CommandVersionRegistry::load_or_default(Path::new("does/not/exist"))?;
 
-        assert_eq!(definitions, Definitions::default());
+        assert_eq!(registry, CommandVersionRegistry::default());
 
         Ok(())
     }
@@ -132,7 +150,7 @@ mod tests {
         // The file path is actually a directory. This should cause an io::Error
         fs::create_dir(&bad_file_path)?;
 
-        let res = Definitions::load_or_default(&bad_file_path);
+        let res = CommandVersionRegistry::load_or_default(&bad_file_path);
         assert!(res.is_err());
 
         Ok(())
@@ -141,9 +159,9 @@ mod tests {
     #[test]
     fn save_creates_new_file() -> TestResult {
         let workdir = tempfile::tempdir()?;
-        let file_path = workdir.path().join("definitions.toml");
+        let file_path = workdir.path().join("registry.toml");
 
-        let definitions = Definitions(HashMap::from([(
+        let registry = CommandVersionRegistry(HashMap::from([(
             "the-command".to_string(),
             HashMap::from([
                 ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
@@ -153,7 +171,7 @@ mod tests {
 
         assert!(!file_path.exists());
 
-        definitions.save(&file_path)?;
+        registry.save(&file_path)?;
 
         assert!(file_path.exists());
         assert!(file_path.is_file());
@@ -165,9 +183,9 @@ mod tests {
     fn save_creates_whole_path() -> TestResult {
         let workdir = tempfile::tempdir()?;
         let parent_dir = workdir.path().join("some-dir");
-        let file_path = parent_dir.join("definitions.toml");
+        let file_path = parent_dir.join("registry.toml");
 
-        let definitions = Definitions(HashMap::from([(
+        let registry = CommandVersionRegistry(HashMap::from([(
             "the-command".to_string(),
             HashMap::from([
                 ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
@@ -178,7 +196,7 @@ mod tests {
         assert!(!parent_dir.exists());
         assert!(!file_path.exists());
 
-        definitions.save(&file_path)?;
+        registry.save(&file_path)?;
 
         assert!(parent_dir.exists());
         assert!(parent_dir.is_dir());
@@ -191,7 +209,7 @@ mod tests {
     #[test]
     fn save_and_load_preserves_data() -> TestResult {
         let tempfile = NamedTempFile::new()?;
-        let definitions = Definitions(HashMap::from([
+        let new_registry = CommandVersionRegistry(HashMap::from([
             (
                 "the-command".to_string(),
                 HashMap::from([
@@ -208,24 +226,28 @@ mod tests {
             ),
         ]));
 
-        definitions.save(tempfile.path())?;
+        new_registry.save(tempfile.path())?;
 
-        let loaded_definitions = Definitions::load(tempfile.path())?;
+        let loaded_registry = CommandVersionRegistry::load(tempfile.path())?;
 
-        assert_eq!(definitions, loaded_definitions);
+        assert_eq!(new_registry, loaded_registry);
 
         Ok(())
     }
 
     #[test]
-    fn add_version_creates_new_command() {
-        let mut definitions = Definitions::default();
-        assert!(definitions.0.is_empty());
+    fn add_creates_new_command() {
+        let mut registry = CommandVersionRegistry::default();
+        assert!(registry.0.is_empty());
 
-        definitions.add_version("the-command", "42", Path::new("path/to/the-command-v42"));
+        registry.add(CommandVersion::new(
+            "the-command",
+            "42",
+            Path::new("path/to/the-command-v42"),
+        ));
 
         assert_eq!(
-            definitions.0,
+            registry.0,
             HashMap::from([(
                 "the-command".to_string(),
                 HashMap::from([("42".to_string(), PathBuf::from("path/to/the-command-v42")),])
@@ -234,15 +256,23 @@ mod tests {
     }
 
     #[test]
-    fn add_version_adds_version_to_existing_command() {
-        let mut definitions = Definitions::default();
-        assert!(definitions.0.is_empty());
-        definitions.add_version("the-command", "42", Path::new("path/to/the-command-v42"));
-        assert!(definitions.0.contains_key("the-command"));
+    fn add_adds_version_to_existing_command() {
+        let mut registry = CommandVersionRegistry::default();
+        assert!(registry.0.is_empty());
+        registry.add(CommandVersion::new(
+            "the-command",
+            "42",
+            Path::new("path/to/the-command-v42"),
+        ));
+        assert!(registry.0.contains_key("the-command"));
 
-        definitions.add_version("the-command", "43", Path::new("path/to/the-command-v43"));
+        registry.add(CommandVersion::new(
+            "the-command",
+            "43",
+            Path::new("path/to/the-command-v43"),
+        ));
         assert_eq!(
-            definitions.0,
+            registry.0,
             HashMap::from([(
                 "the-command".to_string(),
                 HashMap::from([
@@ -254,35 +284,42 @@ mod tests {
     }
 
     #[test]
-    fn get_binary_returns_path_when_found() {
-        let definitions = Definitions(HashMap::from([(
+    fn get_returns_path_when_found() {
+        let registry = CommandVersionRegistry(HashMap::from([(
             "node".to_string(),
             HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
         )]));
 
-        let res = definitions.get_binary("node", "18");
-        assert_eq!(res, Some(PathBuf::from("path/to/node-18")));
+        let res = registry.get("node", "18");
+        assert_eq!(
+            res,
+            Some(CommandVersion {
+                command_name: "node".to_string(),
+                version_name: "18".to_owned(),
+                path: PathBuf::from("path/to/node-18")
+            })
+        );
     }
 
     #[test]
-    fn get_binary_returns_none_on_missing_version() {
-        let definitions = Definitions(HashMap::from([(
+    fn get_returns_none_on_missing_version() {
+        let registry = CommandVersionRegistry(HashMap::from([(
             "node".to_string(),
             HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
         )]));
 
-        let res = definitions.get_binary("node", "not-there");
+        let res = registry.get("node", "not-there");
         assert_eq!(res, None);
     }
 
     #[test]
-    fn get_binary_returns_none_on_missing_command() {
-        let definitions = Definitions(HashMap::from([(
+    fn get_returns_none_on_missing_command() {
+        let registry = CommandVersionRegistry(HashMap::from([(
             "node".to_string(),
             HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
         )]));
 
-        let res = definitions.get_binary("not-there", "not-there");
+        let res = registry.get("not-there", "not-there");
         assert_eq!(res, None);
     }
 }

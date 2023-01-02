@@ -1,17 +1,18 @@
 use crate::command::find_selected_binary;
 use crate::command::find_selected_version;
 use crate::config;
-use crate::definitions::Definitions;
+use crate::command_version::CommandVersionRegistry;
 use std::env;
 use std::os::unix::process::CommandExt;
 use std::process;
 use std::process::Command;
 
 pub fn run(command: &str, command_args: &[String]) {
-    let definitions =
-        Definitions::load_or_default(&config::definitions_file()).expect("TODO: better errors");
+    let command_version_registry =
+        CommandVersionRegistry::load_or_default(&config::definitions_file())
+            .expect("TODO: better errors");
 
-    match find_selected_binary(&definitions, command) {
+    match find_selected_binary(&command_version_registry, command) {
         Some(bin) => {
             let err = Command::new(&bin).args(command_args).exec();
 

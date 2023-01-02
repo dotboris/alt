@@ -1,5 +1,6 @@
+use crate::command_version::CommandVersion;
+use crate::command_version::CommandVersionRegistry;
 use crate::config;
-use crate::definitions::Definitions;
 use crate::shim;
 use std::env;
 use std::path::*;
@@ -15,10 +16,10 @@ pub fn run(command: &str, version: &str, bin: &str) {
 
     let definitions_file_path = config::definitions_file();
 
-    let mut definitions = Definitions::load_or_default(&definitions_file_path)
+    let mut registry = CommandVersionRegistry::load_or_default(&definitions_file_path)
         .expect("TODO: manage command errors better somehow");
-    definitions.add_version(command, version, &bin_path);
-    definitions
+    registry.add(CommandVersion::new(command, version, &bin_path));
+    registry
         .save(&definitions_file_path)
         .expect("TODO: nice errors maybe");
 
