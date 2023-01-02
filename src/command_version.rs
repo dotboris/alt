@@ -63,14 +63,36 @@ impl CommandVersionRegistry {
         Ok(())
     }
 
+    pub fn get(&self, command: &str, version: &str) -> Option<CommandVersion> {
+        let path = self.0.get(command)?.get(version).cloned()?;
+        Some(CommandVersion::new(command, version, &path))
+    }
+
     pub fn add(&mut self, command_version: CommandVersion) {
         let command_entry = self.0.entry(command_version.command_name).or_default();
         command_entry.insert(command_version.version_name, command_version.path);
     }
 
-    pub fn get(&self, command: &str, version: &str) -> Option<CommandVersion> {
-        let path = self.0.get(command)?.get(version).cloned()?;
-        Some(CommandVersion::new(command, version, &path))
+    pub fn remove(&mut self, command: &str, version: &str) {
+        let versions = self.0.get_mut(command);
+        if let Some(versions) = versions {
+            versions.remove(version);
+            if versions.is_empty() {
+                self.0.remove(command);
+            }
+        }
+    }
+
+    pub fn all(&self) -> impl Iterator<Item = CommandVersion> + '_ {
+        self.0.iter().flat_map(|(command_name, versions)| {
+            versions
+                .iter()
+                .map(|(version_name, path)| CommandVersion::new(command_name, version_name, path))
+        })
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 
@@ -321,5 +343,142 @@ mod tests {
 
         let res = registry.get("not-there", "not-there");
         assert_eq!(res, None);
+    }
+
+    #[test]
+    fn remove_does_nothing_when_version_does_not_exist() {
+        let mut registry = CommandVersionRegistry::default();
+
+        registry.remove("some-command", "42");
+
+        assert_eq!(registry.0, RegistryState::default());
+    }
+
+    #[test]
+    fn remove_removes_a_version_but_keeps_other_around() {
+        let mut registry = CommandVersionRegistry(HashMap::from([
+            (
+                "foo".to_string(),
+                HashMap::from([
+                    ("42".to_string(), PathBuf::from("path/to/foo-42")),
+                    ("43".to_string(), PathBuf::from("path/to/foo-43")),
+                ]),
+            ),
+            (
+                "node".to_string(),
+                HashMap::from([
+                    ("16".to_string(), PathBuf::from("path/to/node-16")),
+                    ("18".to_string(), PathBuf::from("path/to/node-18")),
+                ]),
+            ),
+        ]));
+
+        registry.remove("foo", "42");
+
+        assert_eq!(
+            registry.0,
+            HashMap::from([
+                (
+                    "foo".to_string(),
+                    HashMap::from([("43".to_string(), PathBuf::from("path/to/foo-43")),]),
+                ),
+                (
+                    "node".to_string(),
+                    HashMap::from([
+                        ("16".to_string(), PathBuf::from("path/to/node-16")),
+                        ("18".to_string(), PathBuf::from("path/to/node-18")),
+                    ]),
+                ),
+            ])
+        );
+    }
+
+    #[test]
+    fn remove_cleans_up_command_hashmap_when_removing_last_version() {
+        let mut registry = CommandVersionRegistry(HashMap::from([
+            (
+                "foo".to_string(),
+                HashMap::from([("43".to_string(), PathBuf::from("path/to/foo-43"))]),
+            ),
+            (
+                "node".to_string(),
+                HashMap::from([
+                    ("16".to_string(), PathBuf::from("path/to/node-16")),
+                    ("18".to_string(), PathBuf::from("path/to/node-18")),
+                ]),
+            ),
+        ]));
+
+        registry.remove("foo", "43");
+
+        assert_eq!(
+            registry.0,
+            HashMap::from([(
+                "node".to_string(),
+                HashMap::from([
+                    ("16".to_string(), PathBuf::from("path/to/node-16")),
+                    ("18".to_string(), PathBuf::from("path/to/node-18")),
+                ]),
+            ),])
+        );
+    }
+
+    #[test]
+    fn all_returns_no_results_on_empty() {
+        let registry = CommandVersionRegistry::default();
+
+        let results = registry.all().collect::<Vec<_>>();
+
+        assert!(results.is_empty());
+    }
+
+    #[test]
+    fn all_returns_everything() {
+        let registry = CommandVersionRegistry(HashMap::from([
+            (
+                "the-command".to_string(),
+                HashMap::from([
+                    ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
+                    ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
+                ]),
+            ),
+            (
+                "node".to_string(),
+                HashMap::from([
+                    ("16".to_string(), PathBuf::from("path/to/node-16")),
+                    ("18".to_string(), PathBuf::from("path/to/node-18")),
+                ]),
+            ),
+        ]));
+
+        let mut res = registry.all().collect::<Vec<_>>();
+        res.sort_by(|a, b| {
+            (&a.command_name, &a.version_name).cmp(&(&b.command_name, &b.version_name))
+        });
+
+        assert_eq!(
+            res,
+            vec![
+                CommandVersion::new("node", "16", Path::new("path/to/node-16")),
+                CommandVersion::new("node", "18", Path::new("path/to/node-18")),
+                CommandVersion::new("the-command", "42", Path::new("path/to/the-command-v42")),
+                CommandVersion::new("the-command", "43", Path::new("path/to/the-command-v43")),
+            ]
+        )
+    }
+
+    #[test]
+    fn is_empty_returns_true_when_empty() {
+        let registry = CommandVersionRegistry::default();
+        assert!(registry.is_empty())
+    }
+
+    #[test]
+    fn is_empty_returns_false_when_not_empty() {
+        let registry = CommandVersionRegistry(HashMap::from([(
+            "node".to_string(),
+            HashMap::from([("18".to_string(), PathBuf::from("path/to/node-18"))]),
+        )]));
+        assert!(!registry.is_empty())
     }
 }

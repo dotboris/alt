@@ -1,49 +1,63 @@
-use crate::def_file;
+use crate::command_version::CommandVersionRegistry;
+use crate::config;
 use crate::use_file;
 use console::style;
 use std::env;
 use std::process;
 
 pub fn run() {
-    let defs = def_file::load();
+    let registry = CommandVersionRegistry::load_or_default(&config::definitions_file())
+        .expect("TODO: better errors");
 
-    if defs.is_empty() {
+    if registry.is_empty() {
         println!("No commands are defined.");
         println!("Try alt scan");
         process::exit(1);
     }
 
     let use_file = use_file::find(&env::current_dir().unwrap());
-    let used_versions = use_file.as_ref().and_then(|path| use_file::load(path));
+    let used_versions = use_file
+        .as_ref()
+        .and_then(|path| use_file::load(path))
+        .unwrap_or_default();
 
     if let Some(use_file_path) = use_file {
         println!("Versions from: {}", use_file_path.to_str().unwrap());
     }
 
-    let mut sorted_defs: Vec<_> = defs.iter().collect();
-    sorted_defs.sort_by_key(|t| t.0);
+    let mut command_versions = registry.all().collect::<Vec<_>>();
+    command_versions.sort_by(|a, b| {
+        (&a.command_name, &a.version_name).cmp(&(&b.command_name, &b.version_name))
+    });
 
-    for (command, versions) in sorted_defs {
-        let current_version = used_versions.as_ref().and_then(|vs| vs.get(command));
+    let mut current_command: Option<String> = None;
+    for command_version in command_versions {
+        let currently_used_version = used_versions.get(&command_version.command_name);
 
-        let command_display = style(command).bold();
+        if current_command.as_ref() != Some(&command_version.command_name) {
+            current_command = Some(command_version.command_name.clone());
 
-        if current_version.is_some() {
-            println!("{}", command_display);
-        } else {
-            println!("{} {}", command_display, style("(using system)").yellow());
+            let command_display = style(&command_version.command_name).bold();
+            if currently_used_version.is_some() {
+                println!("{}", command_display);
+            } else {
+                println!("{} {}", command_display, style("(using system)").yellow());
+            }
         }
 
-        let mut sorted_versions: Vec<_> = versions.iter().collect();
-        sorted_versions.sort();
-
-        for (version, bin) in sorted_versions {
-            let bin_str = bin.to_str().unwrap();
-            if current_version.is_some() && current_version.unwrap() == version {
-                println!(" {} {} ({})", style("*").green().bold(), &version, bin_str);
-            } else {
-                println!("   {} ({})", &version, bin_str);
-            }
+        if currently_used_version == Some(&command_version.version_name) {
+            println!(
+                " {} {} ({})",
+                style("*").green().bold(),
+                &command_version.version_name,
+                command_version.path.display()
+            );
+        } else {
+            println!(
+                "   {} ({})",
+                &command_version.version_name,
+                command_version.path.display()
+            );
         }
     }
 }
