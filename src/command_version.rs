@@ -427,9 +427,7 @@ mod tests {
     fn all_returns_no_results_on_empty() {
         let registry = CommandVersionRegistry::default();
 
-        let results = registry.all().collect::<Vec<_>>();
-
-        assert!(results.is_empty());
+        assert!(registry.all().next().is_none());
     }
 
     #[test]

@@ -55,7 +55,7 @@ pub fn run(command: &str) {
                     .expect("TODO: error handling");
 
             for choice in choices {
-                let version = (&versions[choice]).clone();
+                let version = versions[choice].clone();
                 command_version_registry.add(version);
             }
 

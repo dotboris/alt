@@ -80,8 +80,8 @@ pub fn run(command: &str, arg_version: Option<&str>) {
     }
 }
 
-fn prompt_version(versions: &Vec<CommandVersion>) -> SelectedVersion {
-    let mut versions = versions.clone();
+fn prompt_version(versions: &[CommandVersion]) -> SelectedVersion {
+    let mut versions = versions.to_owned();
     versions.sort();
 
     println!("Please select a version to use");
