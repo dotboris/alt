@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   affect people building from source.
 - Migrate to `clap@v4`. This changes the way the help text is rendered. In terms
   of behavior, nothing should change.
+- Change some of the errors management to use the
+  [`anyhow` crate](https://crates.io/crates/anyhow). This should make the errors
+  affected by this change clearer and give more context.
+- Rewrite how command versions are managed internally. This is a purely internal
+  change and should not affect users in any way.
 
 <!-- section:previous-releases -->
 ## [v1.2.1] 2022-06-24
