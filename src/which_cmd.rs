@@ -1,21 +1,17 @@
-use crate::command;
-use crate::def_file;
+use crate::command::find_selected_binary;
+use crate::environment::load_command_version_registry;
 use std::process;
 
-pub fn run(command: &str) {
-    let defs = def_file::load();
-    let command_version = command::find_selected_version(command);
+pub fn run(command: &str) -> anyhow::Result<()> {
+    let command_version_registry = load_command_version_registry()?;
 
-    let bin = command_version
-        .and_then(|version| def_file::find_bin(&defs, command, &version))
-        .map(|bin| bin.to_owned())
-        .or_else(|| command::find_system_bin(command));
-
-    match bin {
+    match find_selected_binary(&command_version_registry, command) {
         Some(bin) => println!("{}", bin.to_str().unwrap()),
         None => {
             println!("command not found: {}", command);
             process::exit(1)
         }
     };
+
+    Ok(())
 }

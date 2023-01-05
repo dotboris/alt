@@ -1,8 +1,11 @@
+use crate::command_version::CommandVersionRegistry;
+use anyhow::Context;
 use std::env;
 use std::path::{Path, PathBuf};
 
 const DEFAULT_HOME: &str = ".config/alt";
 const DEFAULT_SHIM_DIR: &str = ".local/alt/shims";
+const DEFINITIONS_FILE_NAME: &str = "defs.toml";
 
 pub fn home_dir() -> PathBuf {
     match env::var("ALT_HOME") {
@@ -23,9 +26,18 @@ pub fn shim_dir() -> PathBuf {
         })
 }
 
+pub fn definitions_file() -> PathBuf {
+    home_dir().join(DEFINITIONS_FILE_NAME)
+}
+
+pub fn load_command_version_registry() -> anyhow::Result<CommandVersionRegistry> {
+    CommandVersionRegistry::load_or_new(&definitions_file())
+        .context("failed to load command version registry")
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::config;
+    use crate::environment;
     use lazy_static::lazy_static;
     use std::env;
     use std::path::{Path, PathBuf};
@@ -40,12 +52,12 @@ mod tests {
         let res = {
             let _guard = ENV_MUTEX.lock().unwrap();
             env::remove_var("ALT_HOME");
-            config::home_dir()
+            environment::home_dir()
         };
 
         assert_eq!(
             res,
-            Path::new(&env::var("HOME").unwrap()).join(config::DEFAULT_HOME)
+            Path::new(&env::var("HOME").unwrap()).join(environment::DEFAULT_HOME)
         );
     }
 
@@ -54,7 +66,7 @@ mod tests {
         let res = {
             let _guard = ENV_MUTEX.lock().unwrap();
             env::set_var("ALT_HOME", "/path/to/phony/home");
-            config::home_dir()
+            environment::home_dir()
         };
 
         assert_eq!(res, PathBuf::from("/path/to/phony/home"));

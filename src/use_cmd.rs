@@ -1,89 +1,108 @@
-use crate::def_file;
+use crate::command_version::CommandVersion;
+use crate::environment::load_command_version_registry;
 use crate::use_file;
 use dialoguer::Select;
 use std::env;
 use std::process;
 
-pub fn run(command: &str, arg_version: Option<&str>) {
-    let defs = def_file::load();
+enum SelectedVersion {
+    System,
+    ThisOne(CommandVersion),
+}
 
-    let command_versions = defs.get(command).unwrap_or_else(|| {
+pub fn run(command: &str, arg_version: Option<&str>) -> anyhow::Result<()> {
+    let registry = load_command_version_registry()?;
+
+    let command_versions = registry
+        .iter()
+        .filter(|v| v.command_name == command)
+        .collect::<Vec<_>>();
+
+    if command_versions.is_empty() {
         println!("Unknown command {}", command);
         println!("Did you forget to define it? (see alt help scan)");
         process::exit(1);
-    });
-
-    let version = arg_version.unwrap_or_else(|| prompt_version(command_versions));
-
-    if version == "system" {
-        let cwd = env::current_dir().unwrap();
-        let use_file = use_file::find_or_dir(&cwd);
-        let mut use_def = use_file::load(&use_file).unwrap_or_default();
-        use_def.remove(command);
-        use_file::save(&use_def, &use_file).unwrap_or_else(|err| {
-            panic!(
-                "Failed to write use file to {}: {}",
-                use_file.to_str().unwrap(),
-                err
-            )
-        });
-
-        println!(
-            "Will now use system version of {} when in {}",
-            command,
-            use_file.parent().unwrap().to_str().unwrap()
-        );
-    } else {
-        let bin = command_versions.get(version).unwrap_or_else(|| {
-            println!("Unknown version {} for command {}", version, command);
-            println!("Did you forget to define it? (see alt help scan)");
-            process::exit(2);
-        });
-
-        let cwd = env::current_dir().unwrap();
-        let use_file = use_file::find_or_dir(&cwd);
-        let mut use_def = use_file::load(&use_file).unwrap_or_default();
-        use_def.insert(String::from(command), String::from(version));
-        use_file::save(&use_def, &use_file).unwrap_or_else(|err| {
-            panic!(
-                "Failed to write use file to {}: {}",
-                use_file.to_str().unwrap(),
-                err
-            )
-        });
-
-        println!(
-            "Will now use {} {} ({}) when in {}",
-            command,
-            version,
-            bin.to_str().unwrap(),
-            use_file.parent().unwrap().to_str().unwrap()
-        );
     }
+
+    let selected_version = match arg_version {
+        Some("system") => SelectedVersion::System,
+        Some(version) => SelectedVersion::ThisOne(registry.get(command, version).unwrap()),
+        None => prompt_version(&command_versions),
+    };
+
+    match selected_version {
+        SelectedVersion::System => {
+            let cwd = env::current_dir().unwrap();
+            let use_file = use_file::find_or_dir(&cwd);
+            let mut use_def = use_file::load(&use_file).unwrap_or_default();
+            use_def.remove(command);
+            use_file::save(&use_def, &use_file).unwrap_or_else(|err| {
+                panic!(
+                    "Failed to write use file to {}: {}",
+                    use_file.to_str().unwrap(),
+                    err
+                )
+            });
+
+            println!(
+                "Will now use system version of {} when in {}",
+                command,
+                use_file.parent().unwrap().to_str().unwrap()
+            );
+        }
+        SelectedVersion::ThisOne(CommandVersion {
+            command_name,
+            version_name,
+            path,
+        }) => {
+            let cwd = env::current_dir().unwrap();
+            let use_file = use_file::find_or_dir(&cwd);
+            let mut use_def = use_file::load(&use_file).unwrap_or_default();
+            use_def.insert(command_name.clone(), version_name.clone());
+            use_file::save(&use_def, &use_file).unwrap_or_else(|err| {
+                panic!(
+                    "Failed to write use file to {}: {}",
+                    use_file.to_str().unwrap(),
+                    err
+                )
+            });
+
+            println!(
+                "Will now use {} {} ({}) when in {}",
+                command_name,
+                version_name,
+                path.display(),
+                use_file.parent().unwrap().to_str().unwrap()
+            );
+        }
+    }
+
+    Ok(())
 }
 
-fn prompt_version(versions: &def_file::CommandVersions) -> &str {
-    let mut versions_vec: Vec<_> = versions.iter().collect();
-    versions_vec.sort();
-    let mut version_strings: Vec<_> = versions_vec
-        .iter()
-        .map(|(version, bin)| format!("{} ({})", version, bin.to_str().unwrap()))
-        .collect();
+fn prompt_version(versions: &[CommandVersion]) -> SelectedVersion {
+    let mut versions = versions.to_owned();
+    versions.sort();
 
     println!("Please select a version to use");
     println!("  ↑/↓,j/k: move cursor");
     println!("  <enter>: select");
     println!();
 
+    let mut version_strings: Vec<_> = versions
+        .iter()
+        .map(|c| format!("{} ({})", c.version_name, c.path.display()))
+        .collect();
     version_strings.insert(0, "system version".to_string());
+
     let choice = Select::new()
-        .items(version_strings.as_slice())
+        .items(&version_strings)
         .default(0)
         .interact()
         .unwrap();
 
     match choice {
-        0 => "system",
-        i => versions_vec[i - 1].0,
+        0 => SelectedVersion::System,
+        i => SelectedVersion::ThisOne(versions[i - 1].clone()),
     }
 }

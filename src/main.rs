@@ -1,10 +1,10 @@
 mod checks;
 mod cli;
 mod command;
-mod config;
+mod command_version;
 mod def_cmd;
-mod def_file;
 mod doctor_cmd;
+mod environment;
 mod exec_cmd;
 mod scan;
 mod scan_cmd;
@@ -17,7 +17,7 @@ mod which_cmd;
 
 use std::env;
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     checks::check_shim_in_path();
 
     let arg0 = env::args().next().unwrap();
@@ -25,7 +25,7 @@ fn main() {
     if shim::is_shim(&arg0) {
         let args = env::args().skip(1).collect::<Vec<String>>();
 
-        exec_cmd::run(shim::get_command(&arg0), &args);
+        exec_cmd::run(shim::get_command(&arg0), &args)?;
     } else {
         let matches = cli::make_app().get_matches();
 
@@ -37,18 +37,20 @@ fn main() {
                     .map(String::to_owned)
                     .collect::<Vec<String>>();
 
-                exec_cmd::run(matches.get_one::<String>("command").unwrap(), &args)
+                exec_cmd::run(matches.get_one::<String>("command").unwrap(), &args)?
             }
             Some(("which", matches)) => {
-                which_cmd::run(matches.get_one::<String>("command").unwrap())
+                which_cmd::run(matches.get_one::<String>("command").unwrap())?
             }
-            Some(("shim", _)) => shim_cmd::run(),
-            Some(("scan", matches)) => scan_cmd::run(matches.get_one::<String>("command").unwrap()),
+            Some(("shim", _)) => shim_cmd::run()?,
+            Some(("scan", matches)) => {
+                scan_cmd::run(matches.get_one::<String>("command").unwrap())?
+            }
             Some(("use", matches)) => use_cmd::run(
                 matches.get_one::<String>("command").unwrap(),
                 matches.get_one::<String>("version").map(String::as_ref),
-            ),
-            Some(("show", _)) => show_cmd::run(),
+            )?,
+            Some(("show", _)) => show_cmd::run()?,
             Some(("doctor", matches)) => {
                 let fix_mode = match matches.get_one::<String>("fix_mode").map(String::as_ref) {
                     Some("auto") => doctor_cmd::FixMode::Auto,
@@ -56,14 +58,16 @@ fn main() {
                     Some("prompt") => doctor_cmd::FixMode::Prompt,
                     _ => unreachable!(),
                 };
-                doctor_cmd::run(fix_mode)
+                doctor_cmd::run(fix_mode)?
             }
             Some(("def", matches)) => def_cmd::run(
                 matches.get_one::<String>("command").unwrap(),
                 matches.get_one::<String>("version").unwrap(),
                 matches.get_one::<String>("bin").unwrap(),
-            ),
+            )?,
             _ => unreachable!(),
         };
     }
+
+    Ok(())
 }

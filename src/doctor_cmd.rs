@@ -1,4 +1,5 @@
-use crate::def_file;
+use crate::environment::load_command_version_registry;
+use anyhow::Context;
 use dialoguer::Confirm;
 use std::os::unix::fs::MetadataExt;
 use std::process;
@@ -9,75 +10,74 @@ pub enum FixMode {
     Prompt,
 }
 
-pub fn run(fix_mode: FixMode) {
+pub fn run(fix_mode: FixMode) -> anyhow::Result<()> {
     let mut problem_count: u32 = 0;
     let mut fixed_count: u32 = 0;
 
-    let defs = def_file::load();
-    let mut fixed_defs = defs.clone();
+    let mut command_version_registry = load_command_version_registry()?;
 
-    for (command, versions) in defs {
-        for (version, bin) in versions {
-            let has_problem = {
-                if !bin.exists() {
-                    print_problem(&format!(
-                        "Bin for {} version {} ({}) does not exist.",
-                        command,
-                        version,
-                        bin.display()
-                    ));
-                    true
-                } else if !bin.is_file() {
-                    print_problem(&format!(
-                        "Bin for {} version {} ({}) is not a file.",
-                        command,
-                        version,
-                        bin.display()
-                    ));
-                    true
-                } else if bin.metadata().unwrap().mode() & 0o111 == 0 {
-                    print_problem(&format!(
-                        "Bin for {} version {} ({}) is not executable.",
-                        command,
-                        version,
-                        bin.display()
-                    ));
-                    true
-                } else {
-                    false
-                }
-            };
-
-            if has_problem {
-                problem_count += 1;
-
-                print_fix_available(&format!(
-                    "Remove entry for {} version {}.",
-                    command, version
+    for command_version in command_version_registry.iter().collect::<Vec<_>>() {
+        let has_problem = {
+            if !command_version.path.exists() {
+                print_problem(&format!(
+                    "Bin for {} version {} ({}) does not exist.",
+                    command_version.command_name,
+                    command_version.version_name,
+                    command_version.path.display()
                 ));
-
-                if should_fix(&fix_mode) {
-                    fixed_count += 1;
-
-                    def_file::remove_version(&mut fixed_defs, &command, &version);
-
-                    // We are purposefully saving at every step to ensure that
-                    // no fixes are lost if the user does a Ctrl-C to kill the
-                    // process.
-                    def_file::save(&fixed_defs)
-                        .expect("Failed to save command version definitions");
-
-                    print_fixed(&format!(
-                        "Removed entry for {} version {}.",
-                        command, version
-                    ));
-                }
-                println!();
+                true
+            } else if !command_version.path.is_file() {
+                print_problem(&format!(
+                    "Bin for {} version {} ({}) is not a file.",
+                    command_version.command_name,
+                    command_version.version_name,
+                    command_version.path.display()
+                ));
+                true
+            } else if command_version.path.metadata().unwrap().mode() & 0o111 == 0 {
+                print_problem(&format!(
+                    "Bin for {} version {} ({}) is not executable.",
+                    command_version.command_name,
+                    command_version.version_name,
+                    command_version.path.display()
+                ));
+                true
+            } else {
+                false
             }
+        };
+
+        if has_problem {
+            problem_count += 1;
+
+            print_fix_available(&format!(
+                "Remove entry for {} version {}.",
+                command_version.command_name, command_version.version_name,
+            ));
+
+            if should_fix(&fix_mode) {
+                fixed_count += 1;
+
+                command_version_registry
+                    .remove(&command_version.command_name, &command_version.version_name);
+
+                // We are purposefully saving at every step to ensure that
+                // no fixes are lost if the user does a Ctrl-C to kill the
+                // process.
+                command_version_registry
+                    .save()
+                    .context("Failed to save command version definitions")?;
+
+                print_fixed(&format!(
+                    "Removed entry for {} version {}.",
+                    command_version.command_name, command_version.version_name,
+                ));
+            }
+            println!();
         }
     }
 
-    if fixed_defs.is_empty() {
+    if command_version_registry.is_empty() {
         problem_count += 1;
         print_problem(
             "No commands or command versions are defined. This is normal if \
@@ -109,6 +109,8 @@ pub fn run(fix_mode: FixMode) {
             console::style("All is good").bold().green()
         );
     }
+
+    Ok(())
 }
 
 fn should_fix(fix_mode: &FixMode) -> bool {
