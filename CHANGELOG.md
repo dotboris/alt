@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 <!-- section:unreleased-body -->
 
+<!-- section:previous-releases -->
+## [v1.3.0] 2023-01-08
+
 ### Added
 
 - Add man pages. Users will now be able to run `man alt` as well as `man
@@ -32,7 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   it was defined using a relative path.
   ([#274](https://github.com/dotboris/alt/issues/274))
 
-<!-- section:previous-releases -->
 ## [v1.2.1] 2022-06-24
 
 ### Changed
@@ -121,6 +123,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix crash when `alt` is run without the `PATH` environment variable set.
 
 <!-- section:refs -->
+[v1.3.0]: https://github.com/dotboris/alt/compare/v1.2.1..v1.3.0
 [v1.2.1]: https://github.com/dotboris/alt/compare/v1.2.0..v1.2.1
 [v1.2.0]: https://github.com/dotboris/alt/compare/v1.1.1..v1.2.0
 [v1.1.1]: https://github.com/dotboris/alt/compare/v1.1.0..v1.1.1
