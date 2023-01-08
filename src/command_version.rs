@@ -1,5 +1,6 @@
 use std::{
     collections::HashMap,
+    fmt::Display,
     fs, io,
     path::{Path, PathBuf},
 };
@@ -10,6 +11,14 @@ pub enum SaveError {
     TomlError(#[from] toml::ser::Error),
     #[error(transparent)]
     IoError(#[from] io::Error),
+}
+
+#[derive(thiserror::Error, Debug, PartialEq)]
+pub enum AddError {
+    #[error(
+        "could not add {0} to CommandVersionRegistry because it's invalid: path should be absolute"
+    )]
+    InvalidPathNotAbsolute(CommandVersion),
 }
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Debug)]
@@ -26,6 +35,18 @@ impl CommandVersion {
             version_name: version_name.to_owned(),
             path: path.to_owned(),
         }
+    }
+}
+
+impl Display for CommandVersion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{0}@{1} ({2})",
+            self.command_name,
+            self.version_name,
+            self.path.display()
+        )
     }
 }
 
@@ -81,9 +102,15 @@ impl CommandVersionRegistry {
         Some(CommandVersion::new(command, version, &path))
     }
 
-    pub fn add(&mut self, command_version: CommandVersion) {
+    pub fn add(&mut self, command_version: CommandVersion) -> Result<(), AddError> {
+        if !command_version.path.is_absolute() {
+            return Err(AddError::InvalidPathNotAbsolute(command_version));
+        }
+
         let command_entry = self.state.entry(command_version.command_name).or_default();
         command_entry.insert(command_version.version_name, command_version.path);
+
+        Ok(())
     }
 
     pub fn remove(&mut self, command: &str, version: &str) {
@@ -284,51 +311,75 @@ mod tests {
     }
 
     #[test]
-    fn add_creates_new_command() {
+    fn add_creates_new_command() -> anyhow::Result<()> {
         let mut registry = CommandVersionRegistry::new(Path::new("not-important"));
         assert!(registry.state.is_empty());
 
         registry.add(CommandVersion::new(
             "the-command",
             "42",
-            Path::new("path/to/the-command-v42"),
-        ));
+            Path::new("/path/to/the-command-v42"),
+        ))?;
 
         assert_eq!(
             registry.state,
             HashMap::from([(
                 "the-command".to_string(),
-                HashMap::from([("42".to_string(), PathBuf::from("path/to/the-command-v42")),])
+                HashMap::from([("42".to_string(), PathBuf::from("/path/to/the-command-v42")),])
             )])
         );
+
+        Ok(())
     }
 
     #[test]
-    fn add_adds_version_to_existing_command() {
+    fn add_adds_version_to_existing_command() -> anyhow::Result<()> {
         let mut registry = CommandVersionRegistry::new(Path::new("not-important"));
         assert!(registry.state.is_empty());
         registry.add(CommandVersion::new(
             "the-command",
             "42",
-            Path::new("path/to/the-command-v42"),
-        ));
+            Path::new("/path/to/the-command-v42"),
+        ))?;
         assert!(registry.state.contains_key("the-command"));
 
         registry.add(CommandVersion::new(
             "the-command",
             "43",
-            Path::new("path/to/the-command-v43"),
-        ));
+            Path::new("/path/to/the-command-v43"),
+        ))?;
         assert_eq!(
             registry.state,
             HashMap::from([(
                 "the-command".to_string(),
                 HashMap::from([
-                    ("42".to_string(), PathBuf::from("path/to/the-command-v42")),
-                    ("43".to_string(), PathBuf::from("path/to/the-command-v43")),
+                    ("42".to_string(), PathBuf::from("/path/to/the-command-v42")),
+                    ("43".to_string(), PathBuf::from("/path/to/the-command-v43")),
                 ])
             )])
         );
+
+        Ok(())
+    }
+
+    #[test]
+    fn add_fails_with_relative_path() {
+        let mut registry = CommandVersionRegistry::new(Path::new("not-important"));
+
+        let res = registry.add(CommandVersion::new(
+            "foo",
+            "42",
+            Path::new("this/is/relative"),
+        ));
+
+        assert_eq!(
+            res,
+            Err(AddError::InvalidPathNotAbsolute(CommandVersion::new(
+                "foo",
+                "42",
+                Path::new("this/is/relative")
+            )))
+        )
     }
 
     #[test]

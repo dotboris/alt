@@ -53,7 +53,7 @@ pub fn run(command: &str) -> anyhow::Result<()> {
 
             for choice in choices {
                 let version = versions[choice].clone();
-                command_version_registry.add(version);
+                command_version_registry.add(version)?;
             }
 
             command_version_registry

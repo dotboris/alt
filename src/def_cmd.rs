@@ -15,7 +15,7 @@ pub fn run(command: &str, version: &str, bin: &str) -> anyhow::Result<()> {
     }
 
     let mut registry = load_command_version_registry()?;
-    registry.add(CommandVersion::new(command, version, &bin_path));
+    registry.add(CommandVersion::new(command, version, &bin_path))?;
     registry
         .save()
         .context("failed to save command version registry file")?;
