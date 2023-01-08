@@ -56,7 +56,7 @@ You will probably need to log out & log back in to your desktop session for
 
 ```sh
 brew tap dotboris/alt
-brew install alt-bin
+brew install alt
 ```
 
 Pay close attention to the "Caveats" messages as you'll need to add a line to
