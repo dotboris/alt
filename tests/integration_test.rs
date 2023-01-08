@@ -114,3 +114,33 @@ fn use_with_subdir_overwrite() -> IoResult<()> {
 
     Ok(())
 }
+
+#[test]
+fn def_with_relative_path_works_after_dir_change() -> anyhow::Result<()> {
+    let env = TestEnv::new();
+
+    let stub_command_path = env.create_stub_command("foo-42", "this is foo@42")?;
+
+    // Define foo@42 using a relative path. The `TestEnv` manages a working
+    // directory under such that all commands run through it run in that
+    // directory. The relative path is relative to that directory.
+    let relative_path = stub_command_path.strip_prefix(&env.root)?;
+    println!("{:?}", relative_path);
+    assert!(relative_path.is_relative());
+    env.def("foo", "42", relative_path).assert().success();
+
+    env._use("foo", "42").assert().success();
+
+    env.command("foo")
+        .assert()
+        .success()
+        .stdout("this is foo@42");
+
+    fs::create_dir(env.root.join("subdir"))?;
+    env.command("foo")
+        .assert()
+        .success()
+        .stdout("this is foo@42");
+
+    Ok(())
+}

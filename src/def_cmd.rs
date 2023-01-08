@@ -3,16 +3,12 @@ use crate::environment::load_command_version_registry;
 use crate::shim;
 use anyhow::Context;
 use std::env;
+use std::fs;
 use std::path::*;
-use std::process;
 
 pub fn run(command: &str, version: &str, bin: &str) -> anyhow::Result<()> {
-    let bin_path = PathBuf::from(bin);
-
-    if !bin_path.exists() {
-        println!("File not found: {}", bin);
-        process::exit(1);
-    }
+    let bin_path = fs::canonicalize(Path::new(bin))
+        .with_context(|| format!("failed to resolve {} to an absolute path", bin))?;
 
     let mut registry = load_command_version_registry()?;
     registry.add(CommandVersion::new(command, version, &bin_path))?;
