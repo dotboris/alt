@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 <!-- section:unreleased-body -->
 
+### Changed
+
+- Update `rand_core@0.6.0` crate to `0.6.4`. The previous version we were using
+  has been yanked from `crates.io`.
+
 <!-- section:previous-releases -->
 ## [v1.3.0] 2023-01-08
 
