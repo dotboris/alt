@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 <!-- section:unreleased-body -->
 
+<!-- section:previous-releases -->
+## [v1.3.1] 2023-01-08
+
 ### Changed
 
 - Update `rand_core@0.6.0` crate to `0.6.4`. The previous version we were using
   has been yanked from `crates.io`.
 
-<!-- section:previous-releases -->
 ## [v1.3.0] 2023-01-08
 
 ### Added
@@ -128,6 +130,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix crash when `alt` is run without the `PATH` environment variable set.
 
 <!-- section:refs -->
+[v1.3.1]: https://github.com/dotboris/alt/compare/v1.3.0..v1.3.1
 [v1.3.0]: https://github.com/dotboris/alt/compare/v1.2.1..v1.3.0
 [v1.2.1]: https://github.com/dotboris/alt/compare/v1.2.0..v1.2.1
 [v1.2.0]: https://github.com/dotboris/alt/compare/v1.1.1..v1.2.0
