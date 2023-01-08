@@ -25,6 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rewrite how command versions are managed internally. This is a purely internal
   change and should not affect users in any way.
 
+### Fixed
+
+- Ensure `alt def` always stores the binary path it is given as an absolute
+  path. This fixes an issue where `alt` would fail to run a command version if
+  it was defined using a relative path.
+  ([#274](https://github.com/dotboris/alt/issues/274))
+
 <!-- section:previous-releases -->
 ## [v1.2.1] 2022-06-24
 
