@@ -3,5 +3,8 @@
   "extends": [
     "config:base",
     "group:allNonMajor"
-  ]
+  ],
+
+  "timezone": "America/Toronto",
+  "schedule": ["after 2pm on friday"]
 }
