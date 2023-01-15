@@ -13,7 +13,7 @@ Arguments:
   [version]  Version to use (optional)
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 
 EXAMPLES:
     alt use node 8        Use version 8 of node

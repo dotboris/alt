@@ -13,7 +13,7 @@ Arguments:
   [command_args]...  Arguments to pass to the command
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 
 ARGS NOTE:
     Note that `alt exec` handles some flags on its own (`--help` for example).

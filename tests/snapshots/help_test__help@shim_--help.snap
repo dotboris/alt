@@ -9,6 +9,6 @@ Generate shims for all managed commands
 Usage: alt shim
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 '''
 stderr = ''

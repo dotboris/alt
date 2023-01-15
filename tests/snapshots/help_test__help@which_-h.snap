@@ -12,6 +12,6 @@ Arguments:
   <command>  Command to look up
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 '''
 stderr = ''
