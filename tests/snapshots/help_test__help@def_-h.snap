@@ -14,6 +14,6 @@ Arguments:
   <bin>      Path to the executable for the version
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 '''
 stderr = ''

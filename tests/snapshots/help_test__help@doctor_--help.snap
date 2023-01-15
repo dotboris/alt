@@ -11,6 +11,6 @@ Usage: alt doctor [OPTIONS]
 Options:
   -f, --fix-mode <fix_mode>  Control how automatic fixes are applied. [default: prompt] [possible
                              values: auto, never, prompt]
-  -h, --help                 Print help information
+  -h, --help                 Print help
 '''
 stderr = ''

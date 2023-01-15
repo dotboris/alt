@@ -9,6 +9,6 @@ Print commands and their versions
 Usage: alt show
 
 Options:
-  -h, --help  Print help information
+  -h, --help  Print help
 '''
 stderr = ''
