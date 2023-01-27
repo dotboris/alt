@@ -33,8 +33,8 @@ opt-level = 3
 
 [dependencies]
 anyhow = "1.0"
-clap = { version = "4.1.1", features = ["cargo", "wrap_help"] }
-toml = "0.5.11"
+clap = { version = "4.1.4", features = ["cargo", "wrap_help"] }
+toml = "0.7.0"
 console = "0.15.5"
 lazy_static = "1.4.0"
 dialoguer = "0.10.3"
@@ -57,6 +57,6 @@ test-case = "2.2.2"
 tempfile = "3"
 
 [build-dependencies]
-clap = { version = "4.1.1", features = ["cargo"] }
-clap_complete = "4.1.0"
+clap = { version = "4.1.4", features = ["cargo"] }
+clap_complete = "4.1.1"
 clap_mangen = "0.2.7"
