@@ -40,7 +40,7 @@ pub fn run(command: &str) -> anyhow::Result<()> {
         .collect();
 
     if versions.is_empty() {
-        println!("Sorry, could not find any versions of {}", command);
+        println!("Sorry, could not find any versions of {command}");
         process::exit(1);
     } else {
         let choices = prompt_versions(&versions);
@@ -61,7 +61,7 @@ pub fn run(command: &str) -> anyhow::Result<()> {
                 .context("Failed to save command version registry")?;
 
             shim::make_shim(command, env::current_exe().unwrap().as_path())
-                .unwrap_or_else(|err| panic!("failed to create shim for {}: {}", command, err));
+                .unwrap_or_else(|err| panic!("failed to create shim for {command}: {err}"));
         }
     }
 

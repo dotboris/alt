@@ -93,10 +93,7 @@ pub fn run(fix_mode: FixMode) -> anyhow::Result<()> {
     // TODO: check that old shims are not left over
 
     if problem_count > 0 {
-        println!(
-            "Found {} problems. Fixed {}/{}.",
-            problem_count, fixed_count, problem_count
-        );
+        println!("Found {problem_count} problems. Fixed {fixed_count}/{problem_count}.");
 
         if problem_count > fixed_count {
             process::exit(1);

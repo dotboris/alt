@@ -7,8 +7,16 @@ use std::{
 
 #[derive(thiserror::Error, Debug)]
 pub enum SaveError {
-    #[error("failed to serialize CommandVersionRegistry contents as TOML")]
+    #[error("failed to serialize CommandVersionRegistry state to TOML")]
     TomlError(#[from] toml::ser::Error),
+    #[error(transparent)]
+    IoError(#[from] io::Error),
+}
+
+#[derive(thiserror::Error, Debug)]
+pub enum LoadError {
+    #[error("failed to deserialize CommandVersionRegistry state from TOML")]
+    TomlError(#[from] toml::de::Error),
     #[error(transparent)]
     IoError(#[from] io::Error),
 }
@@ -59,9 +67,9 @@ pub struct CommandVersionRegistry {
 }
 
 impl CommandVersionRegistry {
-    pub fn load(path: &Path) -> Result<Self, io::Error> {
-        let bytes = fs::read(path)?;
-        let state: RegistryState = toml::from_slice(&bytes)?;
+    pub fn load(path: &Path) -> Result<Self, LoadError> {
+        let contents = fs::read_to_string(path)?;
+        let state: RegistryState = toml::from_str(&contents)?;
 
         Ok(CommandVersionRegistry {
             path: path.to_owned(),
@@ -76,14 +84,13 @@ impl CommandVersionRegistry {
         }
     }
 
-    pub fn load_or_new(path: &Path) -> Result<Self, io::Error> {
+    pub fn load_or_new(path: &Path) -> Result<Self, LoadError> {
         let res = Self::load(path);
-        res.or_else(|error| {
-            if error.kind() == io::ErrorKind::NotFound {
+        res.or_else(|error| match error {
+            LoadError::IoError(error) if error.kind() == io::ErrorKind::NotFound => {
                 Ok(Self::new(path))
-            } else {
-                Err(error)
             }
+            _ => Err(error),
         })
     }
 

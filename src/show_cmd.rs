@@ -37,7 +37,7 @@ pub fn run() -> anyhow::Result<()> {
 
             let command_display = style(&command_version.command_name).bold();
             if currently_used_version.is_some() {
-                println!("{}", command_display);
+                println!("{command_display}");
             } else {
                 println!("{} {}", command_display, style("(using system)").yellow());
             }

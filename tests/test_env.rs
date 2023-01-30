@@ -35,7 +35,7 @@ impl TestEnv {
             .map(char::from)
             .collect();
 
-        let root = env::temp_dir().join(format!("alt-tests-{}", rand_ns));
+        let root = env::temp_dir().join(format!("alt-tests-{rand_ns}"));
         fs::create_dir(&root)
             .unwrap_or_else(|_| panic!("failed to created tmp env {}", root.display()));
 
@@ -68,7 +68,7 @@ impl TestEnv {
 
         let mut writer = BufWriter::new(&file);
         writeln!(&mut writer, "#!/bin/bash")?;
-        writeln!(&mut writer, "echo -n '{}'", display_text)?;
+        writeln!(&mut writer, "echo -n '{display_text}'")?;
         writer.flush()?;
 
         let mut perms = file.metadata()?.permissions();
