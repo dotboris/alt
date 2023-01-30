@@ -8,7 +8,7 @@ pub fn run(command: &str) -> anyhow::Result<()> {
     match find_selected_binary(&command_version_registry, command) {
         Some(bin) => println!("{}", bin.to_str().unwrap()),
         None => {
-            println!("command not found: {}", command);
+            println!("command not found: {command}");
             process::exit(1)
         }
     };

@@ -6,12 +6,12 @@ use test_env::TestEnv;
 
 fn def_all(env: &TestEnv) -> IoResult<()> {
     for command in &["alfa", "bravo", "charlie"] {
-        env.create_stub_command(command, &format!("{} system version", command))?;
+        env.create_stub_command(command, &format!("{command} system version"))?;
 
         for version in &["1", "2", "3"] {
             let stub_path = env.create_stub_command(
-                &format!("{}{}", command, version),
-                &format!("{} version {}", command, version),
+                &format!("{command}{version}"),
+                &format!("{command} version {version}"),
             )?;
 
             env.def(command, version, &stub_path).assert().success();
@@ -125,7 +125,7 @@ fn def_with_relative_path_works_after_dir_change() -> anyhow::Result<()> {
     // directory under such that all commands run through it run in that
     // directory. The relative path is relative to that directory.
     let relative_path = stub_command_path.strip_prefix(&env.root)?;
-    println!("{:?}", relative_path);
+    println!("{relative_path:?}");
     assert!(relative_path.is_relative());
     env.def("foo", "42", relative_path).assert().success();
 

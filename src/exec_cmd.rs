@@ -21,20 +21,17 @@ pub fn run(command: &str, command_args: &[String]) -> anyhow::Result<()> {
             // Since we're calling exec, either our process will be replaced
             // (and this code will never be called) or something's wrong and
             // we get this error
-            eprintln!(
-                "🔥 alt failed to run {} version {}!",
-                command, pretty_command_version
-            );
-            eprintln!("error: {:?}", err);
-            eprintln!("command: {}", command);
-            eprintln!("command version: {}", pretty_command_version);
-            eprintln!("args: {:?}", command_args);
+            eprintln!("🔥 alt failed to run {command} version {pretty_command_version}!");
+            eprintln!("error: {err:?}");
+            eprintln!("command: {command}");
+            eprintln!("command version: {pretty_command_version}");
+            eprintln!("args: {command_args:?}");
             eprintln!("bin: {}", bin.display());
             eprintln!("current dir: {:?}", env::current_dir());
             panic!();
         }
         None => {
-            println!("command not found: {}", command);
+            println!("command not found: {command}");
             process::exit(1)
         }
     }

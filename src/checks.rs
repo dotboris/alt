@@ -18,9 +18,9 @@ fn line_label(width: usize, label: &str) -> String {
 
     format!(
         "{} {} {}",
-        style(format!("{}>", left)).bold(),
+        style(format!("{left}>")).bold(),
         style(label).bold().red(),
-        style(format!("<{}", right)).bold(),
+        style(format!("<{right}")).bold(),
     )
 }
 

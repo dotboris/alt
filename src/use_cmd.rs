@@ -19,7 +19,7 @@ pub fn run(command: &str, arg_version: Option<&str>) -> anyhow::Result<()> {
         .collect::<Vec<_>>();
 
     if command_versions.is_empty() {
-        println!("Unknown command {}", command);
+        println!("Unknown command {command}");
         println!("Did you forget to define it? (see alt help scan)");
         process::exit(1);
     }
