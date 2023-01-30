@@ -26,9 +26,9 @@ pub fn find_or_dir(start: &Path) -> PathBuf {
 pub type UseFile = HashMap<String, String>;
 
 pub fn load(path: &Path) -> Option<UseFile> {
-    fs::read(path)
+    fs::read_to_string(path)
         .ok()
-        .map(|contents| toml::from_slice(&contents).unwrap())
+        .map(|contents| toml::from_str(&contents).unwrap())
 }
 
 pub fn save(use_def: &UseFile, path: &Path) -> Result<(), io::Error> {
