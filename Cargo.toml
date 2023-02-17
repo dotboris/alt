@@ -53,7 +53,7 @@ insta = { version = "1.26.0", features = ["filters", "toml"] }
 predicates = "2.1.5"
 rand = "0.8"
 serde = "1.0.152"
-test-case = "2.2.2"
+test-case = "3.0.0"
 tempfile = "3"
 
 [build-dependencies]
