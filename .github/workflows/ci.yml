@@ -23,9 +23,7 @@ jobs:
           profile: minimal
           toolchain: stable
       - uses: Swatinem/rust-cache@v2
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
+      - run: cargo check
 
   fmt-check:
     name: cargo fmt --check
@@ -38,15 +36,8 @@ jobs:
           toolchain: stable
           components: rustfmt
       - uses: Swatinem/rust-cache@v2
-      - name: print rustfmt version
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --version
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check --color=always
+      - run: cargo fmt --version
+      - run: cargo fmt --all -- --check --color=always
 
   test-rust:
     name: cargo test
@@ -80,15 +71,8 @@ jobs:
           toolchain: stable
           components: clippy
       - uses: Swatinem/rust-cache@v2
-      - name: print clippy version
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --version
-      - uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --all-targets --all-features -- -D warnings
+      - run: cargo clippy --version
+      - run: clippy --all-targets --all-features -- -D warnings
 
   shellcheck:
     runs-on: ubuntu-latest
