@@ -58,7 +58,7 @@ jobs:
       - run: rustup toolchain install stable --profile minimal --component clippy
       - uses: Swatinem/rust-cache@v2
       - run: cargo clippy --version
-      - run: clippy --all-targets --all-features -- -D warnings
+      - run: cargo clippy --all-targets --all-features -- -D warnings
 
   shellcheck:
     runs-on: ubuntu-latest
