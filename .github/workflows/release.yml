@@ -49,6 +49,7 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
+      - uses: Swatinem/rust-cache@v2
       - name: Install cargo-edit
         uses: actions-rs/cargo@v1
         with:
