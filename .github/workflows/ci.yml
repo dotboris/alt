@@ -64,9 +64,8 @@ jobs:
           profile: minimal
           toolchain: stable
       - uses: Swatinem/rust-cache@v2
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
+      - run: cargo build
+      - run: cargo test
 
   package:
     uses: ./.github/workflows/package.yml
