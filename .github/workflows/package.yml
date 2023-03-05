@@ -23,11 +23,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ inputs.checkoutRef }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: ${{ matrix.target }}
+      - run: rustup toolchain install stable --profile minimal --target ${{ matrix.target }}
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-python@v4
         with:
