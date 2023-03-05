@@ -18,35 +18,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
+      - run: rustup toolchain install stable --profile minimal
       - uses: Swatinem/rust-cache@v2
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
+      - run: cargo check
 
   fmt-check:
     name: cargo fmt --check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: rustfmt
+      - run: rustup toolchain install stable --profile minimal --component rustfmt
       - uses: Swatinem/rust-cache@v2
-      - name: print rustfmt version
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --version
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check --color=always
+      - run: cargo fmt --version
+      - run: cargo fmt --all -- --check --color=always
 
   test-rust:
     name: cargo test
@@ -59,10 +43,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
+      - run: rustup toolchain install stable --profile minimal
       - uses: Swatinem/rust-cache@v2
       - run: cargo build
       - run: cargo test
@@ -74,21 +55,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: clippy
+      - run: rustup toolchain install stable --profile minimal --component clippy
       - uses: Swatinem/rust-cache@v2
-      - name: print clippy version
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --version
-      - uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --all-targets --all-features -- -D warnings
+      - run: cargo clippy --version
+      - run: cargo clippy --all-targets --all-features -- -D warnings
 
   shellcheck:
     runs-on: ubuntu-latest
@@ -106,9 +76,6 @@ jobs:
         include:
           - ppa: ppa:fish-shell/release-3
             os: ubuntu-latest
-          - ppa: ppa:fish-shell/release-2
-            # fish 2 ppa doesn't support ubuntu 20.04
-            os: ubuntu-18.04
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3

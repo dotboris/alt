@@ -45,16 +45,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
+      - run: rustup toolchain install stable --profile minimal
       - uses: Swatinem/rust-cache@v2
-      - name: Install cargo-edit
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: --no-default-features --features set-version cargo-edit
+      - run: cargo install --no-default-features --features set-version cargo-edit
       - uses: actions/setup-python@v4
 
       - name: Determine current version
@@ -62,15 +55,9 @@ jobs:
         run: ./ci/get_version.py
 
       - name: Bump ${{ github.event.inputs.bumpType }} in Cargo.toml
-        uses: actions-rs/cargo@v1
-        with:
-          command: set-version
-          args: --bump ${{ github.event.inputs.bumpType }}
+        run: cargo set-version --bump ${{ github.event.inputs.bumpType }}
       - name: Update Cargo.lock
-        uses: actions-rs/cargo@v1
-        with:
-          command: update
-          args: -p alt
+        run: cargo update -p alt
 
       - name: Determine next version
         id: getNewVersion
