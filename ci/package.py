@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-from pathlib import Path
+import json
 import subprocess
 import sys
 import tarfile
 from argparse import ArgumentParser
-from os import path, makedirs
+from os import makedirs, path
+from pathlib import Path
 from shutil import rmtree, which
 from tempfile import mkdtemp
 
@@ -34,9 +35,9 @@ def is_platform(platform):
     return sys.platform.startswith(platform)
 
 
-def build_release(rust_target):
+def build_release(cargo_bin, rust_target):
     step(f"Building release build for target {rust_target}")
-    sh("cargo", "build", "--release", "--locked", "--target", rust_target)
+    sh(cargo_bin, "build", "--release", "--locked", "--target", rust_target)
 
 
 def build_deb(rust_target, dest_dir):
@@ -45,7 +46,18 @@ def build_deb(rust_target, dest_dir):
         sh("cargo", "install", "cargo-deb")
 
     step(f"Building deb package for {rust_target}")
-    sh("cargo", "deb", "--target", rust_target, "-o", dest_dir, "--", "--locked")
+    sh(
+        "cargo",
+        "deb",
+        # Assuming it's already built in previous step
+        "--no-build",
+        # Stripping doesn't work when cross compiling
+        "--no-strip",
+        "--target",
+        rust_target,
+        "-o",
+        dest_dir,
+    )
 
 
 def build_tarbal(bin_path, version, rust_target, dest_dir):
@@ -99,15 +111,22 @@ def list_output(dest_dir):
     sh("ls", "-lh", dest_dir)
 
 
+def get_version():
+    raw_manifest = sh_capture("cargo", "read-manifest", "--quiet")
+    manifest = json.loads(raw_manifest)
+    return manifest["version"]
+
+
 def parse():
     parser = ArgumentParser()
     parser.add_argument("--dest-dir", required=True)
     parser.add_argument("--rust-target", required=True)
     parser.add_argument("--lazy-build", action="store_true")
+    parser.add_argument("--use-cross", action="store_true")
     return parser.parse_args()
 
 
-def main(dest_dir=None, rust_target=None, lazy_build=None):
+def main(dest_dir=None, rust_target=None, lazy_build=None, use_cross=None):
     step(f"Emptying {dest_dir}")
     if path.exists(dest_dir):
         rmtree(dest_dir)
@@ -115,14 +134,16 @@ def main(dest_dir=None, rust_target=None, lazy_build=None):
 
     alt_bin = path.join("target", rust_target, "release/alt")
     if lazy_build and path.exists(alt_bin):
-        step(f"Release {alt_bin} already built, " "skipping because of --lazy-build")
+        step(f"Release {alt_bin} already built, skipping because of --lazy-build")
     else:
-        build_release(rust_target)
+        if use_cross and not command_exists("cross"):
+            step("Installing `cross` tool")
+            sh("cargo", "install", "cross")
+
+        build_release("cross" if use_cross else "cargo", rust_target)
 
     step("Looking up version")
-    version = sh_capture(alt_bin, "--version")
-    version = version.decode()
-    version = version.strip().split(" ")[1]
+    version = get_version()
     print(version, flush=True)
 
     build_tarbal(alt_bin, version, rust_target, dest_dir)
