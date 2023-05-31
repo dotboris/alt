@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-from pathlib import Path
+import json
 import subprocess
 import sys
 import tarfile
 from argparse import ArgumentParser
-from os import path, makedirs
+from os import makedirs, path
+from pathlib import Path
 from shutil import rmtree, which
 from tempfile import mkdtemp
 
@@ -99,6 +100,12 @@ def list_output(dest_dir):
     sh("ls", "-lh", dest_dir)
 
 
+def get_version():
+    raw_manifest = sh_capture("cargo", "read-manifest", "--quiet")
+    manifest = json.loads(raw_manifest)
+    return manifest["version"]
+
+
 def parse():
     parser = ArgumentParser()
     parser.add_argument("--dest-dir", required=True)
@@ -120,9 +127,7 @@ def main(dest_dir=None, rust_target=None, lazy_build=None):
         build_release(rust_target)
 
     step("Looking up version")
-    version = sh_capture(alt_bin, "--version")
-    version = version.decode()
-    version = version.strip().split(" ")[1]
+    version = get_version()
     print(version, flush=True)
 
     build_tarbal(alt_bin, version, rust_target, dest_dir)
