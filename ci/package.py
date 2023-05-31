@@ -46,7 +46,7 @@ def build_deb(rust_target, dest_dir):
         sh("cargo", "install", "cargo-deb")
 
     step(f"Building deb package for {rust_target}")
-    sh("cargo", "deb", "--target", rust_target, "-o", dest_dir, "--", "--locked")
+    sh("cargo", "deb", "--no-build", "--target", rust_target, "-o", dest_dir)
 
 
 def build_tarbal(bin_path, version, rust_target, dest_dir):
