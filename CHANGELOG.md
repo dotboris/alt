@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 <!-- section:unreleased-body -->
 
+<!-- section:previous-releases -->
+## [v1.4.0] 2023-05-31
+
 ### Added
 
 - Add pre-built ARM binaries for Linux
 - Add pre-built ARM binaries for MacOS
 
-<!-- section:previous-releases -->
 ## [v1.3.1] 2023-01-08
 
 ### Changed
@@ -135,6 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix crash when `alt` is run without the `PATH` environment variable set.
 
 <!-- section:refs -->
+[v1.4.0]: https://github.com/dotboris/alt/compare/v1.3.1..v1.4.0
 [v1.3.1]: https://github.com/dotboris/alt/compare/v1.3.0..v1.3.1
 [v1.3.0]: https://github.com/dotboris/alt/compare/v1.2.1..v1.3.0
 [v1.2.1]: https://github.com/dotboris/alt/compare/v1.2.0..v1.2.1
