@@ -115,7 +115,7 @@ def main(dest_dir=None, rust_target=None, lazy_build=None):
 
     alt_bin = path.join("target", rust_target, "release/alt")
     if lazy_build and path.exists(alt_bin):
-        step(f"Release {alt_bin} already built, " "skipping because of --lazy-build")
+        step(f"Release {alt_bin} already built, skipping because of --lazy-build")
     else:
         build_release(rust_target)
 
