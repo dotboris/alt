@@ -3,7 +3,7 @@
     "Switches between different versions of commands based on your current directory";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-23.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -32,5 +32,6 @@
             installShellCompletion --zsh "$releaseDir/completion/_alt"
           '';
         };
+        formatter = pkgs.nixpkgs-fmt;
       });
 }
