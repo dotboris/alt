@@ -75,8 +75,8 @@
             cargo-deb
 
             shellcheck
-          ]) ++ pkgs.lib.optionals pkgs.stdenv.isDarwin
-            (with pkgs; [ libiconv ]);
+            cargo-insta
+          ]) ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [ pkgs.libiconv ];
         };
       });
 }
