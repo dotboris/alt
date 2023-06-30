@@ -4,4 +4,11 @@
 
     timezone: "America/Toronto",
     schedule: ["after 2pm on friday"],
+
+    lockFileMaintenance: {
+        enabled: true,
+        schedule: ["after 2pm on friday"],
+    },
+
+    nix: { enabled: true },
 }
