@@ -24,6 +24,12 @@ cargo clippy
 This project is built with rust. You'll need to have rust installed.
 See: <https://www.rust-lang.org/tools/install>
 
+### Nix
+
+If you have nix, you can leverage an already provided development environment.
+Simply run `nix develop`. Note that this requires
+[Nix flakes](https://nixos.wiki/wiki/Flakes) to be enabled.
+
 ## Snapshot tests
 
 Some of the tests in this projects are snapshot based. Instead of asserting on

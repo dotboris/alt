@@ -9,5 +9,5 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[{*.sh,*.yml,*fish}]
+[{*.sh,*.yml,*.fish,*.nix,*.json5}]
 indent_size = 2

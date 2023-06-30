@@ -2,3 +2,6 @@
 /target
 /dist
 **/*.rs.bk
+
+# Nix output
+/result

@@ -1,0 +1,42 @@
+name: Nix CI
+
+on:
+  pull_request: {}
+  push:
+    branches:
+      - main
+
+jobs:
+  nix-flake-check:
+    name: nix flake check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+        with:
+          # Helps avoid rate limiting
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: nix flake check --all-systems --keep-going
+
+  nix-develop:
+    name: test nix dev shell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+        with:
+          # Helps avoid rate limiting
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: nix develop -c true
+
+  nix-fmt:
+    name: nix fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+        with:
+          # Helps avoid rate limiting
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: nix fmt
+      - run: git diff --color=always --exit-code
