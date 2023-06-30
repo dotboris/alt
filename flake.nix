@@ -32,33 +32,6 @@
       {
         formatter = pkgs.nixpkgs-fmt;
 
-        packages.default = pkgs.rustPlatform.buildRustPackage {
-          name = "alt";
-          src = ./.;
-          cargoLock = { lockFile = ./Cargo.lock; };
-
-          # TODO: integrations test fail. It's likely something to do with the
-          # PATH manipulation or the lack of the tmp dir.
-          doCheck = false;
-
-          nativeBuildInputs = [ pkgs.installShellFiles ];
-          postInstall = ''
-            target=${pkgs.rust.toRustTargetSpec pkgs.stdenv.hostPlatform}
-            releaseDir=target/$target/$cargoBuildType
-
-            # TODO: Not sure if this actually works. They're in the right place
-            # but I have no idea if nix links those.
-            install -D -m 644 etc/fish/conf.d/alt.fish "$out/share/fish/vendor_conf.d/alt.fish"
-            install -D -m 644 etc/profile.d/alt.sh "$out/etc/profile.d/alt.sh"
-
-            installManPage "$releaseDir/man/"*.1
-
-            installShellCompletion --bash "$releaseDir/completion/alt.bash"
-            installShellCompletion --fish "$releaseDir/completion/alt.fish"
-            installShellCompletion --zsh "$releaseDir/completion/_alt"
-          '';
-        };
-
         devShells.default = pkgs.mkShell {
           # The Nix packages provided in the environment
           packages = (with pkgs; [
