@@ -46,6 +46,11 @@
             target=${pkgs.rust.toRustTargetSpec pkgs.stdenv.hostPlatform}
             releaseDir=target/$target/$cargoBuildType
 
+            # TODO: Not sure if this actually works. They're in the right place
+            # but I have no idea if nix links those.
+            install -D -m 644 etc/fish/conf.d/alt.fish "$out/share/fish/vendor_conf.d/alt.fish"
+            install -D -m 644 etc/profile.d/alt.sh "$out/etc/profile.d/alt.sh"
+
             installManPage "$releaseDir/man/"*.1
 
             installShellCompletion --bash "$releaseDir/completion/alt.bash"
