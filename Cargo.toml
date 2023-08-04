@@ -52,7 +52,7 @@ escargot = "0.5"
 insta = { version = "1.31.0", features = ["filters", "toml"] }
 predicates = "3.0.3"
 rand = "0.8"
-serde = "1.0.178"
+serde = "1.0.181"
 test-case = "3.1.0"
 tempfile = "3"
 
