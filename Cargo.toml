@@ -33,7 +33,7 @@ opt-level = 3
 
 [dependencies]
 anyhow = "1.0"
-clap = { version = "4.3.19", features = ["cargo", "wrap_help"] }
+clap = { version = "4.3.21", features = ["cargo", "wrap_help"] }
 toml = "0.7.6"
 console = "0.15.7"
 lazy_static = "1.4.0"
@@ -52,11 +52,11 @@ escargot = "0.5"
 insta = { version = "1.31.0", features = ["filters", "toml"] }
 predicates = "3.0.3"
 rand = "0.8"
-serde = "1.0.181"
+serde = "1.0.183"
 test-case = "3.1.0"
 tempfile = "3"
 
 [build-dependencies]
-clap = { version = "4.3.19", features = ["cargo"] }
+clap = { version = "4.3.21", features = ["cargo"] }
 clap_complete = "4.3.2"
 clap_mangen = "0.2.12"
