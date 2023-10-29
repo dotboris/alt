@@ -86,11 +86,7 @@ mod tests {
     fn test_parse_opt_homebrew_path_php() {
         assert_eq!(
             parse_version_path(PathBuf::from("/opt/homebrew/opt/php@8.2/bin/php")),
-            CommandVersion::new(
-                "php",
-                "8.2",
-                Path::new("/opt/homebrew/opt/php@8.2/bin/php"),
-            )
+            CommandVersion::new("php", "8.2", Path::new("/opt/homebrew/opt/php@8.2/bin/php")),
         );
     }
 
