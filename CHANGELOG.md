@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 <!-- section:unreleased-body -->
 
+### Added
+
+- `alt scan` can now locate binaries from homebrew when it's installed in `/opt/homebrew`.
+  Thank you [Walrusse](https://github.com/Walrusse) for [#368](https://github.com/dotboris/alt/pull/368).
+
 <!-- section:previous-releases -->
 ## [v1.4.0] 2023-05-31
 
