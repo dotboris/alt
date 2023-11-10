@@ -34,7 +34,7 @@ opt-level = 3
 [dependencies]
 anyhow = "1.0"
 clap = { version = "4.4.7", features = ["cargo", "wrap_help"] }
-toml = "0.8.6"
+toml = "0.8.8"
 console = "0.15.7"
 lazy_static = "1.4.0"
 dialoguer = "0.11.0"
@@ -52,7 +52,7 @@ escargot = "0.5"
 insta = { version = "1.34.0", features = ["filters", "toml"] }
 predicates = "3.0.4"
 rand = "0.8"
-serde = "1.0.190"
+serde = "1.0.192"
 test-case = "3.2.1"
 tempfile = "3"
 
