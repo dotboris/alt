@@ -3,7 +3,7 @@
     "Switches between different versions of commands based on your current directory";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
     rust-overlay.url = "github:oxalica/rust-overlay/stable";
     flake-utils.url = "github:numtide/flake-utils";
   };
