@@ -9,6 +9,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -16,33 +20,70 @@
     nixpkgs,
     flake-utils,
     rust-overlay,
+    crane,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      # Overlays enable you to customize the Nixpkgs attribute set
-      overlays = [
-        # Makes a `rust-bin` attribute available in Nixpkgs
-        (import rust-overlay)
-        # Provides a `rustToolchain` attribute for Nixpkgs that we can use to
-        # create a Rust environment
-        (self: super: {
-          rustToolchain = super.rust-bin.stable.latest.default.override {
-            targets = pkgs.lib.optionals pkgs.stdenv.isLinux [
-              # We package using musl on linux
-              "x86_64-unknown-linux-musl"
-            ];
-          };
-        })
-      ];
-      pkgs = import nixpkgs {inherit system overlays;};
-    in {
-      formatter = pkgs.alejandra;
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [(import rust-overlay)];
+      };
 
-      devShells.default = pkgs.mkShell {
+      rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+        targets = pkgs.lib.optionals pkgs.stdenv.isLinux [
+          # We package using musl on linux
+          "x86_64-unknown-linux-musl"
+        ];
+      };
+
+      craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+
+      src = let
+        # .snap files are snapshots used by the tests
+        snapFilter = path: _type: builtins.match ".*\.snap$" path != null;
+        srcFilter = path: type:
+          (snapFilter path type) || (craneLib.filterCargoSources path type);
+      in
+        pkgs.lib.cleanSourceWith {
+          src = craneLib.path ./.;
+          filter = srcFilter;
+        };
+      commonArgs = {
+        inherit src;
+        strictDeps = true;
+        buildInputs = pkgs.lib.optionals pkgs.stdenv.isDarwin [pkgs.libiconv];
+      };
+      cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+      alt = craneLib.buildPackage (commonArgs
+        // {
+          inherit cargoArtifacts;
+          doCheck = false; # run through checks
+        });
+    in {
+      packages.default = alt;
+      apps.default = flake-utils.lib.mkApp {drv = alt;};
+
+      formatter = pkgs.alejandra;
+      checks = {
+        inherit alt;
+        clippy = craneLib.cargoClippy (commonArgs // {inherit cargoArtifacts;});
+        test = craneLib.cargoTest (commonArgs // {inherit cargoArtifacts;});
+        rustfmt = craneLib.cargoFmt {inherit src;};
+        alejandra = pkgs.runCommand "alejandra" {} ''
+          ${pkgs.alejandra}/bin/alejandra -c ${./.}
+          mkdir $out
+        '';
+        shellcheck = pkgs.runCommand "shellcheck" {} ''
+          ${pkgs.fd}/bin/fd . ${./.} \
+            -e .sh -e .bash -e .zsh \
+            -X ${pkgs.shellcheck}/bin/shellcheck '{}'
+          mkdir $out
+        '';
+      };
+
+      devShells.default = craneLib.devShell {
         # The Nix packages provided in the environment
         packages =
           (with pkgs; [
-            # The usual suite for rust tools including cargo, Clippy,
-            # cargo-fmt rustdoc, rustfmt, and other tools.
             rustToolchain
 
             # Various supported shells for testing integrations
