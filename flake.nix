@@ -124,6 +124,7 @@
         checks = self.checks.${system};
         packages = with pkgs; [
           cargo-insta
+          rust-analyzer
 
           # Various supported shells for testing integrations
           bash
@@ -135,6 +136,9 @@
           cargo-cross
           cargo-deb
         ];
+
+        # Ensure `rust-analyzer` has access to the rust source code.
+        RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
       };
     });
 }
