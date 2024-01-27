@@ -67,7 +67,7 @@ impl TestEnv {
         let file = File::create(&command_path)?;
 
         let mut writer = BufWriter::new(&file);
-        writeln!(&mut writer, "#!/bin/bash")?;
+        writeln!(&mut writer, "#!/bin/sh")?;
         writeln!(&mut writer, "echo -n '{display_text}'")?;
         writer.flush()?;
 
