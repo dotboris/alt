@@ -27,9 +27,10 @@
         inherit system;
         overlays = [(import rust-overlay)];
       };
+      inherit (pkgs) lib;
 
       rustToolchain = pkgs.rust-bin.stable.latest.default.override {
-        targets = pkgs.lib.optionals pkgs.stdenv.isLinux [
+        targets = lib.optionals pkgs.stdenv.isLinux [
           # We package using musl on linux
           "x86_64-unknown-linux-musl"
         ];
@@ -37,20 +38,25 @@
 
       craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
-      src = let
-        # .snap files are snapshots used by the tests
-        snapFilter = path: _type: builtins.match ".*\.snap$" path != null;
-        srcFilter = path: type:
-          (snapFilter path type) || (craneLib.filterCargoSources path type);
-      in
-        pkgs.lib.cleanSourceWith {
-          src = craneLib.path ./.;
-          filter = srcFilter;
+      rustSrc = lib.cleanSourceWith {
+        src = ./.;
+        filter = craneLib.filterCargoSources;
+      };
+      src = with lib.fileset;
+        toSource {
+          root = ./.;
+          fileset = unions [
+            (fromSource rustSrc)
+            ./tests/snapshots
+            ./README.md
+            ./etc
+          ];
         };
+
       commonArgs = {
         inherit src;
         strictDeps = true;
-        buildInputs = pkgs.lib.optionals pkgs.stdenv.isDarwin [pkgs.libiconv];
+        buildInputs = lib.optionals pkgs.stdenv.isDarwin [pkgs.libiconv];
       };
       cargoArtifacts = craneLib.buildDepsOnly commonArgs;
       alt = craneLib.buildPackage (commonArgs
@@ -59,11 +65,17 @@
           doCheck = false; # runs through `nix flake check`
 
           postInstall = ''
-            # isntall man pages
-            mkdir -p $out/share/man/man1
-            cp target/release/man/*.1 $out/share/man/man1/
+            # shell hooks
+            install -D etc/profile.d/alt.sh $out/etc/profile.d/alt.sh
+            install -D \
+              etc/fish/conf.d/alt.fish \
+              $out/share/fish/vendor_conf.d/alt.fish
 
-            # install completion
+            # docs / man pages
+            install -D README.md $out/share/doc/alt/README.md
+            install -D target/release/man/*.1 -t $out/share/man/man1
+
+            # completion
             install -D \
               target/release/completion/alt.bash \
               $out/share/bash-completion/completions/alt.bash
