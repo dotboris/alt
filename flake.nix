@@ -56,7 +56,24 @@
       alt = craneLib.buildPackage (commonArgs
         // {
           inherit cargoArtifacts;
-          doCheck = false; # run through checks
+          doCheck = false; # runs through `nix flake check`
+
+          postInstall = ''
+            # isntall man pages
+            mkdir -p $out/share/man/man1
+            cp target/release/man/*.1 $out/share/man/man1/
+
+            # install completion
+            install -D \
+              target/release/completion/alt.bash \
+              $out/share/bash-completion/completions/alt.bash
+            install -D \
+              target/release/completion/alt.fish \
+              $out/share/fish/vendor_completions.d/alt.fish
+            install -D \
+              target/release/completion/_alt \
+              $out/share/zsh/site-functions/_alt
+          '';
         });
     in {
       packages.default = alt;
