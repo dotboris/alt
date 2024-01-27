@@ -29,12 +29,7 @@
       };
       inherit (pkgs) lib;
 
-      rustToolchain = pkgs.rust-bin.stable.latest.default.override {
-        targets = lib.optionals pkgs.stdenv.isLinux [
-          # We package using musl on linux
-          "x86_64-unknown-linux-musl"
-        ];
-      };
+      rustToolchain = pkgs.rust-bin.stable.latest.default;
 
       craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
