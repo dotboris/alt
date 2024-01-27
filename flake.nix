@@ -4,11 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
     flake-utils.url = "github:numtide/flake-utils";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay/stable";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
     crane = {
       url = "github:ipetkov/crane";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -19,19 +14,12 @@
     self,
     nixpkgs,
     flake-utils,
-    rust-overlay,
     crane,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [(import rust-overlay)];
-      };
+      pkgs = import nixpkgs {inherit system;};
       inherit (pkgs) lib;
-
-      rustToolchain = pkgs.rust-bin.stable.latest.default;
-
-      craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+      craneLib = crane.mkLib pkgs;
 
       rustSrc = lib.cleanSourceWith {
         src = ./.;
