@@ -85,41 +85,51 @@
         clippy = craneLib.cargoClippy (commonArgs // {inherit cargoArtifacts;});
         test = craneLib.cargoTest (commonArgs // {inherit cargoArtifacts;});
         rustfmt = craneLib.cargoFmt {inherit src;};
-        alejandra = pkgs.runCommand "alejandra" {} ''
-          ${pkgs.alejandra}/bin/alejandra -c ${./.}
-          mkdir $out
-        '';
-        shellcheck = pkgs.runCommand "shellcheck" {} ''
-          ${pkgs.fd}/bin/fd . ${./.} \
-            -e .sh -e .bash -e .zsh \
-            -X ${pkgs.shellcheck}/bin/shellcheck '{}'
-          mkdir $out
-        '';
+        alejandra =
+          pkgs.runCommand "alejandra" {
+            buildInputs = [pkgs.alejandra];
+          } ''
+            alejandra -c ${./.}
+            mkdir $out
+          '';
+        shellcheck =
+          pkgs.runCommand "shellcheck" {
+            buildInputs = [pkgs.fd pkgs.shellcheck];
+          } ''
+            fd . ${./.} -e .sh -e .bash -e .zsh -X shellcheck '{}'
+            mkdir $out
+          '';
+        black =
+          pkgs.runCommand "black" {
+            buildInputs = [pkgs.python311Packages.black];
+          } ''
+            black --check ${./.}
+            mkdir $out
+          '';
+        flake8 =
+          pkgs.runCommand "flake8" {
+            buildInputs = [pkgs.python311Packages.flake8];
+          } ''
+            flake8 --config ${./.}/setup.cfg ${./.}
+            mkdir $out
+          '';
       };
 
       devShells.default = craneLib.devShell {
-        # The Nix packages provided in the environment
-        packages =
-          (with pkgs; [
-            rustToolchain
+        checks = self.checks.${system};
+        packages = with pkgs; [
+          cargo-insta
 
-            # Various supported shells for testing integrations
-            bash
-            fish
-            zsh
+          # Various supported shells for testing integrations
+          bash
+          fish
+          zsh
 
-            # Packaging tooling (in `ci/`)
-            (python311.withPackages (p: [
-              p.black
-              p.flake8
-            ]))
-            cargo-cross
-            cargo-deb
-
-            shellcheck
-            cargo-insta
-          ])
-          ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [pkgs.libiconv];
+          # Packaging tooling (in `ci/`)
+          python311
+          cargo-cross
+          cargo-deb
+        ];
       };
     });
 }
