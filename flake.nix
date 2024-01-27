@@ -47,7 +47,6 @@
           root = ./.;
           fileset = unions [
             (fromSource rustSrc)
-            ./tests/snapshots
             ./README.md
             ./etc
           ];
@@ -95,7 +94,18 @@
       checks = {
         inherit alt;
         clippy = craneLib.cargoClippy (commonArgs // {inherit cargoArtifacts;});
-        test = craneLib.cargoTest (commonArgs // {inherit cargoArtifacts;});
+        test = craneLib.cargoTest (commonArgs
+          // {
+            inherit cargoArtifacts;
+            src = with lib.fileset;
+              toSource {
+                root = ./.;
+                fileset = unions [
+                  (fromSource rustSrc)
+                  ./tests/snapshots
+                ];
+              };
+          });
         rustfmt = craneLib.cargoFmt {inherit src;};
         alejandra =
           pkgs.runCommand "alejandra" {
