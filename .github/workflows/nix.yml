@@ -16,7 +16,7 @@ jobs:
         with:
           # Helps avoid rate limiting
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: nix flake check --all-systems --keep-going
+      - run: nix flake check -L --all-systems --keep-going
 
   nix-develop:
     name: test nix dev shell
