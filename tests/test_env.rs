@@ -68,7 +68,7 @@ impl TestEnv {
 
         let mut writer = BufWriter::new(&file);
         writeln!(&mut writer, "#!/bin/sh")?;
-        writeln!(&mut writer, "echo -n '{display_text}'")?;
+        writeln!(&mut writer, "printf '%s' '{display_text}'")?;
         writer.flush()?;
 
         let mut perms = file.metadata()?.permissions();
