@@ -8,11 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 <!-- section:unreleased-body -->
 
+<!-- section:previous-releases -->
+## [v1.5.1] 2024-02-24
+
 ### Changed
 
 - Update dependencies
 
-<!-- section:previous-releases -->
 ## [v1.5.0] 2023-10-29
 
 ### Added
@@ -148,6 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix crash when `alt` is run without the `PATH` environment variable set.
 
 <!-- section:refs -->
+[v1.5.1]: https://github.com/dotboris/alt/compare/v1.5.0..v1.5.1
 [v1.5.0]: https://github.com/dotboris/alt/compare/v1.4.0..v1.5.0
 [v1.4.0]: https://github.com/dotboris/alt/compare/v1.3.1..v1.4.0
 [v1.3.1]: https://github.com/dotboris/alt/compare/v1.3.0..v1.3.1
