@@ -32,29 +32,29 @@ opt-level = 3
 opt-level = 3
 
 [dependencies]
-anyhow = "1.0"
+anyhow = "1.0.82"
 clap = { version = "4.5.4", features = ["cargo", "wrap_help"] }
 toml = "0.8.12"
 console = "0.15.8"
 lazy_static = "1.4.0"
 dialoguer = "0.11.0"
 glob = "0.3.1"
-thiserror = "1.0"
+thiserror = "1.0.59"
 
 [dependencies.regex]
-version = "1"
+version = "1.10.4"
 default-features = false
 features = ["std", "perf", "unicode-perl"]
 
 [dev-dependencies]
-assert_cmd = "2.0"
-escargot = "0.5"
+assert_cmd = "2.0.14"
+escargot = "0.5.10"
 insta = { version = "1.38.0", features = ["filters", "toml"] }
 predicates = "3.1.0"
-rand = "0.8"
-serde = "1.0.198"
+rand = "0.8.5"
+serde = "1.0.200"
 test-case = "3.3.1"
-tempfile = "3"
+tempfile = "3.10.1"
 
 [build-dependencies]
 clap = { version = "4.5.4", features = ["cargo"] }
