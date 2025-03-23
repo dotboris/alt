@@ -70,7 +70,9 @@
       packages.default = alt;
       apps.default = flake-utils.lib.mkApp {drv = alt;};
 
-      formatter = pkgs.alejandra;
+      formatter = pkgs.writeShellScriptBin "fmt" ''
+        ${pkgs.alejandra}/bin/alejandra .
+      '';
       checks = {
         inherit alt;
         clippy = craneLib.cargoClippy (commonArgs // {inherit cargoArtifacts;});
