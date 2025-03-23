@@ -4,10 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    crane = {
-      url = "github:ipetkov/crane";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    crane.url = "github:ipetkov/crane";
   };
 
   outputs = {
@@ -122,19 +119,19 @@
 
       devShells.default = craneLib.devShell {
         checks = self.checks.${system};
-        packages = with pkgs; [
-          cargo-insta
-          rust-analyzer
+        packages = [
+          pkgs.cargo-insta
+          pkgs.rust-analyzer
 
           # Various supported shells for testing integrations
-          bash
-          fish
-          zsh
+          pkgs.bash
+          pkgs.fish
+          pkgs.zsh
 
           # Packaging tooling (in `ci/`)
-          python311
-          cargo-cross
-          cargo-deb
+          pkgs.python311
+          pkgs.cargo-cross
+          pkgs.cargo-deb
         ];
 
         # Ensure `rust-analyzer` has access to the rust source code.
