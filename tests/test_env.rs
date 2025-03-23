@@ -9,7 +9,7 @@
 #![allow(dead_code)]
 
 use escargot::CargoBuild;
-use rand::distributions::Alphanumeric;
+use rand::distr::Alphanumeric;
 use rand::prelude::*;
 use std::env;
 use std::ffi::OsStr;
@@ -29,7 +29,7 @@ pub struct TestEnv {
 
 impl TestEnv {
     pub fn new() -> Self {
-        let rand_ns: String = thread_rng()
+        let rand_ns: String = rand::rng()
             .sample_iter(Alphanumeric)
             .take(10)
             .map(char::from)
