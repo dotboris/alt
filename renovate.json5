@@ -11,4 +11,8 @@
   },
 
   nix: { enabled: true },
+
+  // Don't use platform automerge (enable automerge button) in GH We can't use
+  // that because there are no required checks for PRs in this repo.
+  platformAutomerge: false,
 }
