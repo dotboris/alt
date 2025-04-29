@@ -18,7 +18,7 @@ fn extract_command_and_version(path: &Path) -> (String, String) {
     let version = match parts[num_parts - 3] {
         Component::Normal(part) => {
             let package = part.to_str().unwrap();
-            let version = package.split('@').last().unwrap();
+            let version = package.split('@').next_back().unwrap();
             String::from(version)
         }
         _ => panic!(),
