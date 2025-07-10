@@ -34,8 +34,8 @@ opt-level = 3
 [dependencies]
 anyhow = "1.0.82"
 clap = { version = "4.5.4", features = ["cargo", "wrap_help"] }
-toml = "0.8.12"
-console = "0.15.8"
+toml = "0.9.0"
+console = "0.16.0"
 lazy_static = "1.4.0"
 dialoguer = "0.11.0"
 glob = "0.3.1"
