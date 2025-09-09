@@ -48,7 +48,7 @@ jobs:
       - run: rustup toolchain install stable --profile minimal
       - uses: Swatinem/rust-cache@v2
       - run: cargo install --no-default-features --features set-version cargo-edit
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
 
       - name: Determine current version
         id: getOldVersion
