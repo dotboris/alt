@@ -1,17 +1,14 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:recommended", "group:allNonMajor", ":automergeMinor"],
-
   timezone: "America/Toronto",
   schedule: ["before 5am on saturday"],
-
+  minimumReleaseAge: "7 days",
   lockFileMaintenance: {
     enabled: true,
-    schedule: ["before 5am on saturday"],
+    prCreation: "approval",
   },
-
   nix: { enabled: true },
-
   // Don't use platform automerge (enable automerge button) in GH We can't use
   // that because there are no required checks for PRs in this repo.
   platformAutomerge: false,
