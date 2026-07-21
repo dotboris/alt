@@ -47,13 +47,13 @@ pub fn run() -> anyhow::Result<()> {
             println!(
                 " {} {} ({})",
                 style("*").green().bold(),
-                &command_version.version_name,
+                command_version.version_name,
                 command_version.path.display()
             );
         } else {
             println!(
                 "   {} ({})",
-                &command_version.version_name,
+                command_version.version_name,
                 command_version.path.display()
             );
         }
