@@ -117,6 +117,6 @@ impl Default for TestEnv {
 impl Drop for TestEnv {
     fn drop(&mut self) {
         fs::remove_dir_all(&self.root)
-            .unwrap_or_else(|_| panic!("failed to remove {:?}", &self.root));
+            .unwrap_or_else(|_| panic!("failed to remove {:?}", self.root));
     }
 }
